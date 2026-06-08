@@ -51,10 +51,26 @@
     a.card.featured { border-color: rgba(74,222,128,0.35); }
     a.card.featured strong { color: var(--ok); }
     footer { margin-top: 2.5rem; font-size: 0.73rem; color: var(--muted); }
+    .url-box {
+      margin-bottom: 1.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.3);
+      font-size: 0.82rem;
+    }
+    .url-box strong { color: var(--ok); display: block; margin-bottom: 0.35rem; }
+    .url-box a { color: var(--accent); word-break: break-all; }
+    .url-box .warn { color: #fde68a; margin: 0.5rem 0 0; font-size: 0.76rem; }
   </style>
 </head>
 <body>
   <div class="wrap">
+    <div class="url-box">
+      <strong>Live site — share this URL</strong>
+      <a href="https://dipa-lt.github.io/oppm-reports/">https://dipa-lt.github.io/oppm-reports/</a>
+      <p class="warn">GitHub file links (<code>github.com/…/blob/…</code>) show raw HTML code. Always use the link above.</p>
+    </div>
     <h1>Reports &amp; plans</h1>
     <p class="sub">DIPA · OPPM Assistant internal register (read-only)</p>
 
