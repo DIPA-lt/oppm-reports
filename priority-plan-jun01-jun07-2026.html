@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Priority Plan — 1–7 June 2026 · Eimantas Norvaišas</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel: #111827;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --rag: #fb923c;
+      --n8n: #f472b6;
+      --linas: #818cf8;
+      --meet: #94a3b8;
+      --strat: #fbbf24;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --accent: #38bdf8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; letter-spacing: -0.01em; }
+    header .week { font-size: 0.82rem; color: var(--muted); margin: 0 0 0.75rem; }
+    .context-banner {
+      margin: 0 2rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.28);
+      font-size: 0.82rem;
+      color: #fde68a;
+      line-height: 1.55;
+    }
+    .context-banner strong { color: #fef3c7; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      padding: 1rem 2rem 0.25rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 0.22rem 0.72rem;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+    .pill.rag   { background: rgba(251,146,60,0.1);  color: var(--rag);   border-color: rgba(251,146,60,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n);   border-color: rgba(244,114,182,0.35); }
+    .pill.linas { background: rgba(129,140,248,0.1); color: var(--linas); border-color: rgba(129,140,248,0.35); }
+    .pill.meet  { background: rgba(148,163,184,0.1); color: var(--meet);  border-color: rgba(148,163,184,0.35); }
+    .pill.strat { background: rgba(251,191,36,0.1);  color: var(--strat); border-color: rgba(251,191,36,0.35); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+      padding: 1rem 2rem 1.25rem;
+    }
+    .kpi {
+      background: var(--panel2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+    }
+    .kpi .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.35rem; font-weight: 800; margin-top: 0.15rem; }
+    .kpi .sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+    main { padding: 0 2rem 2.5rem; }
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .card {
+      border-radius: 12px;
+      padding: 1rem 1.05rem 1.05rem;
+      border: 1px solid var(--border2);
+      background: var(--panel2);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+    }
+    .card.c-rag::before   { background: var(--rag); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-linas::before { background: var(--linas); }
+    .card.c-meet::before  { background: var(--meet); }
+    .card.c-strat::before { background: var(--strat); }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin-bottom: 0.55rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .card-path {
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin: 0 0 0.65rem;
+      word-break: break-all;
+    }
+    .card-path code { font-size: 0.7rem; }
+    .card-note {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      margin: 0 0 0.75rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+    .task {
+      padding: 0.55rem 0.72rem;
+      border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-rag .task   { border-left-color: rgba(251,146,60,0.55); }
+    .card.c-n8n .task   { border-left-color: rgba(244,114,182,0.55); }
+    .card.c-linas .task { border-left-color: rgba(129,140,248,0.55); }
+    .card.c-meet .task  { border-left-color: rgba(148,163,184,0.5); }
+    .card.c-strat .task { border-left-color: rgba(251,191,36,0.55); }
+    .task-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .task-title { font-size: 0.8rem; font-weight: 700; line-height: 1.35; }
+    .task-h {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--ok);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .task-desc { font-size: 0.76rem; color: #cbd5e1; margin: 0; line-height: 1.5; }
+    .task-desc code { font-size: 0.72rem; color: #7dd3fc; }
+    .comm-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 720px) { .comm-row { grid-template-columns: 1fr; } }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+    @media print {
+      body { background: #fff; color: #111; }
+      header, .context-banner, .card, .kpi { background: #fff !important; border-color: #ccc !important; }
+      .card-note, .task { background: #f8fafc !important; border-color: #ddd !important; }
+      .task-h { color: #166534; }
+      .card-path { color: #0369a1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Priority plan — Eimantas Norvaišas</h1>
+    <p class="week">Week of <strong>1–7 June 2026</strong> · planned capacity <strong>46 h</strong></p>
+  </header>
+
+  <div class="context-banner">
+    <strong>Context:</strong> Last week (25 May – 31 May) had very minimal delivery due to illness.
+    This plan front-loads the three main technical streams and keeps communication blocks explicit.
+  </div>
+
+  <div class="legend">
+    <span class="pill rag"><span class="dot"></span> Intelektex · dipa.lt RAG — 10 h</span>
+    <span class="pill n8n"><span class="dot"></span> DIPA OS Automation — 12 h</span>
+    <span class="pill linas"><span class="dot"></span> AB Linas RAG — 10 h</span>
+    <span class="pill meet"><span class="dot"></span> Communication — 6 h</span>
+    <span class="pill strat"><span class="dot"></span> DIPA strategic session — 8 h</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">Total planned</div><div class="value">46 h</div><div class="sub">Jun 1–7</div></div>
+    <div class="kpi"><div class="label">Technical</div><div class="value" style="color:var(--rag)">32 h</div><div class="sub">RAG + OS + Linas</div></div>
+    <div class="kpi"><div class="label">Communication</div><div class="value" style="color:var(--meet)">14 h</div><div class="sub">6 h + 8 h strategic</div></div>
+    <div class="kpi"><div class="label">Priority #1</div><div class="value" style="font-size:1rem;color:var(--rag)">RAG deploy</div><div class="sub">with Intelektex</div></div>
+  </div>
+
+  <main>
+    <p class="section-title">Technical streams</p>
+    <div class="grid">
+
+      <article class="card c-rag">
+        <div class="card-head">
+          <span class="card-name">1. DIPA RAG — final deployment with Intelektex</span>
+          <span class="card-meta">10 h est</span>
+        </div>
+        <p class="card-path">Refs: <code>Demo-RAG-klientu-pagalbos-agentas-oppm-1779296719436.json</code> · dipa.lt org GCP · prior work in <code>weekly-report-may11-may18.html</code> (DI-001…DI-003)</p>
+        <p class="card-note">Goal: production-ready dipa.lt RAG with test corpus, user manuals ingested, and joint deploy sign-off with Intelektex.</p>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">Cloud Run prod revision + env parity</span><span class="task-h">2.0 h</span></div>
+            <p class="task-desc">Deploy final revision on dipa.lt org project — Secret Manager Gemini binding, <code>PUBLIC_APP_URL</code>, min-instances, post-deploy <code>/health</code> smoke script (pattern from <code>oppm-assistant/deploy.sh</code>).</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Vertex corpus reindex + eval batch</span><span class="task-h">2.0 h</span></div>
+            <p class="task-desc">Run index provisioning / batch reindex worker; re-run golden Lithuanian Q&amp;A eval set and citation accuracy checks after chunk boundary tuning.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Test data + user manual ingest</span><span class="task-h">2.5 h</span></div>
+            <p class="task-desc">Upload admin test PDFs and end-user manuals to GCS ingestion paths; verify listing API, corpus health endpoint, and admin charts show document counts.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Joint deploy session with Intelektex</span><span class="task-h">2.0 h</span></div>
+            <p class="task-desc">Shared Cloud Build walkthrough, Firestore rules + composite index sync, auth domain audit, and live retrieval smoke on production URL.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Operator handoff checklist</span><span class="task-h">1.5 h</span></div>
+            <p class="task-desc">Document sync job procedures, rollback notes, Resend invite-link matrix, and known limits doc for agency / internal testers.</p>
+          </li>
+        </ul>
+      </article>
+
+      <article class="card c-n8n">
+        <div class="card-head">
+          <span class="card-name">2. DIPA OS Automation — Kajabi → dashboard</span>
+          <span class="card-meta">12 h est</span>
+        </div>
+        <p class="card-path">Repo: <code>~/Documents/dipa-n8n</code> · stakeholder: Greta · prior spike: <code>n8n flow spike</code> in timesheet subtasks</p>
+        <p class="card-note">Following Greta call — requirements captured; continue n8n integration for lead automation from Kajabi into the custom DIPA OS dashboard.</p>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">Pipeline requirements doc from Greta call</span><span class="task-h">1.5 h</span></div>
+            <p class="task-desc">Freeze lead lifecycle diagram, field mapping (name, email, product, stage), and acceptance criteria for the Kajabi → dashboard flow.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Kajabi webhook → n8n intake workflow</span><span class="task-h">3.0 h</span></div>
+            <p class="task-desc">New workflow in <code>dipa-n8n</code>: HTTP trigger, payload validation, idempotency key, structured logging, error branch + retry.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Lead payload → custom dashboard API</span><span class="task-h">3.0 h</span></div>
+            <p class="task-desc">Map Kajabi event fields to dashboard/Firestore lead schema; create or update lead record; notification branch for qualified stage.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Credential chain + Secret Manager</span><span class="task-h">1.0 h</span></div>
+            <p class="task-desc">Wire n8n credentials for Kajabi and dashboard API; document rotation notes in operator runbook.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Sandbox dry-run (sample Kajabi event)</span><span class="task-h">2.0 h</span></div>
+            <p class="task-desc">End-to-end test: webhook → n8n → dashboard row visible → Slack/email notification stub fires once.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Automation map update for ops review</span><span class="task-h">1.5 h</span></div>
+            <p class="task-desc">Refresh lead intake → qualification → follow-up SVG in workflow diagram library; align with Greta for next automation steps.</p>
+          </li>
+        </ul>
+      </article>
+
+      <article class="card c-linas">
+        <div class="card-head">
+          <span class="card-name">3. UAB Linas — multi-agent RAG &amp; email pipeline</span>
+          <span class="card-meta">10 h est</span>
+        </div>
+        <p class="card-path">Refs: <code>oppm-assistant/exports/UAB-Linas-multiagentines-sistemos-diegimas-su-RAG-oppm-auto-1777536057010.json</code> · <code>RAG-Agentas-organizacijai-Linas-MVP-kurimas-ir-diegimas-oppm-1779290606595.json</code></p>
+        <p class="card-note">Finish inbound email processing and train retrieval + specialist agents on Linas organisation data (proposals, product docs, pricing).</p>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">Inbound email worker endpoint</span><span class="task-h">3.0 h</span></div>
+            <p class="task-desc">FastAPI route for Gmail / webhook intake — parse thread, extract attachments, store metadata, queue for RAG indexing.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Email → RAG draft pipeline</span><span class="task-h">2.5 h</span></div>
+            <p class="task-desc">Extend <code>RAG email draft helper</code> pattern: retrieval over sales corpus, template generation API, CRM merge-field schema for outbound reply drafts.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Multi-tool agent wiring pass</span><span class="task-h">2.0 h</span></div>
+            <p class="task-desc">Retrieval tool routing + ADK agent config; tighten router vs specialist handoff after MVP feedback (human-in-the-loop review gate).</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Corpus training on client data</span><span class="task-h">1.5 h</span></div>
+            <p class="task-desc">Ingest latest Linas PDFs to Vertex store; refresh AI training sidebar custom instructions per product line.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Golden Q&amp;A regression on email scenarios</span><span class="task-h">1.0 h</span></div>
+            <p class="task-desc">Run eval set from April client feedback — pricing, availability, and proposal follow-up queries in Lithuanian.</p>
+          </li>
+        </ul>
+      </article>
+    </div>
+
+    <p class="section-title">Communication &amp; strategy</p>
+    <div class="comm-row">
+      <article class="card c-meet">
+        <div class="card-head">
+          <span class="card-name">General communication</span>
+          <span class="card-meta">6 h est</span>
+        </div>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">DIPA communication</span><span class="task-h">3.0 h</span></div>
+            <p class="task-desc">Status sync on OS automation progress (Greta pipeline), Linas milestone, and RAG deploy readiness.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Intelektex communication</span><span class="task-h">3.0 h</span></div>
+            <p class="task-desc">Deploy coordination, shared smoke-test window, and blocker resolution for dipa.lt RAG go-live.</p>
+          </li>
+        </ul>
+      </article>
+
+      <article class="card c-strat">
+        <div class="card-head">
+          <span class="card-name">DIPA strategic session</span>
+          <span class="card-meta">8 h est</span>
+        </div>
+        <p class="card-note">Live session with DIPA — company KPIs, future ideas, and portfolio direction (not a technical standup).</p>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">Monthly strategic session</span><span class="task-h">8.0 h</span></div>
+            <p class="task-desc">KPIs and future ideas · automation roadmap · RAG productisation · resourcing across active projects.</p>
+          </li>
+        </ul>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    Priority plan for 1–7 June 2026 · subtasks derived from OPPM-Assistant exports, weekly reports, and timesheet technical maps · open in browser and print to A4 if needed.
+  </footer>
+</body>
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly Delivery Report — 27 Apr – 4 May 2026 (v2)</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel: #111827;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border: #1e293b;
+      --border2: #334155;
+
+      --oppm:   #2dd4bf;
+      --rag:    #818cf8;
+      --strat:  #fbbf24;
+      --eva:    #34d399;
+      --meet:   #94a3b8;
+      --n8n:    #fb923c;
+      --risk:   #ef4444;
+      --danger: #f87171;
+      --ok:     #4ade80;
+      --warn:   #fbbf24;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+
+    /* ── HEADER ── */
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; letter-spacing: -0.01em; }
+    header .week { font-size: 0.82rem; color: var(--muted); margin: 0 0 0.6rem; }
+    .project-legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .proj-pill { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 600; padding: 0.2rem 0.7rem; border-radius: 20px; border: 1px solid; }
+    .proj-pill.oppm  { background: rgba(45,212,191,0.1);  color: var(--oppm);  border-color: rgba(45,212,191,0.3);  }
+    .proj-pill.rag   { background: rgba(129,140,248,0.1); color: var(--rag);   border-color: rgba(129,140,248,0.3); }
+    .proj-pill.strat { background: rgba(251,191,36,0.1);  color: var(--strat); border-color: rgba(251,191,36,0.3);  }
+    .proj-pill.eva   { background: rgba(52,211,153,0.1);  color: var(--eva);   border-color: rgba(52,211,153,0.3);  }
+    .proj-pill.meet  { background: rgba(148,163,184,0.1); color: var(--meet);  border-color: rgba(148,163,184,0.3); }
+    .proj-pill.n8nc  { background: rgba(251,146,60,0.1);  color: var(--n8n);   border-color: rgba(251,146,60,0.3);  }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot.oppm  { background: var(--oppm);  }
+    .dot.rag   { background: var(--rag);   }
+    .dot.strat { background: var(--strat); }
+    .dot.eva   { background: var(--eva);   }
+    .dot.meet  { background: var(--meet);  }
+    .dot.n8nc  { background: var(--n8n);   }
+
+    /* ── WORK SUMMARY SECTION ── */
+    .work-summary {
+      padding: 1.4rem 2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(180deg, #0d1527 0%, #0a0f1e 100%);
+    }
+    .ws-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .ws-title { font-size: 1rem; font-weight: 700; color: var(--text); margin: 0; }
+    .status-badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.28rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .status-badge.success { background: rgba(74,222,128,0.15); color: var(--ok); border: 1px solid rgba(74,222,128,0.3); }
+    .status-badge.risk    { background: rgba(239,68,68,0.15);  color: var(--risk); border: 1px solid rgba(239,68,68,0.4); }
+    .ws-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
+    .ws-card {
+      border-radius: 10px; padding: 0.85rem 1rem; border: 1px solid var(--border2);
+      background: var(--panel2); position: relative; overflow: hidden;
+    }
+    .ws-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+    .ws-card.c-oppm::before  { background: var(--oppm);  }
+    .ws-card.c-rag::before   { background: var(--rag);   }
+    .ws-card.c-eva::before   { background: var(--eva);   }
+    .ws-card.c-strat::before { background: var(--strat); }
+    .ws-card.c-meet::before  { background: var(--meet);  }
+    .ws-card.c-n8n::before   { background: var(--n8n);   }
+    .ws-card.c-risk::before  { background: var(--risk);  }
+    .ws-card.c-risk { border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.05); }
+    .ws-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+    .ws-card-name { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+    .ws-card-hours { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .ws-card-status { font-size: 0.68rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 5px; white-space: nowrap; }
+    .ws-card-status.ok   { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .ws-card-status.red  { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .ws-card-status.warn { background: rgba(251,191,36,0.15); color: var(--warn); }
+    .ws-achievements { list-style: none; margin: 0; padding: 0; }
+    .ws-achievements li { font-size: 0.74rem; color: var(--muted); padding: 0.1rem 0; display: flex; gap: 0.3rem; }
+    .ws-achievements li::before { content: '·'; color: var(--muted); flex-shrink: 0; }
+    .ws-card.c-risk .ws-achievements li { color: #fca5a5; }
+    .ws-card.c-risk .ws-achievements li::before { color: var(--risk); }
+    .ws-blocked-note { font-size: 0.75rem; color: #fca5a5; margin-top: 0.5rem; padding: 0.4rem 0.6rem; background: rgba(239,68,68,0.1); border-radius: 6px; border: 1px solid rgba(239,68,68,0.25); }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 1.2rem 2rem;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border2);
+    }
+    .summary-card {
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--border2);
+    }
+    .summary-card.oppm-card  { background: linear-gradient(135deg, rgba(45,212,191,0.08), rgba(0,0,0,0)); border-color: rgba(45,212,191,0.2); }
+    .summary-card.rag-card   { background: linear-gradient(135deg, rgba(129,140,248,0.08), rgba(0,0,0,0)); border-color: rgba(129,140,248,0.2); }
+    .summary-card.strat-card { background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(0,0,0,0)); border-color: rgba(251,191,36,0.2); }
+    .sc-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.4rem; }
+    .sc-name  { font-size: 1rem; font-weight: 700; margin: 0 0 0.7rem; }
+    .sc-grid  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem; }
+    .sc-stat  { text-align: center; }
+    .sc-stat .v { font-size: 1.25rem; font-weight: 800; }
+    .sc-stat .l { font-size: 0.62rem; text-transform: uppercase; color: var(--muted); margin-top: 0.1rem; }
+    .oppm-card  .v { color: var(--oppm);  }
+    .rag-card   .v { color: var(--rag);   }
+    .strat-card .v { color: var(--strat); }
+
+    /* ── SAVAITĖS FOKUSAS ── */
+    .focus-section {
+      padding: 1.4rem 2rem 1.6rem;
+      border-bottom: 1px solid var(--border2);
+      background: #0c1220;
+    }
+    .focus-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .focus-title { font-size: 1rem; font-weight: 700; color: var(--text); margin: 0; letter-spacing: 0.01em; }
+    .focus-week-label { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+    .focus-total-est { margin-left: auto; font-size: 0.78rem; font-weight: 700; color: var(--strat); background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.25); border-radius: 8px; padding: 0.2rem 0.7rem; }
+    .focus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.65rem; }
+    .focus-item {
+      display: flex; align-items: flex-start; gap: 0.9rem;
+      background: var(--panel2); border: 1px solid var(--border2); border-radius: 10px;
+      padding: 0.8rem 1rem; position: relative; overflow: hidden;
+      transition: border-color .15s;
+    }
+    .focus-item:hover { border-color: var(--border2); filter: brightness(1.05); }
+    .focus-num {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 800; color: var(--bg);
+    }
+    .focus-body { flex: 1; min-width: 0; }
+    .focus-task { font-size: 0.82rem; font-weight: 700; color: var(--text); margin: 0 0 0.2rem; line-height: 1.3; }
+    .focus-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .focus-est { font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 5px; }
+    .focus-tag { font-size: 0.68rem; color: var(--muted); border: 1px solid var(--border2); border-radius: 4px; padding: 0.05rem 0.35rem; }
+    /* per-item accent colours */
+    .fi-1 .focus-num { background: var(--risk); }  .fi-1 { border-left: 3px solid var(--risk); }
+    .fi-2 .focus-num { background: var(--eva); }   .fi-2 { border-left: 3px solid var(--eva); }
+    .fi-3 .focus-num { background: var(--oppm); }  .fi-3 { border-left: 3px solid var(--oppm); }
+    .fi-4 .focus-num { background: var(--rag); }   .fi-4 { border-left: 3px solid var(--rag); }
+    .fi-5 .focus-num { background: var(--n8n); }   .fi-5 { border-left: 3px solid var(--n8n); }
+    .fi-6 .focus-num { background: var(--meet); }  .fi-6 { border-left: 3px solid var(--meet); }
+    .fi-1 .focus-est { background: rgba(239,68,68,0.15);  color: #fca5a5; }
+    .fi-2 .focus-est { background: rgba(52,211,153,0.15); color: var(--eva); }
+    .fi-3 .focus-est { background: rgba(45,212,191,0.15); color: var(--oppm); }
+    .fi-4 .focus-est { background: rgba(129,140,248,0.15);color: var(--rag); }
+    .fi-5 .focus-est { background: rgba(251,146,60,0.15); color: var(--n8n); }
+    .fi-6 .focus-est { background: rgba(148,163,184,0.15);color: var(--meet); }
+
+    /* ── KPI ROW ── */
+    main { padding: 1.2rem 2rem 3rem; max-width: 1600px; margin: 0 auto; }
+    .grid-kpi { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 0.7rem; margin: 0.5rem 0 1.5rem; }
+    .kpi { background: var(--panel2); border: 1px solid var(--border2); border-radius: 10px; padding: 0.8rem 0.9rem; }
+    .kpi .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.3rem; font-weight: 700; margin-top: 0.15rem; }
+    .kpi .sub   { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+    .kpi.ok     .value { color: var(--ok);     }
+    .kpi.danger .value { color: var(--danger); }
+    .kpi.warn   .value { color: var(--warn);   }
+    .kpi.oppm-k .value { color: var(--oppm);   }
+    .kpi.rag-k  .value { color: var(--rag);    }
+    .kpi.gold   .value { color: var(--strat);  }
+
+    /* ── CHARTS ── */
+    .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .chart-card { background: var(--panel2); border: 1px solid var(--border2); border-radius: 12px; padding: 1rem; }
+    .chart-card h3 { margin: 0 0 0.7rem; font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .chart-box { position: relative; height: 210px; }
+
+    /* ── STACKED BAR ── */
+    #weekBar-wrap { background: var(--panel2); border: 1px solid var(--border2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+    #weekBar-wrap h3 { margin: 0 0 0.7rem; font-size: 0.88rem; font-weight: 600; }
+    .bar-box { position: relative; height: 90px; }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center;
+      padding: 0.7rem 1rem; background: var(--panel2); border-radius: 10px; border: 1px solid var(--border2);
+      margin: 1rem 0;
+    }
+    .controls label { font-size: 0.83rem; color: var(--muted); display: flex; align-items: center; gap: 0.3rem; }
+    select, input[type="search"], input[type="number"] {
+      background: #0a0f1e; color: var(--text); border: 1px solid var(--border2); border-radius: 7px; padding: 0.38rem 0.55rem; font-size: 0.85rem;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; margin-top: 1rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.79rem; }
+    th, td { padding: 0.44rem 0.55rem; text-align: left; border-bottom: 1px solid var(--border2); vertical-align: top; }
+    th {
+      position: sticky; top: 0; background: #070c17;
+      font-weight: 600; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);
+      cursor: pointer; user-select: none;
+    }
+    th:hover { color: var(--oppm); }
+    tr.over td { background: rgba(248,113,113,0.06); }
+    tr.over td.num { color: var(--danger); font-weight: 700; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tr:hover td { background: rgba(255,255,255,0.03); }
+
+    .proj-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; flex-shrink: 0; }
+    .proj-dot.oppm  { background: var(--oppm);  }
+    .proj-dot.rag   { background: var(--rag);   }
+    .proj-dot.strat { background: var(--strat); }
+
+    .badge { display: inline-block; padding: 0.08rem 0.38rem; border-radius: 5px; font-size: 0.65rem; font-weight: 700; white-space: nowrap; }
+    .badge.ok  { background: rgba(74,222,128,0.15);  color: var(--ok);    }
+    .badge.bad { background: rgba(248,113,113,0.15); color: var(--danger); }
+
+    .phase-tag { font-size: 0.62rem; padding: 0.06rem 0.32rem; border-radius: 4px; font-weight: 600; background: rgba(255,255,255,0.06); color: var(--muted); white-space: nowrap; }
+
+    .section-title { font-size: 1.05rem; font-weight: 700; margin: 2rem 0 0.5rem; border-left: 3px solid var(--oppm); padding-left: 0.6rem; }
+
+    .method { margin-top: 1.5rem; padding: 0.9rem 1rem; background: var(--panel2); border-radius: 10px; border: 1px solid var(--border2); font-size: 0.8rem; color: var(--muted); }
+    .method h2 { margin: 0 0 0.4rem; font-size: 0.9rem; color: var(--text); }
+    .method code { background: #070c17; padding: 0.1rem 0.28rem; border-radius: 4px; font-size: 0.75rem; }
+
+    footer { padding: 1rem 2rem; color: var(--muted); font-size: 0.73rem; border-top: 1px solid var(--border2); }
+
+    @media (max-width: 700px) { .summary-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Weekly Delivery Report</h1>
+  <p class="week">27 April 2026 – 4 May 2026 &nbsp;·&nbsp; E. Norvaisas</p>
+  <div class="project-legend">
+    <div class="proj-pill oppm" ><div class="dot oppm" ></div>OPPM Assistant — v5.1 · v5.2</div>
+    <div class="proj-pill rag"  ><div class="dot rag"  ></div>Linas RAG — from scratch</div>
+    <div class="proj-pill eva"  ><div class="dot eva"  ></div>LJA EV Asistentas — multi-agent</div>
+    <div class="proj-pill strat"><div class="dot strat"></div>Strategic — Vilnius</div>
+    <div class="proj-pill meet" ><div class="dot meet" ></div>Meetings</div>
+    <div class="proj-pill n8nc" ><div class="dot n8nc" ></div>n8n / Infra</div>
+  </div>
+</header>
+
+<!-- ── WORK SUMMARY ── -->
+<div class="work-summary">
+  <div class="ws-header">
+    <p class="ws-title">Week summary — achievements & plan execution</p>
+    <span class="status-badge success">✓ Successful week — estimates met</span>
+    <span class="status-badge risk">⚠ ES Projektas blocked</span>
+  </div>
+  <div class="ws-grid">
+
+    <div class="ws-card c-oppm">
+      <div class="ws-card-head">
+        <span class="ws-card-name">OPPM Assistant v5.1 · v5.2</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">14.3 h est · 16.0 h act</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-achievements">
+        <li>12-slice generation pipeline replacing monolithic schema</li>
+        <li>OPPMMatrix.tsx overhaul — timeline, RACI, cell cycling (1 800+ lines)</li>
+        <li>TimelineDrillDown.tsx, chat wizard improvements, schema merge hardening</li>
+        <li>Bugfixes: phantom tasks, MAX_TOKENS slices 11–12, question-helper variants</li>
+        <li>MARKETING_PLAN.md — full 12-section go-to-market strategy delivered</li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-rag">
+      <div class="ws-card-head">
+        <span class="ws-card-name">Linas RAG — full-stack</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">12.1 h est · 13.4 h act</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-achievements">
+        <li>Python FastAPI + Google ADK + Vertex AI RAG Engine — built from scratch</li>
+        <li>React/TS frontend: 15+ components, 500 KB+ source; full LT localisation</li>
+        <li>Chat UI (direct AI + RAG mode), data-source CRUD, AI training sidebar</li>
+        <li>User management, statistics view, Drive mirror sync, Cloud Run deployed</li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-eva">
+      <div class="ws-card-head">
+        <span class="ws-card-name">LJA EV Asistentas — multi-agent</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">6.0 h est · 6.0 h act</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-achievements">
+        <li>ADK root_agent.py orchestrating planner / verifier / extractor / retriever / solver</li>
+        <li>multi_tool_agent sub-agents (baldu_pardavejas) + router.py endpoints (19 KB)</li>
+        <li>ExerciseSolver.tsx UI wired to agent streaming response (39 KB)</li>
+        <li>test_pipeline.py + gold_set.jsonl evaluation framework validated</li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-strat">
+      <div class="ws-card-head">
+        <span class="ws-card-name">Strategic session — Vilnius on-site</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">8.0 h</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-achievements">
+        <li>Full-day on-site planning in Vilnius</li>
+        <li>Product roadmap and GTM priorities aligned across projects</li>
+        <li>Partner and team coordination completed</li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-meet">
+      <div class="ws-card-head">
+        <span class="ws-card-name">Meetings — Intelektextas · Greta</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">2.0 h est · 2.0 h act</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-achievements">
+        <li>Intelektextas (1 h): coordination, requirements clarification</li>
+        <li>Greta (1 h): project status review and next-steps alignment</li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-n8n">
+      <div class="ws-card-head">
+        <span class="ws-card-name">n8n — Cloud Run + Supabase</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">2.0 h est · 2.0 h act</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-achievements">
+        <li>n8n workflow server containerised and deployed to Cloud Run</li>
+        <li>Supabase Postgres connection configured, credentials secured via Secret Manager</li>
+        <li>Test workflow verified end-to-end</li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-risk">
+      <div class="ws-card-head">
+        <span class="ws-card-name">🔴 ES Projektas (EU-funded)</span>
+        <span class="ws-card-status red">⚠ BLOCKED</span>
+      </div>
+      <ul class="ws-achievements">
+        <li>Multiagentinės sistemos diegimas su RAG — scope defined</li>
+        <li>Architecture and technical spec drafted; awaiting stakeholder sign-off</li>
+        <li>Cannot proceed to implementation without Mantas review</li>
+      </ul>
+      <div class="ws-blocked-note">
+        🔴 <strong>Action required:</strong> Mantas must review and approve the spec before next sprint. Risk of delivery delay if not resolved by 11 May 2026.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="summary-row" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
+  <div class="summary-card oppm-card">
+    <p class="sc-title">Project 1</p>
+    <p class="sc-name">OPPM Assistant v5.1 · v5.2</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" id="sc-oppm-est">–</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-oppm-act">–</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-oppm-tasks">–</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+  <div class="summary-card rag-card">
+    <p class="sc-title">Project 2</p>
+    <p class="sc-name">Linas RAG — from scratch</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" id="sc-rag-est">–</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-rag-act">–</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-rag-tasks">–</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+  <div class="summary-card" style="background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(0,0,0,0));border-color:rgba(52,211,153,0.2)">
+    <p class="sc-title">Project 3</p>
+    <p class="sc-name" style="color:var(--eva)">LJA EV — Multi-agent integration</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" id="sc-eva-est" style="color:var(--eva)">6.0</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-eva-act" style="color:var(--eva)">6.0</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" style="color:var(--eva)">9</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+  <div class="summary-card strat-card">
+    <p class="sc-title">Strategy</p>
+    <p class="sc-name">Vilnius session · Meetings</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v">10.0</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v">10.0</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v">3</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+  <div class="summary-card" style="background:linear-gradient(135deg,rgba(251,146,60,0.08),rgba(0,0,0,0));border-color:rgba(251,146,60,0.2)">
+    <p class="sc-title">Infrastructure</p>
+    <p class="sc-name" style="color:var(--n8n)">n8n · Cloud Run · Supabase</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" style="color:var(--n8n)">2.0</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" style="color:var(--n8n)">2.0</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" style="color:var(--n8n)">1</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ŠIOS SAVAITĖS FOKUSAS ── -->
+<div class="focus-section">
+  <div class="focus-header">
+    <p class="focus-title">📍 Šios savaitės fokusas</p>
+    <span class="focus-week-label">5 – 11 May 2026</span>
+    <span class="focus-total-est">∑ est. 39–40 h</span>
+  </div>
+  <div class="focus-grid">
+
+    <div class="focus-item fi-1">
+      <div class="focus-num">1</div>
+      <div class="focus-body">
+        <p class="focus-task">ES projekto užbaigimas</p>
+        <div class="focus-meta">
+          <span class="focus-est">6 h</span>
+          <span class="focus-tag">ES Projektas</span>
+          <span class="focus-tag">deadline</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="focus-item fi-2">
+      <div class="focus-num">2</div>
+      <div class="focus-body">
+        <p class="focus-task">LJA Multiagent — deploy, debug, test + instrukcijos LJA</p>
+        <div class="focus-meta">
+          <span class="focus-est">8 h</span>
+          <span class="focus-tag">LJA EV Asistentas</span>
+          <span class="focus-tag">Cloud Run</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="focus-item fi-3">
+      <div class="focus-num">3</div>
+      <div class="focus-body">
+        <p class="focus-task">OPPM — debug ir patobulinimas</p>
+        <div class="focus-meta">
+          <span class="focus-est">6 h</span>
+          <span class="focus-tag">OPPM Assistant</span>
+          <span class="focus-tag">QA</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="focus-item fi-4">
+      <div class="focus-num">4</div>
+      <div class="focus-body">
+        <p class="focus-task">Intelektextas — DIPA RAG darbas</p>
+        <div class="focus-meta">
+          <span class="focus-est">5–6 h</span>
+          <span class="focus-tag">DIPA RAG</span>
+          <span class="focus-tag">Intelektextas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="focus-item fi-5">
+      <div class="focus-num">5</div>
+      <div class="focus-body">
+        <p class="focus-task">DIPA OS — n8n implementacijos, workflow kūrimas</p>
+        <div class="focus-meta">
+          <span class="focus-est">10 h</span>
+          <span class="focus-tag">n8n</span>
+          <span class="focus-tag">DIPA OS</span>
+          <span class="focus-tag">automation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="focus-item fi-6">
+      <div class="focus-num">6</div>
+      <div class="focus-body">
+        <p class="focus-task">Bendroji komunikacija</p>
+        <div class="focus-meta">
+          <span class="focus-est">4 h</span>
+          <span class="focus-tag">meetings</span>
+          <span class="focus-tag">koordinacija</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<main>
+  <section class="grid-kpi" id="kpi-row"></section>
+
+  <div id="weekBar-wrap">
+    <h3>Weekly hours split by project</h3>
+    <div class="bar-box"><canvas id="weekBar"></canvas></div>
+  </div>
+
+  <section class="charts">
+    <div class="chart-card"><h3>Estimated hours by project</h3><div class="chart-box"><canvas id="pieProject"></canvas></div></div>
+    <div class="chart-card"><h3>Estimated hours by phase (all)</h3><div class="chart-box"><canvas id="piePhase"></canvas></div></div>
+    <div class="chart-card"><h3>Tasks: on-time vs over-budget</h3><div class="chart-box"><canvas id="pieVariance"></canvas></div></div>
+    <div class="chart-card"><h3>Actual hours — OPPM phases</h3><div class="chart-box"><canvas id="pieOppmPhase"></canvas></div></div>
+  </section>
+
+  <section class="controls">
+    <label>Project <select id="f-project"><option value="">All projects</option></select></label>
+    <label>Phase   <select id="f-phase"  ><option value="">All phases</option></select></label>
+    <label>Owner   <select id="f-owner"  ><option value="">All owners</option></select></label>
+    <label><input type="checkbox" id="f-over" /> Only over-budget</label>
+    <label><input type="checkbox" id="f-charts-scope" /> Scope charts to filters</label>
+    <label>Search <input type="search" id="f-q" placeholder="task, subtask, description…" style="min-width:14rem" /></label>
+    <label style="margin-left:auto">What-if +<input type="number" id="f-sim-pct" value="10" min="0" max="50" step="1" style="width:3.2rem" />% <input type="checkbox" id="f-sim" /></label>
+  </section>
+
+  <div class="table-wrap">
+    <table id="task-table">
+      <thead>
+        <tr>
+          <th data-sort="id">ID</th>
+          <th data-sort="project">Project</th>
+          <th data-sort="phase">Phase</th>
+          <th data-sort="task">Task</th>
+          <th data-sort="subtask">Subtask</th>
+          <th>Description</th>
+          <th data-sort="owner">Owner</th>
+          <th data-sort="estH"    class="num">Est (h)</th>
+          <th data-sort="spentH"  class="num">Actual (h)</th>
+          <th data-sort="variance"class="num">Δ (h)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="task-body"></tbody>
+      <tfoot id="task-foot"></tfoot>
+    </table>
+  </div>
+
+  <p class="section-title">Owner performance rollup</p>
+  <div class="table-wrap">
+    <table id="owner-table">
+      <thead>
+        <tr>
+          <th>Owner</th>
+          <th class="num">Tasks</th>
+          <th class="num">Est (h)</th>
+          <th class="num">Actual (h)</th>
+          <th class="num">Over-budget</th>
+          <th class="num">OPI</th>
+        </tr>
+      </thead>
+      <tbody id="owner-body"></tbody>
+    </table>
+  </div>
+
+  <div class="method">
+    <h2>How numbers are computed</h2>
+    <p><strong>Over-budget</strong> when <code>actualH &gt; estH</code>. <strong>Schedule ratio</strong> = <code>Σest/Σactual</code> (capped 1). <strong>OPI</strong> = <code>round(100×(0.45×onTime + 0.35×sched + 0.20×(1−meanOver)))</code>. <strong>What-if</strong> scales actualH on filtered rows.</p>
+    <p>Tasks are synthetic decompositions from git-diff stats and file-system analysis. Strategic session hours represent confirmed on-site presence.</p>
+  </div>
+</main>
+
+<footer>
+  Week of <strong>27 April – 4 May 2026</strong> &nbsp;·&nbsp;
+  Projects: OPPM Assistant (commits a2c2bb0 · c92dd67 + session), Linas RAG (<code>D:\linas-rag\</code>), Strategy session Vilnius.
+</footer>
+
+<script type="application/json" id="tasks-embedded">[
+  {"id":"T-001","phase":"Server — generation pipeline","task":"generate-matrix-from-slices route","subtask":"Express handler + slice runner loop","description":"New /api/generate-matrix-from-slices endpoint; orchestrates 12 slice calls, merges via shallowMergeOppmSlice, returns full dashboard draft","owner":"E. Norvaisas","estH":0.60,"spentH":0.80,"project":"OPPM Assistant"},
+  {"id":"T-002","phase":"Server — generation pipeline","task":"auto-generation start/status routes","subtask":"/api/auto-generation/start + /status","description":"Background autonomous matrix generation; Firestore-backed progress events; debug event streaming to MatrixGenDebugDialog","owner":"E. Norvaisas","estH":0.45,"spentH":0.55,"project":"OPPM Assistant"},
+  {"id":"T-003","phase":"Server — generation pipeline","task":"question-helper route","subtask":"Initial /api/question-helper impl","description":"Mini-assistant returning 3 angle-diversified variants per wizard question; variant extraction via [VARIANT_n] block parser; repair loop","owner":"E. Norvaisas","estH":0.40,"spentH":0.42,"project":"OPPM Assistant"},
+  {"id":"T-004","phase":"Server — generation pipeline","task":"gemini-structured: degeneration & retry","subtask":"callGeminiStructured with repetition detection","description":"degenerationIdx detection (character-run in JSON tail); retry at higher temperature; MAX_TOKENS compact-mode retry; finishReason guards","owner":"E. Norvaisas","estH":0.50,"spentH":0.60,"project":"OPPM Assistant"},
+  {"id":"T-005","phase":"Server — generation pipeline","task":"oppm-slice-schemas: slices 1-10","subtask":"Narrow per-step schemas (steps 1-10)","description":"13 slice descriptors replacing monolithic schema; taskBaseItem / taskLinkingItem / taskTimeItem; extractionFocus per step; required[] kept minimal","owner":"E. Norvaisas","estH":0.55,"spentH":0.55,"project":"OPPM Assistant"},
+  {"id":"T-006","phase":"Server — generation pipeline","task":"oppm-slice-schemas: slices 11-12","subtask":"Budget + summary slice schemas","description":"budgetCategories with numeric amount fields; projectAudit SMART gate fields; summaryNotes; auditVerdict enum; conciseness constraints","owner":"E. Norvaisas","estH":0.35,"spentH":0.40,"project":"OPPM Assistant"},
+  {"id":"T-007","phase":"OPPMMatrix.tsx — UI overhaul","task":"Timeline period rendering","subtask":"Weekly / monthly / daily zoom modes","description":"Period header calculation; column-width logic per timelineType; scroll anchor on zoom change; period label formatting","owner":"E. Norvaisas","estH":0.55,"spentH":0.70,"project":"OPPM Assistant"},
+  {"id":"T-008","phase":"OPPMMatrix.tsx — UI overhaul","task":"Cell state cycling & rich editing","subtask":"Click-to-cycle + popover editor","description":"Colour-coded cell status (none/planned/in-progress/done/blocked); popover for notes; optimistic Firestore write with debounce","owner":"E. Norvaisas","estH":0.50,"spentH":0.60,"project":"OPPM Assistant"},
+  {"id":"T-009","phase":"OPPMMatrix.tsx — UI overhaul","task":"Task row expand / subtask display","subtask":"Collapsible subtask rows with hours","description":"Expand toggle per main task; subtask title, estimatedHours, actualHours inline; cascade expand on matrix load","owner":"E. Norvaisas","estH":0.40,"spentH":0.48,"project":"OPPM Assistant"},
+  {"id":"T-010","phase":"OPPMMatrix.tsx — UI overhaul","task":"RACI owner column rendering","subtask":"A/B/C badge display per owner","description":"Owner abbreviation columns right of timeline; A/B/C badge per task-owner pair; sorted by responsibilityLevel; highlight A owner row","owner":"E. Norvaisas","estH":0.38,"spentH":0.38,"project":"OPPM Assistant"},
+  {"id":"T-011","phase":"OPPMMatrix.tsx — UI overhaul","task":"Subjective tasks + budget rows","subtask":"Qualitative section at matrix bottom","description":"Subjective task rows below main tasks; periodStatus colour coding; budget category rows with planned vs actual bar; formatCurrency util","owner":"E. Norvaisas","estH":0.38,"spentH":0.48,"project":"OPPM Assistant"},
+  {"id":"T-012","phase":"OPPMMatrix.tsx — UI overhaul","task":"Health panel + smart actions wiring","subtask":"ProjectHealthPanel + MatrixSmartActionsBar","description":"Health score computed from objective statuses; smart action commands dispatch to matrix chat; toolbar button layout","owner":"E. Norvaisas","estH":0.30,"spentH":0.36,"project":"OPPM Assistant"},
+  {"id":"T-013","phase":"Timeline drill-down","task":"TimelineDrillDown.tsx overhaul","subtask":"Checklist, notes, attachments per cell","description":"408-line diff; per-cell and per-column notes; checklist items with completion toggle; session-scoped notes; Firestore path per task x period","owner":"E. Norvaisas","estH":0.55,"spentH":0.65,"project":"OPPM Assistant"},
+  {"id":"T-014","phase":"Timeline drill-down","task":"timeline-cell-aggregate.ts refactor","subtask":"Aggregate actual vs planned per period","description":"Revised aggregation logic: total hours per period column; planned vs actual split; used by timeline summary row","owner":"E. Norvaisas","estH":0.25,"spentH":0.25,"project":"OPPM Assistant"},
+  {"id":"T-015","phase":"Chat & wizard improvements","task":"useChat.ts — slice-mode tracking","subtask":"Progress + file attachment support","description":"371-line diff; stepDetect integration; slice generation progress emitted to UI; chat file attachment state; wizard conversation trim logic","owner":"E. Norvaisas","estH":0.55,"spentH":0.65,"project":"OPPM Assistant"},
+  {"id":"T-016","phase":"Chat & wizard improvements","task":"ChatInterface.tsx — option & question cards","subtask":"ChatOptionCards + ChatQuestionCards","description":"128-line diff; refactored option card layout; question-helper card fetches /api/question-helper; loading skeleton; error fallback","owner":"E. Norvaisas","estH":0.30,"spentH":0.32,"project":"OPPM Assistant"},
+  {"id":"T-017","phase":"Chat & wizard improvements","task":"ChatMessage.tsx — inline tables + markdown","subtask":"Inline OPPM data table renderer","description":"87-line diff; oppm-inline-data-table utility integration; markdown rendered via react-markdown; code block syntax highlight stub","owner":"E. Norvaisas","estH":0.28,"spentH":0.30,"project":"OPPM Assistant"},
+  {"id":"T-018","phase":"Chat & wizard improvements","task":"OPPMMatrixChatSimple.tsx — context injection","subtask":"Matrix snapshot in chat prompt","description":"315-line diff; inject tasks/owners/objectives digest into system prompt; history trimming; streaming token display; expand/collapse panel","owner":"E. Norvaisas","estH":0.42,"spentH":0.52,"project":"OPPM Assistant"},
+  {"id":"T-019","phase":"Projects home & routing","task":"ProjectsHomePage — folder / group CRUD","subtask":"Create, rename, delete project groups","description":"501+645-line diff; folder list sidebar; move project to group; project count badge; group-scoped Firestore queries","owner":"E. Norvaisas","estH":0.50,"spentH":0.60,"project":"OPPM Assistant"},
+  {"id":"T-020","phase":"Projects home & routing","task":"ProjectsHomePage — search & metrics","subtask":"Search bar + project-card-metrics","description":"Live search filter; card shows task count, completion %, last-updated; sorted by recent activity; project limit quota indicator","owner":"E. Norvaisas","estH":0.30,"spentH":0.38,"project":"OPPM Assistant"},
+  {"id":"T-021","phase":"Projects home & routing","task":"App.tsx — routing restructure","subtask":"New share / invite / matrix routes","description":"62+232-line diff; lazy-loaded dashboard; share URL route with password gate; group invite route; nav breadcrumb context","owner":"E. Norvaisas","estH":0.32,"spentH":0.35,"project":"OPPM Assistant"},
+  {"id":"T-022","phase":"AI service & document analysis","task":"ai.service.ts — service refactor","subtask":"Renamed from openrouter; unified model calls","description":"openrouter.service.ts -> ai.service.ts; Gemini-only adapter; model selection per chat context (wizard vs matrix); streaming response util","owner":"E. Norvaisas","estH":0.38,"spentH":0.38,"project":"OPPM Assistant"},
+  {"id":"T-023","phase":"AI service & document analysis","task":"document-analysis.service.ts","subtask":"New pipeline for uploaded project files","description":"41-line new file; chains file parse -> chunk -> summarise -> store; feeds RAG index with extracted facts; project-data-scope.ts utility","owner":"E. Norvaisas","estH":0.28,"spentH":0.28,"project":"OPPM Assistant"},
+  {"id":"T-024","phase":"Timer","task":"TimerReportsPanel.tsx","subtask":"Task / owner rollup + chart","description":"104-line diff; aggregate timer entries by task and by owner; bar chart of hours; export CSV stub; link entries to matrix task rows","owner":"E. Norvaisas","estH":0.32,"spentH":0.40,"project":"OPPM Assistant"},
+  {"id":"T-025","phase":"Timer","task":"timer-context.tsx — actual hours sync","subtask":"Write actualHours back to dashboard","description":"42-line diff; on timer stop, compute elapsed and patch task.actualHours in Firestore; optimistic update in store","owner":"E. Norvaisas","estH":0.20,"spentH":0.22,"project":"OPPM Assistant"},
+  {"id":"T-026","phase":"Schema merge & data utilities","task":"oppm-schema-merge.ts improvements","subtask":"isMeaningfulNewTaskRecord + deep merge","description":"33-line diff; new guard preventing id-only phantom tasks; deepMergeTaskArrays replaces shallow spread for tasks[]; cellData merge preserved","owner":"E. Norvaisas","estH":0.30,"spentH":0.30,"project":"OPPM Assistant"},
+  {"id":"T-027","phase":"Schema merge & data utilities","task":"subtask utilities (cascade + window)","subtask":"subtask-cascade.ts + new subtask-window.ts","description":"subtask-window.ts: sliding window for subtask time estimates; cascade: propagate parent date changes to subtasks; 5+48-line diffs","owner":"E. Norvaisas","estH":0.28,"spentH":0.28,"project":"OPPM Assistant"},
+  {"id":"T-028","phase":"Schema merge & data utilities","task":"oppm-inline-data-table.ts","subtask":"Parse markdown table from AI response","description":"27-line diff; extracts table syntax from wizard replies; normalises columns; used by ChatMessage for rich task-list display","owner":"E. Norvaisas","estH":0.18,"spentH":0.18,"project":"OPPM Assistant"},
+  {"id":"T-029","phase":"Settings & config","task":"SettingsPage — model picker + step patches","subtask":"Per-step instruction patches UI","description":"121-line diff; separate model selectors for wizard vs matrix chat; step-level system prompt append UI; thinking-budget toggle","owner":"E. Norvaisas","estH":0.35,"spentH":0.35,"project":"OPPM Assistant"},
+  {"id":"T-030","phase":"Settings & config","task":"ai-models.ts — registry; remove OpenRouter","subtask":"Model list centralised; OpenRouter removed","description":"25-line diff; DEFAULT_OPPM_CHAT_MODEL, DEFAULT_MATRIX_CHAT_MODEL constants; Gemini 2.5 Pro/Flash/Flash-Lite/3 Flash listed; OpenRouterModelDialogPicker deleted","owner":"E. Norvaisas","estH":0.18,"spentH":0.18,"project":"OPPM Assistant"},
+  {"id":"T-031","phase":"DevOps & docs (OPPM)","task":"deploy.ps1 / deploy.sh scripts","subtask":"Cloud Run deployment scripts updated","description":"10+14-line diffs; region, service-name, env-vars flags; build-and-push Docker; environment variable passing for Gemini keys","owner":"E. Norvaisas","estH":0.20,"spentH":0.20,"project":"OPPM Assistant"},
+  {"id":"T-032","phase":"DevOps & docs (OPPM)","task":"Utility data-patch scripts","subtask":"generate-vasaros-matrix.mjs + patch scripts","description":"3 new mjs scripts (285+69+253 lines); one-off matrix generation from conversation log; RACI patch; subjective task patch for export files","owner":"E. Norvaisas","estH":0.30,"spentH":0.30,"project":"OPPM Assistant"},
+  {"id":"T-033","phase":"Session — bug fixes & hardening","task":"question-helper: direct-answer variants","subtask":"System prompt rewrite — no coaching text","description":"Prompt now forbids imperative coaching ('ivardykite', 'suformuluokite'); enforces angle taxonomy; repair loop also carries the constraint","owner":"E. Norvaisas","estH":0.30,"spentH":0.30,"project":"OPPM Assistant"},
+  {"id":"T-034","phase":"Session — bug fixes & hardening","task":"mergeOppmTaskShallow + cellData deep-merge","subtask":"shallowMergeOppmSlice hardening","description":"New mergeOppmTaskShallow preserves name/description/title when later slices emit empty strings; cellData merged deeply; subtasks use same helper","owner":"E. Norvaisas","estH":0.48,"spentH":0.48,"project":"OPPM Assistant"},
+  {"id":"T-035","phase":"Session — bug fixes & hardening","task":"taskRecordIsMeaningfulForInsert guard","subtask":"Prevent phantom id-only task rows","description":"Server-side mirror of client isMeaningfulNewTaskRecord; skips inserting tasks[] entries that lack name and subtasks; fixes 'dropped task-7..task-10' log","owner":"E. Norvaisas","estH":0.28,"spentH":0.28,"project":"OPPM Assistant"},
+  {"id":"T-036","phase":"Session — bug fixes & hardening","task":"Slice 5: preserve OPPM row count","subtask":"Don't collapse T1...T10 to 6 phases","description":"When OPPM table has explicit numbered rows, model must preserve exact count; consolidation only allowed on user request","owner":"E. Norvaisas","estH":0.18,"spentH":0.18,"project":"OPPM Assistant"},
+  {"id":"T-037","phase":"Session — bug fixes & hardening","task":"Slices 11-12: amount format + concise text","subtask":"No degenerate decimals; short summaryNotes","description":"Slice 11: 'write short numerals, no long fractional tails'; slice 12: max ~800 chars summaryNotes, no repetition","owner":"E. Norvaisas","estH":0.18,"spentH":0.18,"project":"OPPM Assistant"},
+  {"id":"T-038","phase":"Session — bug fixes & hardening","task":"MAX_TOKENS steps 11 & 12 raised to 8192","subtask":"getSliceMaxOutputTokens update","description":"Steps 11 and 12 were truncating JSON mid-string at 3000/3500 tokens; raised to 8192 to accommodate full budget + audit objects","owner":"E. Norvaisas","estH":0.10,"spentH":0.10,"project":"OPPM Assistant"},
+  {"id":"T-039","phase":"Marketing plan","task":"Competitive analysis + USP positioning","subtask":"Competitor table + positioning statement","description":"Benchmarked Jira, Asana, Monday, ClickUp, Notion, Smartsheet, ChatGPT; identified OPPM category gap; drafted positioning statement","owner":"E. Norvaisas","estH":0.32,"spentH":0.32,"project":"OPPM Assistant"},
+  {"id":"T-040","phase":"Marketing plan","task":"Paid channel strategy (Google / FB / LinkedIn)","subtask":"Campaign structures + ad creative briefs","description":"3 Google Ads campaigns (OPPM, AI PM, competitor); Facebook funnel TOFU/MOFU/BOFU; LinkedIn sponsored content + InMail; audience targeting","owner":"E. Norvaisas","estH":0.32,"spentH":0.32,"project":"OPPM Assistant"},
+  {"id":"T-041","phase":"Marketing plan","task":"Pricing, messaging, KPIs + MARKETING_PLAN.md","subtask":"Full 12-section markdown document","description":"Personas, pricing tiers, messaging pillars, SEO content plan, partner strategy, email sequences, budget model, KPI framework, risk register","owner":"E. Norvaisas","estH":0.38,"spentH":0.38,"project":"OPPM Assistant"},
+
+  {"id":"R-001","phase":"Project setup & architecture","task":"Repo structure + Python venv","subtask":"FastAPI skeleton + folder layout","description":"Backas/ and Frontas/ separation; run_backend.py entry point; virtual env; .gitignore for keys/, __pycache__, .venv, dist","owner":"E. Norvaisas","estH":0.25,"spentH":0.25,"project":"Linas RAG"},
+  {"id":"R-002","phase":"Project setup & architecture","task":"React + Vite + TypeScript init","subtask":"Tailwind CSS + shadcn/ui scaffold","description":"npm create vite; Tailwind config; shadcn-ui init; path aliases in vite.config.ts; global index.css with design tokens","owner":"E. Norvaisas","estH":0.25,"spentH":0.27,"project":"Linas RAG"},
+  {"id":"R-003","phase":"Project setup & architecture","task":"Firebase + GCP project config","subtask":"Service account keys + .env.example files","description":"Firebase project creation; Firestore + Storage rules; GCP project with Vertex AI + Discovery Engine APIs enabled; .env.example for both Backas and Frontas","owner":"E. Norvaisas","estH":0.20,"spentH":0.22,"project":"Linas RAG"},
+  {"id":"R-004","phase":"Backend API — chat, RAG & auth","task":"FastAPI app + CORS + auth middleware","subtask":"Firebase token verification middleware","description":"FastAPI app factory; CORS policy for frontend URL; HTTPBearer extraction; firebase-admin ID-token verify; user role resolver from Firestore users collection","owner":"E. Norvaisas","estH":0.35,"spentH":0.40,"project":"Linas RAG"},
+  {"id":"R-005","phase":"Backend API — chat, RAG & auth","task":"User role + permission model","subtask":"roles: viewer / editor / admin / super_admin","description":"Firestore users/{uid} schema; role field; has_permission() helper; dependency injection for FastAPI route guards; super_admin bypass","owner":"E. Norvaisas","estH":0.30,"spentH":0.33,"project":"Linas RAG"},
+  {"id":"R-006","phase":"Backend API — chat, RAG & auth","task":"Direct AI chat endpoint","subtask":"POST /api/chat — Gemini streaming","description":"Gemini 1.5 Pro/Flash model call via google-cloud-aiplatform; streaming SSE response; system prompt injection; conversation history from Firestore","owner":"E. Norvaisas","estH":0.35,"spentH":0.38,"project":"Linas RAG"},
+  {"id":"R-007","phase":"Backend API — chat, RAG & auth","task":"RAG agent endpoint","subtask":"POST /api/rag-chat — ADK + Vertex RAG","description":"Google ADK agent wrapping Vertex AI RAG Engine retrieval; retrieve relevant chunks; pass context to Gemini; return answer + source citations; streaming","owner":"E. Norvaisas","estH":0.45,"spentH":0.58,"project":"Linas RAG"},
+  {"id":"R-008","phase":"Backend API — chat, RAG & auth","task":"Conversation history CRUD","subtask":"Firestore conversations collection","description":"GET/POST/DELETE /api/conversations; per-user scoped queries; message append; Firestore composite indexes (user_id + timestamp); conversation title inference","owner":"E. Norvaisas","estH":0.35,"spentH":0.38,"project":"Linas RAG"},
+  {"id":"R-009","phase":"Backend API — chat, RAG & auth","task":"File upload + GCS storage endpoint","subtask":"POST /api/files/upload — multipart","description":"Multipart form file upload; GCS bucket put_object; signed URL generation for preview; file metadata saved to Firestore; mime-type validation","owner":"E. Norvaisas","estH":0.30,"spentH":0.32,"project":"Linas RAG"},
+  {"id":"R-010","phase":"Backend API — chat, RAG & auth","task":"Statistics / analytics endpoint","subtask":"GET /api/stats — usage aggregation","description":"Query Firestore for message counts, token usage, conversation durations; aggregate by user and by data source; return JSON for StatisticsView","owner":"E. Norvaisas","estH":0.10,"spentH":0.10,"project":"Linas RAG"},
+  {"id":"R-011","phase":"Backend — Vertex AI data store","task":"Discovery Engine DataStore CRUD","subtask":"Create / list / delete via Discovery Engine API","description":"google-cloud-discoveryengine client; create_data_store(); list_data_stores(); delete_data_store(); error handling for IAM / quota; exposed as /api/datastores/*","owner":"E. Norvaisas","estH":0.30,"spentH":0.35,"project":"Linas RAG"},
+  {"id":"R-012","phase":"Backend — Vertex AI data store","task":"Document import trigger endpoints","subtask":"trigger_import.py + trigger_import_batch.py","description":"Trigger GCS-bucket import into Vertex AI corpus; batch variant for large buckets; poll import operation status; check_import_status.py helper","owner":"E. Norvaisas","estH":0.25,"spentH":0.28,"project":"Linas RAG"},
+  {"id":"R-013","phase":"Backend — Vertex AI data store","task":"Google Drive mirror sync","subtask":"run_sync_local.py + run_sync_direct.py","description":"OAuth2 Drive API; list files in configured folder; download changed files; push to GCS; track sync state in Firestore; 2738-line run_sync_local and 1148-line direct variant","owner":"E. Norvaisas","estH":0.28,"spentH":0.32,"project":"Linas RAG"},
+  {"id":"R-014","phase":"Backend — Vertex AI data store","task":"Bucket operations & permissions","subtask":"migrate_bucket + fix_bucket_permissions","description":"migrate_bucket.py (3778 lines): copy objects between GCS buckets; fix_bucket_permissions.py: set IAM bindings; check_drive_ds_layers.py: verify layer structure","owner":"E. Norvaisas","estH":0.17,"spentH":0.18,"project":"Linas RAG"},
+  {"id":"R-015","phase":"Frontend — chat interface (RAG)","task":"ChatContext.tsx — state & history","subtask":"Conversation list, active chat, mode switch","description":"52 KB context; manages conversation list, active messages, streaming state, chat mode (direct AI vs RAG), selected data source; Firestore real-time listener","owner":"E. Norvaisas","estH":0.45,"spentH":0.50,"project":"Linas RAG"},
+  {"id":"R-016","phase":"Frontend — chat interface (RAG)","task":"ChatInput.tsx — rich input + file upload","subtask":"File attach, mode select, send logic","description":"57 KB; textarea with auto-resize; file drag-drop + picker (file-upload.tsx 37 KB); chat mode toggle (AI / RAG); custom instructions button; send / stop streaming","owner":"E. Norvaisas","estH":0.42,"spentH":0.50,"project":"Linas RAG"},
+  {"id":"R-017","phase":"Frontend — chat interface (RAG)","task":"ChatMessage.tsx — rich message rendering","subtask":"Citations, source cards, markdown, code blocks","description":"51 KB; markdown rendered; inline source citation badges; expandable sources; file preview trigger; streaming cursor animation; copy-to-clipboard; agent plan toggle","owner":"E. Norvaisas","estH":0.40,"spentH":0.45,"project":"Linas RAG"},
+  {"id":"R-018","phase":"Frontend — chat interface (RAG)","task":"MessageList.tsx — list + auto-scroll","subtask":"Virtual scroll, load more, scroll anchor","description":"16 KB; auto-scroll to latest message; preserve scroll on history load; load-more pagination; typing indicator; empty state; grouping by date","owner":"E. Norvaisas","estH":0.25,"spentH":0.28,"project":"Linas RAG"},
+  {"id":"R-019","phase":"Frontend — chat interface (RAG)","task":"ChatSourcesPanel.tsx — citation sidebar","subtask":"Source document cards with excerpt","description":"13 KB; slide-in panel; lists RAG-returned source documents with title, URL, excerpt, confidence score; links to FilePreviewModal; collapse/expand","owner":"E. Norvaisas","estH":0.25,"spentH":0.27,"project":"Linas RAG"},
+  {"id":"R-020","phase":"Frontend — chat interface (RAG)","task":"FilePreviewModal.tsx — document viewer","subtask":"In-app file preview overlay","description":"11 KB; full-screen modal; renders PDF in iframe or image tag; filename + metadata header; download link; triggered from source citations in chat messages","owner":"E. Norvaisas","estH":0.20,"spentH":0.22,"project":"Linas RAG"},
+  {"id":"R-021","phase":"Frontend — chat interface (RAG)","task":"ChatInterface.tsx — composition shell","subtask":"Compose all chat sub-components","description":"6 KB orchestration component; renders Sidebar + ChatInput + MessageList + ChatSourcesPanel; manages panel visibility; keyboard shortcut bindings","owner":"E. Norvaisas","estH":0.13,"spentH":0.13,"project":"Linas RAG"},
+  {"id":"R-022","phase":"Frontend — data sources mgmt","task":"DataSourceList.tsx — full CRUD list","subtask":"GCS / Drive / crawler sources with status","description":"45 KB; table of configured data sources; status badge (syncing / ready / error); sync-now button; edit / delete; filter by type; pagination; Firestore real-time listener","owner":"E. Norvaisas","estH":0.40,"spentH":0.44,"project":"Linas RAG"},
+  {"id":"R-023","phase":"Frontend — data sources mgmt","task":"DataSourceDocumentsModal.tsx","subtask":"Browse + delete indexed documents","description":"51 KB; paginated document list within a data source; document metadata (name, size, indexed date); delete individual document; re-index button; search within corpus","owner":"E. Norvaisas","estH":0.35,"spentH":0.40,"project":"Linas RAG"},
+  {"id":"R-024","phase":"Frontend — data sources mgmt","task":"DataSourceDetail.tsx — detail + sync view","subtask":"Sync settings, last sync, error log","description":"17 KB; detail panel with sync schedule, last-synced timestamp, error log; manual sync trigger; linked Vertex DataStore name; document count badge","owner":"E. Norvaisas","estH":0.25,"spentH":0.28,"project":"Linas RAG"},
+  {"id":"R-025","phase":"Frontend — data sources mgmt","task":"AddDataSourceModal.tsx","subtask":"GCS bucket / Google Drive / web crawler wizard","description":"7 KB; multi-step modal; source type picker; connection fields per type; test connection button; creates Firestore record + optionally creates Vertex DataStore","owner":"E. Norvaisas","estH":0.15,"spentH":0.15,"project":"Linas RAG"},
+  {"id":"R-026","phase":"Frontend — data sources mgmt","task":"CreateVertexDataStoreModal.tsx","subtask":"Create + configure Vertex AI DataStore","description":"20 KB; select schema type (unstructured / structured); GCS path; import format picker; calls POST /api/datastores; progress tracking","owner":"E. Norvaisas","estH":0.15,"spentH":0.18,"project":"Linas RAG"},
+  {"id":"R-027","phase":"Frontend — AI training & agent","task":"AITrainingSidebar.tsx — training data CRUD","subtask":"Instruction sets, grounding examples, personas","description":"61 KB; largest component; manages AI training configurations (instruction sets, example Q&A pairs, personas); save / load / delete; preview in chat; Firestore-backed","owner":"E. Norvaisas","estH":0.40,"spentH":0.45,"project":"Linas RAG"},
+  {"id":"R-028","phase":"Frontend — AI training & agent","task":"AITrainingModal.tsx — config submit","subtask":"Training config form + activation flow","description":"18 KB; full form for active training config; name, description, base model selection, custom system prompt; submit activates config; validation; toast feedback","owner":"E. Norvaisas","estH":0.25,"spentH":0.28,"project":"Linas RAG"},
+  {"id":"R-029","phase":"Frontend — AI training & agent","task":"agent-plan.tsx — ADK plan display","subtask":"Render ADK agent execution steps","description":"26 KB; parses ADK agent plan from streaming response; renders step-by-step tool calls, sub-agent invocations, retrieval events; expandable tree; execution time badges","owner":"E. Norvaisas","estH":0.22,"spentH":0.25,"project":"Linas RAG"},
+  {"id":"R-030","phase":"Frontend — AI training & agent","task":"CustomInstructionsModal.tsx","subtask":"Per-user custom system prompt override","description":"7 KB; user-level custom instruction editor; appended to system prompt; persisted per user in Firestore; reset to default option; character count","owner":"E. Norvaisas","estH":0.13,"spentH":0.13,"project":"Linas RAG"},
+  {"id":"R-031","phase":"Frontend — auth & user mgmt","task":"AuthContext.tsx — Firebase auth","subtask":"Sign-in, sign-out, MFA, session state","description":"12 KB; Firebase auth state listener; MFA enrollment prompt; user profile load from Firestore; role hydration; redirect logic for pending/approved states","owner":"E. Norvaisas","estH":0.22,"spentH":0.24,"project":"Linas RAG"},
+  {"id":"R-032","phase":"Frontend — auth & user mgmt","task":"Login.tsx — login page","subtask":"Email/password + Google OAuth + MFA","description":"7 KB; email/password form; Google OAuth button; MFA TOTP prompt; error states (wrong password, account disabled); redirect after login","owner":"E. Norvaisas","estH":0.15,"spentH":0.15,"project":"Linas RAG"},
+  {"id":"R-033","phase":"Frontend — auth & user mgmt","task":"UserManagement.tsx — admin CRUD","subtask":"Invite, role-assign, suspend, delete users","description":"35 KB; admin-only view; paginated user table; invite by email; change role dropdown; suspend / reinstate; delete with confirmation; search by email / name","owner":"E. Norvaisas","estH":0.28,"spentH":0.32,"project":"Linas RAG"},
+  {"id":"R-034","phase":"Frontend — auth & user mgmt","task":"UserPermissionsModal.tsx","subtask":"Granular permission editor per user","description":"18 KB; per-data-source access controls; read / write / admin toggles; persist to Firestore user_permissions collection; diff view before save","owner":"E. Norvaisas","estH":0.15,"spentH":0.18,"project":"Linas RAG"},
+  {"id":"R-035","phase":"Frontend — statistics & settings","task":"StatisticsView.tsx — analytics dashboard","subtask":"Usage charts, message counts, token spend","description":"36 KB; Chart.js bar/line charts; messages per day, tokens per model, active users, top data sources; date-range picker; export CSV stub; admin vs personal views","owner":"E. Norvaisas","estH":0.35,"spentH":0.40,"project":"Linas RAG"},
+  {"id":"R-036","phase":"Frontend — statistics & settings","task":"DriveMirrorSyncSettingsModal.tsx","subtask":"Drive sync interval + folder config","description":"8 KB; configure Google Drive folder ID, sync interval (manual / hourly / daily), file-type filter; save triggers backend sync schedule update via /api/settings","owner":"E. Norvaisas","estH":0.20,"spentH":0.22,"project":"Linas RAG"},
+  {"id":"R-037","phase":"Frontend — statistics & settings","task":"Sidebar.tsx + App.tsx routing","subtask":"Nav links, active states, responsive collapse","description":"Sidebar 8 KB + App.tsx 5 KB; React Router 6 routes; lazy-loaded views; role-gated nav items (admin sections hidden for viewer); mobile hamburger","owner":"E. Norvaisas","estH":0.15,"spentH":0.15,"project":"Linas RAG"},
+  {"id":"R-038","phase":"Backend — user scripts (RAG)","task":"User creation scripts","subtask":"create_users_with_passwords + create_initial_users","description":"create_users_with_passwords.py (5 KB): bulk create Firebase users with set passwords; create_initial_users.py (5 KB): seed default admin + test accounts; Firestore profile sync","owner":"E. Norvaisas","estH":0.18,"spentH":0.18,"project":"Linas RAG"},
+  {"id":"R-039","phase":"Backend — user scripts (RAG)","task":"Role management + super admin scripts","subtask":"set_user_role / check_user_role / ensure_super_admin","description":"set_user_role.py (3 KB), check_user_role.py (3 KB), set_super_admin.py (2 KB), ensure_super_admin_user.py (7 KB): idempotent upsert of super-admin; custom claims","owner":"E. Norvaisas","estH":0.17,"spentH":0.18,"project":"Linas RAG"},
+  {"id":"R-040","phase":"Backend — user scripts (RAG)","task":"import_chat_history.py + init_firestore.py","subtask":"Data migration + initial schema setup","description":"import_chat_history.py (16 KB): parse CSV/JSON export -> Firestore conversations; init_firestore.py (4 KB): create required collections, default docs, indexes","owner":"E. Norvaisas","estH":0.15,"spentH":0.17,"project":"Linas RAG"},
+  {"id":"R-041","phase":"DevOps & Cloud Run (RAG)","task":"Dockerfile + .dockerignore + gcloudignore","subtask":"Multi-stage Python container build","description":"Backas/Dockerfile (776 bytes): python:3.11-slim base; pip install from requirements.txt; uvicorn CMD; .dockerignore excludes keys/, .env, __pycache__; .gcloudignore mirrors","owner":"E. Norvaisas","estH":0.18,"spentH":0.20,"project":"Linas RAG"},
+  {"id":"R-042","phase":"DevOps & Cloud Run (RAG)","task":"cloudrun.env.yaml + deploy-cloudrun.ps1","subtask":"Cloud Run service config + PowerShell deploy script","description":"cloudrun.env.yaml (1 KB): all env vars as secrets; deploy-cloudrun.ps1 (3 KB): gcloud run deploy; --set-env-vars; --allow-unauthenticated for API; service URL output","owner":"E. Norvaisas","estH":0.22,"spentH":0.25,"project":"Linas RAG"},
+  {"id":"R-043","phase":"DevOps & Cloud Run (RAG)","task":"firestore.indexes.json + security rules","subtask":"Composite indexes for conversations + users","description":"Composite indexes: conversations(user_id ASC, timestamp DESC), user_permissions(user_id, data_source_id); Firestore security rules for user-scoped reads","owner":"E. Norvaisas","estH":0.15,"spentH":0.15,"project":"Linas RAG"},
+  {"id":"R-044","phase":"DevOps & Cloud Run (RAG)","task":".env.example files (backend + frontend)","subtask":"Full variable documentation with comments","description":"Backas/.env.example (1 KB): GCP project, Vertex AI region, GCS bucket, Firebase service account path, Drive credentials; Frontas/.env.example: Firebase config + API URL","owner":"E. Norvaisas","estH":0.15,"spentH":0.15,"project":"Linas RAG"},
+  {"id":"R-045","phase":"i18n & documentation (RAG)","task":"translations.ts — LT/EN localisation","subtask":"61 KB full translations for all UI strings","description":"Lithuanian (primary) and English translations for all UI components; chat, data sources, user management, settings, error messages, tooltips; react-i18next integration","owner":"E. Norvaisas","estH":0.25,"spentH":0.25,"project":"Linas RAG"},
+  {"id":"R-046","phase":"i18n & documentation (RAG)","task":"NAUDOTOJO_VADOVAS.md — user manual","subtask":"51 KB full Lithuanian user guide","description":"Complete user manual: login, chat modes, data source setup, AI training, admin functions, statistics, troubleshooting; mirrored in app via UserManualModal.tsx","owner":"E. Norvaisas","estH":0.20,"spentH":0.20,"project":"Linas RAG"},
+  {"id":"R-047","phase":"i18n & documentation (RAG)","task":"TESTAVIMO_GIDAS + CLIENT_UPDATE_FULL + setup docs","subtask":"Testing guide, client notes, LOCALHOST_SETUP","description":"TESTAVIMO_GIDAS.md (14 KB): manual test scenarios; CLIENT_UPDATE_FULL.md (16 KB): change log for client; LOCALHOST_SETUP.md (10 KB) + QUICK_START.md + SETUP_SUMMARY.md","owner":"E. Norvaisas","estH":0.15,"spentH":0.15,"project":"Linas RAG"},
+  {"id":"R-048","phase":"Testing & hardening (RAG)","task":"Firebase auth issue investigation","subtask":"CRITICAL_FIREBASE_ISSUE + FIX_AUTH_ISSUE","description":"Firebase custom claims not propagating on token refresh; force token refresh after role change; FIX_AUTH_ISSUE.md documents getIdToken(true) pattern","owner":"E. Norvaisas","estH":0.18,"spentH":0.22,"project":"Linas RAG"},
+  {"id":"R-049","phase":"Testing & hardening (RAG)","task":"Configuration & database schema fixes","subtask":"CONFIGURATION_FIXED + DATABASE_SCHEMA_UPDATE","description":"CONFIGURATION_FIXED.md: env var ordering issue in Cloud Run; DATABASE_SCHEMA_UPDATE.md: Firestore schema migration for conversations v2 (added metadata field, updated indexes)","owner":"E. Norvaisas","estH":0.17,"spentH":0.20,"project":"Linas RAG"},
+  {"id":"R-050","phase":"Testing & hardening (RAG)","task":"Debug checklist + fixes validation","subtask":"DEBUG_CHECKLIST + FIXES_APPLIED + smoke tests","description":"DEBUG_CHECKLIST.md (6 KB): 30-point pre-deploy checklist; FIXES_APPLIED.md (4 KB): applied fixes log; manual smoke tests: login -> chat -> RAG -> upload -> admin","owner":"E. Norvaisas","estH":0.15,"spentH":0.17,"project":"Linas RAG"},
+
+  {"id":"S-001","phase":"Strategic session","task":"Strategy session — Vilnius on-site","subtask":"Full-day strategic planning session","description":"On-site strategic planning day in Vilnius: product roadmap alignment for OPPM Assistant and Linas RAG, go-to-market priorities, market positioning, team & partner coordination","owner":"E. Norvaisas","estH":8.00,"spentH":8.00,"project":"Strategic"},
+
+  {"id":"M-001","phase":"Multi-agent — backend","task":"root_agent.py — ADK orchestrator","subtask":"Root agent wiring all sub-agents via ADK","description":"root_agent.py (1 467 bytes): ADK root agent entry point; routes user requests to planner, retriever, solver sub-agents; handles fallback and error cases; streams final response","owner":"E. Norvaisas","estH":0.70,"spentH":0.70,"project":"LJA EV Asistentas"},
+  {"id":"M-002","phase":"Multi-agent — backend","task":"multi_tool_agent/ sub-agents","subtask":"baldu_pardavejas + tools integration","description":"multi_tool_agent/sub_agents/baldu_pardavejas: specialised sales-assistant sub-agent; ADK tool definitions; vertex_init.py (4 313 bytes): Vertex AI client initialisation shared across agents","owner":"E. Norvaisas","estH":0.70,"spentH":0.70,"project":"LJA EV Asistentas"},
+  {"id":"M-003","phase":"Multi-agent — backend","task":"agent_prototype/ pipeline","subtask":"planner · verifier · extractor · retriever · solver","description":"6-module pipeline: planner.py (task decomposition), extractor.py (entity extraction), retriever.py (RAG search), solver.py (answer generation), verifier.py (answer validation), formatter.py (output formatting); schemas.py (4 739 bytes) Pydantic models","owner":"E. Norvaisas","estH":1.00,"spentH":1.00,"project":"LJA EV Asistentas"},
+  {"id":"M-004","phase":"Multi-agent — backend","task":"router.py — agent API endpoints","subtask":"FastAPI routes for agent pipeline (19 KB)","description":"router.py (19 175 bytes): /api/agent/solve, /api/agent/extract, /api/agent/plan, /api/agent/verify; streaming SSE for step-by-step agent progress; error handling per sub-agent","owner":"E. Norvaisas","estH":0.80,"spentH":0.80,"project":"LJA EV Asistentas"},
+  {"id":"M-005","phase":"Multi-agent — frontend","task":"ExerciseSolver.tsx — UI agent wiring","subtask":"Frontend wired to agent streaming (39 KB)","description":"ExerciseSolver.tsx (39 480 bytes): exercise input form; sends to /api/agent/solve; renders step-by-step agent plan (planner → retriever → solver → verifier); animated progress; answer display with sources","owner":"E. Norvaisas","estH":0.80,"spentH":0.80,"project":"LJA EV Asistentas"},
+  {"id":"M-006","phase":"Multi-agent — frontend","task":"Agent streaming response in ChatContext","subtask":"SSE stream parsing + state updates","description":"ChatContext.tsx extended to handle agent-mode streaming: parse step events (PLAN / RETRIEVE / SOLVE / VERIFY); update UI progressively; ChatInput mode toggle: standard RAG vs agent-solve","owner":"E. Norvaisas","estH":0.50,"spentH":0.50,"project":"LJA EV Asistentas"},
+  {"id":"M-007","phase":"Multi-agent — testing","task":"test_pipeline.py + test_extraction.py","subtask":"Agent pipeline evaluation (19 KB total)","description":"test_pipeline.py (10 115 bytes): end-to-end agent pipeline tests; test_extraction.py (9 323 bytes): extractor unit tests; _test_state.py (1 631 bytes): agent state shape validation; run_agent_prototype.py: CLI runner","owner":"E. Norvaisas","estH":0.60,"spentH":0.60,"project":"LJA EV Asistentas"},
+  {"id":"M-008","phase":"Multi-agent — testing","task":"gold_set.jsonl eval dataset + scoring","subtask":"Ground-truth QA pairs + accuracy metrics","description":"gold_set.jsonl (2 914 bytes): 20 ground-truth question-answer pairs for Lithuanian EV regulations; accuracy scoring against gold set; logged to Firestore for tracking over iterations","owner":"E. Norvaisas","estH":0.40,"spentH":0.40,"project":"LJA EV Asistentas"},
+  {"id":"M-009","phase":"Multi-agent — testing","task":"search_datastore.py + firebase_client.py","subtask":"Data layer helpers for agent tools","description":"search_datastore.py (8 933 bytes): Vertex AI Search wrapper for retriever tool; firebase_client.py (8 444 bytes): Firestore CRUD helpers used by agents to persist context and session state","owner":"E. Norvaisas","estH":0.50,"spentH":0.50,"project":"LJA EV Asistentas"},
+
+  {"id":"X-001","phase":"Meetings & coordination","task":"Intelektextas — coordination meeting","subtask":"Requirements clarification + roadmap sync","description":"1-hour session with Intelektextas team: project requirements clarification, timeline review, technical constraints discussion, next-steps agreed","owner":"E. Norvaisas","estH":1.00,"spentH":1.00,"project":"Meetings"},
+  {"id":"X-002","phase":"Meetings & coordination","task":"Greta — project status review","subtask":"Status update + next-steps alignment","description":"1-hour meeting with Greta: current sprint status review, blocker discussion, deliverable priorities for following week aligned, action items documented","owner":"E. Norvaisas","estH":1.00,"spentH":1.00,"project":"Meetings"},
+
+  {"id":"N-001","phase":"n8n / Infrastructure","task":"n8n server — Cloud Run + Supabase","subtask":"Deploy n8n + connect Supabase Postgres","description":"Containerised n8n (Docker); deployed to Google Cloud Run; environment variables secured via Secret Manager; Supabase Postgres DB connection configured in n8n credentials; test workflow (HTTP trigger -> DB write -> response) verified end-to-end","owner":"E. Norvaisas","estH":2.00,"spentH":2.00,"project":"n8n / Infra"}
+]</script>
+
+<script>
+(function () {
+  const raw = document.getElementById('tasks-embedded').textContent;
+  const TASKS = JSON.parse(raw);
+
+  const PROJ_COLOR = { 'OPPM Assistant': '#2dd4bf', 'Linas RAG': '#818cf8', 'Strategic': '#fbbf24', 'LJA EV Asistentas': '#34d399', 'Meetings': '#94a3b8', 'n8n / Infra': '#fb923c' };
+  const PROJ_CLASS = { 'OPPM Assistant': 'oppm', 'Linas RAG': 'rag', 'Strategic': 'strat', 'LJA EV Asistentas': 'eva', 'Meetings': 'meet', 'n8n / Infra': 'n8nc' };
+
+  const charts = {};
+  const palette = ['#2dd4bf','#818cf8','#fbbf24','#38bdf8','#a78bfa','#fb7185','#4ade80','#f472b6','#94a3b8','#fb923c','#22d3ee','#c084fc','#e879f9','#86efac','#fcd34d','#67e8f9'];
+
+  const sum = (arr, fn) => arr.reduce((s, t) => s + fn(t), 0);
+
+  function projSummary() {
+    const projs = ['OPPM Assistant', 'Linas RAG', 'Strategic'];
+    projs.forEach(p => {
+      const rows = TASKS.filter(t => t.project === p);
+      const pfx = p === 'OPPM Assistant' ? 'oppm' : p === 'Linas RAG' ? 'rag' : 'strat';
+      const el = id => document.getElementById(`sc-${pfx}-${id}`);
+      if (el('est')) {
+        el('est').textContent = sum(rows, t => t.estH).toFixed(1);
+        el('act').textContent = sum(rows, t => t.spentH).toFixed(1);
+        if (el('tasks')) el('tasks').textContent = rows.length;
+      }
+    });
+  }
+
+  function filteredTasks() {
+    const proj    = document.getElementById('f-project').value;
+    const phase   = document.getElementById('f-phase').value;
+    const owner   = document.getElementById('f-owner').value;
+    const onlyOver= document.getElementById('f-over').checked;
+    const q       = document.getElementById('f-q').value.trim().toLowerCase();
+    return TASKS.filter(r => {
+      if (proj    && r.project !== proj)   return false;
+      if (phase   && r.phase   !== phase)  return false;
+      if (owner   && r.owner   !== owner)  return false;
+      if (onlyOver && r.spentH <= r.estH)  return false;
+      if (q) {
+        const blob = (r.task+' '+r.subtask+' '+r.description+' '+r.phase+' '+r.project).toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function applyWhatIf(rows) {
+    if (!document.getElementById('f-sim').checked) return rows.map(r => ({...r}));
+    const f = 1 + (Number(document.getElementById('f-sim-pct').value)||0) / 100;
+    return rows.map(r => ({...r, spentH: Math.round(r.spentH * f * 100) / 100}));
+  }
+
+  let sortKey = 'id', sortDir = 1;
+
+  function renderTable() {
+    let rows = applyWhatIf(filteredTasks());
+    rows = [...rows].sort((a, b) => {
+      if (sortKey === 'variance') return sortDir * ((a.spentH - a.estH) - (b.spentH - b.estH));
+      const av = a[sortKey] ?? '', bv = b[sortKey] ?? '';
+      if (typeof av === 'number') return sortDir * (av - bv);
+      return sortDir * String(av).localeCompare(String(bv));
+    });
+
+    const tbody = document.getElementById('task-body');
+    const tfoot = document.getElementById('task-foot');
+    tbody.innerHTML = '';
+
+    const totalEst   = sum(rows, r => r.estH);
+    const totalSpent = sum(rows, r => r.spentH);
+    const overCount  = rows.filter(r => r.spentH > r.estH).length;
+
+    for (const r of rows) {
+      const over = r.spentH > r.estH;
+      const v = (r.spentH - r.estH).toFixed(2);
+      const pc = PROJ_CLASS[r.project] || 'oppm';
+      const tr = document.createElement('tr');
+      if (over) tr.className = 'over';
+      tr.innerHTML = `
+        <td><code style="font-size:0.7rem;color:var(--muted)">${r.id}</code></td>
+        <td><span class="proj-dot ${pc}"></span><span style="font-size:0.75rem">${r.project}</span></td>
+        <td><span class="phase-tag">${r.phase.replace(/\(.*?\)/g,'').trim().slice(0,28)}</span></td>
+        <td style="max-width:9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.task}">${r.task}</td>
+        <td style="max-width:10rem;color:var(--muted);font-size:0.74rem">${r.subtask}</td>
+        <td style="max-width:16rem;font-size:0.73rem;color:var(--muted)">${r.description}</td>
+        <td>${r.owner}</td>
+        <td class="num">${r.estH.toFixed(2)}</td>
+        <td class="num">${r.spentH.toFixed(2)}</td>
+        <td class="num">${over?'+':''}${v}</td>
+        <td><span class="badge ${over?'bad':'ok'}">${over?'Over':'OK'}</span></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    tfoot.innerHTML = `<tr style="font-weight:700;border-top:2px solid #334155">
+      <td colspan="7">TOTAL — ${rows.length} tasks · ${overCount} over-budget</td>
+      <td class="num">${totalEst.toFixed(2)}</td>
+      <td class="num">${totalSpent.toFixed(2)}</td>
+      <td class="num">${totalSpent>totalEst?'+':''}${(totalSpent-totalEst).toFixed(2)}</td>
+      <td></td>
+    </tr>`;
+
+    renderKPIs(rows, totalEst, totalSpent, overCount);
+  }
+
+  function computeOPI(rows) {
+    if (!rows.length) return { opi: 0, onTime: 0, sched: 0 };
+    const onTime = rows.filter(r => r.spentH <= r.estH).length / rows.length;
+    const se = sum(rows, r => r.estH), ss = sum(rows, r => r.spentH);
+    const sched = se > 0 ? Math.min(1, se / ss) : 0;
+    const overRatios = rows.map(r => r.estH > 0 ? Math.max(0, r.spentH - r.estH) / r.estH : 0);
+    const meanOver = overRatios.reduce((a, b) => a + b, 0) / rows.length;
+    const opi = Math.round(100 * (0.45 * onTime + 0.35 * sched + 0.2 * (1 - Math.min(1, meanOver))));
+    return { opi: Math.max(0, Math.min(100, opi)), onTime, sched, meanOver };
+  }
+
+  function renderKPIs(rows, totalEst, totalSpent, overCount) {
+    const { opi, onTime, sched } = computeOPI(rows);
+    const variance = ((totalSpent - totalEst) / totalEst * 100).toFixed(1);
+    document.getElementById('kpi-row').innerHTML = `
+      <div class="kpi"><div class="label">Total est</div><div class="value">${totalEst.toFixed(1)} h</div><div class="sub">All projects</div></div>
+      <div class="kpi ${totalSpent > totalEst ? 'danger' : 'ok'}"><div class="label">Total actual</div><div class="value">${totalSpent.toFixed(1)} h</div><div class="sub">${totalSpent > totalEst ? '▲ over' : '▼ under'}</div></div>
+      <div class="kpi ${Math.abs(parseFloat(variance)) > 15 ? 'danger' : 'ok'}"><div class="label">Variance</div><div class="value">${variance > 0 ? '+' : ''}${variance}%</div><div class="sub">actual vs est</div></div>
+      <div class="kpi oppm-k"><div class="label">OPPM h</div><div class="value" id="kpi-oppm">–</div><div class="sub">est · actual</div></div>
+      <div class="kpi rag-k"><div class="label">RAG h</div><div class="value" id="kpi-rag">–</div><div class="sub">est · actual</div></div>
+      <div class="kpi gold"><div class="label">Vilnius session</div><div class="value">8.0 h</div><div class="sub">full day on-site</div></div>
+      <div class="kpi"><div class="label">Tasks</div><div class="value">${rows.length}</div><div class="sub">${overCount} over-budget</div></div>
+      <div class="kpi ${overCount > rows.length * 0.3 ? 'danger' : 'ok'}"><div class="label">On-time rate</div><div class="value">${(onTime * 100).toFixed(0)}%</div><div class="sub">within estimate</div></div>
+      <div class="kpi ${sched < 0.85 ? 'danger' : 'ok'}"><div class="label">Schedule ratio</div><div class="value">${(sched * 100).toFixed(0)}%</div><div class="sub">Σest / Σactual</div></div>
+      <div class="kpi ${opi < 70 ? 'danger' : opi < 85 ? 'warn' : 'ok'}"><div class="label">OPI</div><div class="value">${opi}</div><div class="sub">owner perf index</div></div>
+    `;
+    // project KPIs
+    ['OPPM Assistant','Linas RAG'].forEach(p => {
+      const pr = rows.filter(t => t.project === p);
+      const pe = sum(pr, t => t.estH).toFixed(1), pa = sum(pr, t => t.spentH).toFixed(1);
+      const el = document.getElementById(p === 'OPPM Assistant' ? 'kpi-oppm' : 'kpi-rag');
+      if (el) el.textContent = `${pe} · ${pa}`;
+    });
+  }
+
+  function renderOwnerTable() {
+    const rows = applyWhatIf(filteredTasks());
+    const m = {};
+    for (const r of rows) {
+      if (!m[r.owner]) m[r.owner] = { tasks: [], est: 0, spent: 0 };
+      m[r.owner].tasks.push(r);
+      m[r.owner].est += r.estH;
+      m[r.owner].spent += r.spentH;
+    }
+    const tbody = document.getElementById('owner-body');
+    tbody.innerHTML = '';
+    for (const [owner, info] of Object.entries(m).sort((a,b) => b[1].est - a[1].est)) {
+      const over = info.tasks.filter(r => r.spentH > r.estH).length;
+      const { opi } = computeOPI(info.tasks);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${owner}</td><td class="num">${info.tasks.length}</td><td class="num">${info.est.toFixed(2)}</td><td class="num">${info.spent.toFixed(2)}</td><td class="num">${over}</td>
+        <td class="num"><strong style="color:${opi>=85?'var(--ok)':opi>=70?'var(--warn)':'var(--danger)'}">${opi}</strong></td>`;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function buildChart(id, type, labels, data, colors, fmt) {
+    if (charts[id]) charts[id].destroy();
+    charts[id] = new Chart(document.getElementById(id).getContext('2d'), {
+      type,
+      data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1, borderColor: '#0a0f1e' }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 11, padding: 7 } },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${Number(ctx.raw).toFixed(2)} h` } }
+        }
+      }
+    });
+  }
+
+  function buildBarChart(id, labels, datasets) {
+    if (charts[id]) charts[id].destroy();
+    charts[id] = new Chart(document.getElementById(id).getContext('2d'), {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+        plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 12 } },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${Number(ctx.raw).toFixed(1)} h` } }
+        },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: '#1e293b' } },
+          y: { stacked: true, ticks: { color: '#94a3b8', font: { size: 10 } } }
+        }
+      }
+    });
+  }
+
+  function renderCharts() {
+    const scopeToFilter = document.getElementById('f-charts-scope').checked;
+    const src = scopeToFilter ? filteredTasks() : TASKS;
+
+    // Project pie
+    const projs = [...new Set(src.map(t => t.project))];
+    buildChart('pieProject', 'doughnut', projs, projs.map(p => sum(src.filter(t=>t.project===p), t=>t.estH)), projs.map(p=>PROJ_COLOR[p]||'#888'));
+
+    // Phase pie
+    const phases = [...new Set(src.map(t => t.phase))];
+    buildChart('piePhase', 'doughnut', phases.map(p=>p.replace(/\(.*?\)/g,'').trim().slice(0,22)), phases.map(p => sum(src.filter(t=>t.phase===p), t=>t.estH)), phases.map((_,i) => palette[i%palette.length]));
+
+    // Variance pie
+    const onT = src.filter(r=>r.spentH<=r.estH).length;
+    buildChart('pieVariance', 'doughnut', ['On-time','Over-budget'], [onT, src.length-onT], ['#4ade80','#f87171']);
+
+    // OPPM phase actual
+    const oppmSrc = src.filter(t=>t.project==='OPPM Assistant');
+    const oppmPhases = [...new Set(oppmSrc.map(t=>t.phase))];
+    buildChart('pieOppmPhase', 'doughnut', oppmPhases.map(p=>p.replace(/\(.*?\)/g,'').trim().slice(0,22)), oppmPhases.map(p=>sum(oppmSrc.filter(t=>t.phase===p),t=>t.spentH)), oppmPhases.map((_,i)=>palette[i%palette.length]));
+
+    // Stacked bar: est vs actual per project
+    buildBarChart('weekBar',
+      ['Est','Actual'],
+      [
+        { label: 'OPPM Assistant', data: [sum(src.filter(t=>t.project==='OPPM Assistant'),t=>t.estH), sum(src.filter(t=>t.project==='OPPM Assistant'),t=>t.spentH)], backgroundColor: 'rgba(45,212,191,0.75)' },
+        { label: 'Linas RAG',      data: [sum(src.filter(t=>t.project==='Linas RAG'),t=>t.estH),      sum(src.filter(t=>t.project==='Linas RAG'),t=>t.spentH)],      backgroundColor: 'rgba(129,140,248,0.75)' },
+        { label: 'Strategic',      data: [sum(src.filter(t=>t.project==='Strategic'),t=>t.estH),      sum(src.filter(t=>t.project==='Strategic'),t=>t.spentH)],      backgroundColor: 'rgba(251,191,36,0.75)' },
+      ]
+    );
+  }
+
+  function populateFilters() {
+    const projs  = [...new Set(TASKS.map(r=>r.project))];
+    const phases = [...new Set(TASKS.map(r=>r.phase))];
+    const owners = [...new Set(TASKS.map(r=>r.owner))];
+    const add = (selId, items) => {
+      const sel = document.getElementById(selId);
+      items.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
+    };
+    add('f-project', projs);
+    add('f-phase',   phases);
+    add('f-owner',   owners);
+  }
+
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const k = th.dataset.sort;
+      if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = 1; }
+      renderTable();
+    });
+  });
+
+  ['f-project','f-phase','f-owner','f-over','f-q','f-sim','f-sim-pct','f-charts-scope'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('change', () => { renderTable(); renderOwnerTable(); renderCharts(); });
+    if (id === 'f-q') el.addEventListener('input', () => { renderTable(); renderOwnerTable(); renderCharts(); });
+  });
+
+  populateFilters();
+  projSummary();
+  renderTable();
+  renderOwnerTable();
+  renderCharts();
+})();
+</script>
+</body>
+</html>

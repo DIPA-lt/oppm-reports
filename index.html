@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OPPM Assistant — Reports &amp; Plans</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border: #334155;
+      --accent: #38bdf8;
+      --ok: #4ade80;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: linear-gradient(160deg, #0d1f3c 0%, #0a0f1e 45%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.65rem; font-weight: 800; }
+    .sub { color: var(--muted); font-size: 0.88rem; margin: 0 0 2rem; }
+    section { margin-bottom: 2rem; }
+    h2 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 0.75rem;
+    }
+    ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+    a.card {
+      display: block;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    a.card:hover { border-color: var(--accent); background: rgba(56,189,248,0.06); }
+    a.card strong { display: block; font-size: 0.92rem; margin-bottom: 0.2rem; }
+    a.card span { font-size: 0.78rem; color: var(--muted); }
+    a.card.featured { border-color: rgba(74,222,128,0.35); }
+    a.card.featured strong { color: var(--ok); }
+    footer { margin-top: 2.5rem; font-size: 0.73rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Reports &amp; plans</h1>
+    <p class="sub">DIPA · OPPM Assistant internal register (read-only)</p>
+
+    <section>
+      <h2>Latest</h2>
+      <ul>
+        <li>
+          <a class="card featured" href="priority-plan-jun02-jun15-2026.html">
+            <strong>Priority plan — 2–8 Jun delivered · 8–15 Jun KPI</strong>
+            <span>Eimantas Norvaišas · Linas MVP, EU project, OPPM fixes, DIPA RAG status</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Plans</h2>
+      <ul>
+        <li>
+          <a class="card" href="priority-plan-jun01-jun07-2026.html">
+            <strong>Priority plan — 1–7 June 2026</strong>
+            <span>Weekly capacity plan</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Timesheets</h2>
+      <ul>
+        <li><a class="card" href="timesheet-march-2026.html"><strong>March 2026</strong><span>144 h</span></a></li>
+        <li><a class="card" href="timesheet-april-2026.html"><strong>April 2026</strong><span>138 h</span></a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Invoices</h2>
+      <ul>
+        <li><a class="card" href="invoice-march-2026.html"><strong>March 2026</strong><span>S2026 Nr. 3</span></a></li>
+        <li><a class="card" href="invoice-april-2026.html"><strong>April 2026</strong><span>S2026 Nr. 4</span></a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Weekly delivery reports</h2>
+      <ul>
+        <li><a class="card" href="weekly-report-apr27-may04.html"><strong>27 Apr – 4 May 2026</strong></a></li>
+        <li><a class="card" href="weekly-report-may04-may11.html"><strong>4–11 May 2026</strong></a></li>
+        <li><a class="card" href="weekly-report-may11-may18.html"><strong>11–18 May 2026</strong></a></li>
+      </ul>
+    </section>
+
+    <footer>Published via GitHub Pages · DIPA-lt/OPPM-Assistant</footer>
+  </div>
+</body>
+</html>

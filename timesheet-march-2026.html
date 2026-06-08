@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task register — March 2026</title>
+  <style>
+    :root { --bg:#0a0f1e; --muted:#94a3b8; --text:#f1f5f9; --border:#334155; --ok:#4ade80; --accent:#38bdf8; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+    header { padding:1.5rem 2rem; border-bottom:1px solid var(--border); background:linear-gradient(140deg,#0d1f3c,#0a0f1e); }
+    header h1 { margin:0 0 .35rem; font-size:1.45rem; font-weight:800; }
+    header p { margin:0; color:var(--muted); font-size:.85rem; }
+    .total { display:inline-block; margin-top:.75rem; padding:.35rem .85rem; border-radius:999px; font-weight:700; color:var(--ok); background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.3); }
+    main { padding:1.25rem 2rem 2.5rem; max-width:1100px; margin:0 auto; }
+    .table-wrap { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    table { width:100%; border-collapse:collapse; font-size:.8rem; }
+    th, td { padding:.55rem .7rem; border-bottom:1px solid var(--border); vertical-align:top; }
+    th { background:#070c17; text-align:left; font-size:.68rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+    td.desc { color:#cbd5e1; font-size:.78rem; line-height:1.55; }
+    td.task { font-weight:600; min-width:220px; }
+    td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; font-weight:700; width:72px; }
+    tr.data:hover td { background:rgba(255,255,255,.02); }
+    tfoot td { font-weight:800; background:#070c17; }
+    footer { padding:1rem 2rem; color:var(--muted); font-size:.73rem; border-top:1px solid var(--border); }
+    @media print { body { background:#fff; color:#111; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Task register — March 2026</h1>
+    <p>E. Norvaisas</p>
+    <span class="total">144 h total · 130 line items · March 2026</span>
+  </header>
+  <main>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task</th><th>Description</th><th class="num">Hours</th></tr></thead>
+        <tbody id="body"></tbody>
+        <tfoot><tr><td colspan="2">March 2026 total</td><td class="num" id="foot-total">144</td></tr></tfoot>
+      </table>
+    </div>
+  </main>
+  <footer>March 2026 · internal register</footer>
+  <script>
+    const ALL = [
+  {
+    "task": "Intelektex communication",
+    "description": "",
+    "hours": 6.5
+  },
+  {
+    "task": "DIPA communication",
+    "description": "",
+    "hours": 4
+  },
+  {
+    "task": "Corpus isolation schema",
+    "description": "Firestore + Vertex store layout for curriculum, exercises, and admin corpora.",
+    "hours": 0.75
+  },
+  {
+    "task": "Retrieval router rules",
+    "description": "Query classifier and corpus selector before agent handoff.",
+    "hours": 0.75
+  },
+  {
+    "task": "Citation contract",
+    "description": "Grounding metadata shape shared across chat and admin surfaces.",
+    "hours": 0.75
+  },
+  {
+    "task": "Integration smoke tests",
+    "description": "Cross-corpus retrieval checks on sample Lithuanian queries.",
+    "hours": 0.75
+  },
+  {
+    "task": "Cross-agent context envelope",
+    "description": "Shared thread metadata passed between material and curriculum specialists.",
+    "hours": 0.75
+  },
+  {
+    "task": "GCS ingestion paths",
+    "description": "Bucket layout, MIME filters, and upload validation for PDF sources.",
+    "hours": 0.5
+  },
+  {
+    "task": "Index provisioning scripts",
+    "description": "CLI to create, rebuild, and verify Vertex AI Search data stores.",
+    "hours": 0.5
+  },
+  {
+    "task": "Corpus health endpoint",
+    "description": "Backend probe for index readiness and document counts.",
+    "hours": 0.5
+  },
+  {
+    "task": "Ingestion error logging",
+    "description": "Structured failures for unsupported files and OCR gaps.",
+    "hours": 0.5
+  },
+  {
+    "task": "Batch reindex worker",
+    "description": "Queue-driven full corpus rebuild with progress webhooks.",
+    "hours": 1.5
+  },
+  {
+    "task": "SSE client hook",
+    "description": "ReadableStream parser with abort and reconnect handling.",
+    "hours": 0.5
+  },
+  {
+    "task": "Citation panel component",
+    "description": "Expandable source list with page/snippet preview.",
+    "hours": 0.5
+  },
+  {
+    "task": "Thread persistence",
+    "description": "Firestore message batching and optimistic UI states.",
+    "hours": 0.5
+  },
+  {
+    "task": "Stream error boundaries",
+    "description": "User-facing fallback when model or retrieval fails mid-token.",
+    "hours": 0.5
+  },
+  {
+    "task": "Typing indicator & token buffer",
+    "description": "Smooth partial render during high-latency retrieval.",
+    "hours": 0.5
+  },
+  {
+    "task": "Step detection heuristics",
+    "description": "Regex + LLM fallback for wizard stage classification.",
+    "hours": 0.75
+  },
+  {
+    "task": "SMART objective validator",
+    "description": "Server-side checks before matrix slice requests.",
+    "hours": 0.75
+  },
+  {
+    "task": "Lithuanian prompt templates",
+    "description": "Per-step system prompts and few-shot examples.",
+    "hours": 0.75
+  },
+  {
+    "task": "Wizard resume logic",
+    "description": "Restore partial dashboard state after session refresh.",
+    "hours": 0.75
+  },
+  {
+    "task": "Step progress UI component",
+    "description": "Visual OPPM stage indicator synced to detected step.",
+    "hours": 1.5
+  },
+  {
+    "task": "Task merge by ID",
+    "description": "Monotonic append for tasks, owners, and objectives arrays.",
+    "hours": 0.75
+  },
+  {
+    "task": "Truncation guard",
+    "description": "Detect slice overflow and preserve earliest stable rows.",
+    "hours": 0.75
+  },
+  {
+    "task": "Merge unit tests",
+    "description": "Regression cases for conflicting slice payloads.",
+    "hours": 0.75
+  },
+  {
+    "task": "Objective dedup pass",
+    "description": "Collapse near-duplicate SMART rows from overlapping slices.",
+    "hours": 1
+  },
+  {
+    "task": "Protected route layout",
+    "description": "Auth gate and role-aware sidebar sections.",
+    "hours": 1
+  },
+  {
+    "task": "Profile settings scaffold",
+    "description": "Locale, notification, and account preference stubs.",
+    "hours": 1.25
+  },
+  {
+    "task": "Material vs curriculum routes",
+    "description": "Intent classifier thresholds and fallbacks.",
+    "hours": 0.25
+  },
+  {
+    "task": "Tool declaration schema",
+    "description": "Shared OpenAPI-style tool defs for specialists.",
+    "hours": 0.25
+  },
+  {
+    "task": "Authorized domains list",
+    "description": "Firebase console vs production URL audit.",
+    "hours": 0.5
+  },
+  {
+    "task": "OOB template review",
+    "description": "Password reset and verify-email HTML links.",
+    "hours": 0.75
+  },
+  {
+    "task": "Multi-tenant project rules",
+    "description": "Company-scoped read/write for dashboards.",
+    "hours": 0.5
+  },
+  {
+    "task": "Index diff review",
+    "description": "Composite indexes for group and people queries.",
+    "hours": 0.75
+  },
+  {
+    "task": "FastAPI timeout middleware",
+    "description": "Extend retrieval budget with user-visible countdown.",
+    "hours": 0.25
+  },
+  {
+    "task": "Retry toast UX",
+    "description": "One-click resend without losing thread context.",
+    "hours": 0.25
+  },
+  {
+    "task": "Auth refresh listener",
+    "description": "Detect expired ID token while admin tab idle.",
+    "hours": 0.75
+  },
+  {
+    "task": "Re-login modal UX",
+    "description": "Preserve unsaved form state where possible.",
+    "hours": 0.75
+  },
+  {
+    "task": "Intelektex communication",
+    "description": "",
+    "hours": 6.25
+  },
+  {
+    "task": "DIPA communication",
+    "description": "",
+    "hours": 4
+  },
+  {
+    "task": "DIPA strategic session",
+    "description": "Live session with DIPA — company KPIs and future ideas.",
+    "hours": 7.75
+  },
+  {
+    "task": "Image upload pipeline",
+    "description": "Multipart handling and Vision preprocessing for worksheets.",
+    "hours": 1
+  },
+  {
+    "task": "Multi-step prompt chain",
+    "description": "Structured solution format with intermediate reasoning blocks.",
+    "hours": 1
+  },
+  {
+    "task": "STEM output validator",
+    "description": "LaTeX/Markdown sanitizer for math-heavy responses.",
+    "hours": 1
+  },
+  {
+    "task": "Failure recovery prompts",
+    "description": "Retry path when OCR or parsing returns low confidence.",
+    "hours": 1
+  },
+  {
+    "task": "Worksheet crop preprocessing",
+    "description": "Auto-trim margins and deskew before Vision OCR call.",
+    "hours": 1.75
+  },
+  {
+    "task": "Folder mapping config",
+    "description": "Admin UI for shared-drive to corpus bindings.",
+    "hours": 0.75
+  },
+  {
+    "task": "Scheduled sync worker",
+    "description": "Cloud Run job with delta detection and dedup hash.",
+    "hours": 0.75
+  },
+  {
+    "task": "Sync status API",
+    "description": "Last-run timestamps, error counts, and manual re-trigger.",
+    "hours": 0.75
+  },
+  {
+    "task": "Permission-denied handler",
+    "description": "Skip and log folders lacking service-account access.",
+    "hours": 1.25
+  },
+  {
+    "task": "Invite email flow",
+    "description": "Tokenised signup links tied to organisation roles.",
+    "hours": 1
+  },
+  {
+    "task": "Role matrix UI",
+    "description": "Admin vs user vs corpus-manager permission toggles.",
+    "hours": 1
+  },
+  {
+    "task": "Bulk CSV import",
+    "description": "Validated batch user creation with error report export.",
+    "hours": 1.25
+  },
+  {
+    "task": "Date redistribution",
+    "description": "Even spread of task bars across project timeline window.",
+    "hours": 0.75
+  },
+  {
+    "task": "Label-based deduplication",
+    "description": "Merge duplicate task names from wizard slices.",
+    "hours": 0.75
+  },
+  {
+    "task": "Owner assignment resolver",
+    "description": "Map A/B/C placeholders to named owners.",
+    "hours": 0.75
+  },
+  {
+    "task": "Compiler regression tests",
+    "description": "Golden matrix fixtures for export/load round-trip.",
+    "hours": 1
+  },
+  {
+    "task": "Weekly cell renderer",
+    "description": "Period columns with note drill-down modal.",
+    "hours": 0.75
+  },
+  {
+    "task": "RACI badge normalisation",
+    "description": "Consistent A/R/C/I chips on matrix rows.",
+    "hours": 0.75
+  },
+  {
+    "task": "Toolbar matrix-first mode",
+    "description": "Toggle between chat-first and matrix-first layouts.",
+    "hours": 0.75
+  },
+  {
+    "task": "Drill-down note editor",
+    "description": "Inline edit for weekly cell annotations with autosave.",
+    "hours": 1.5
+  },
+  {
+    "task": "Hero and callout blocks",
+    "description": "Schema + React renderers with validation.",
+    "hours": 0.5
+  },
+  {
+    "task": "Quiz block type",
+    "description": "Multiple-choice config and scoring metadata.",
+    "hours": 0.5
+  },
+  {
+    "task": "Timeline block type",
+    "description": "Ordered events with icon and date fields.",
+    "hours": 0.5
+  },
+  {
+    "task": "Video embed block",
+    "description": "YouTube/Vimeo URL validator and lazy iframe loader.",
+    "hours": 0.5
+  },
+  {
+    "task": "Image gallery block",
+    "description": "Multi-image carousel with alt-text requirements.",
+    "hours": 0.75
+  },
+  {
+    "task": "Signed URL upload route",
+    "description": "Direct browser upload to bucket with virus-scan hook.",
+    "hours": 0.75
+  },
+  {
+    "task": "Document metadata listing",
+    "description": "Paginated API for teacher material library.",
+    "hours": 1
+  },
+  {
+    "task": "Secret reference pattern",
+    "description": "Document env var to Secret Manager mapping.",
+    "hours": 0.25
+  },
+  {
+    "task": "Deploy script composition",
+    "description": "Merge .env, optional keys, and Cloud Run flags.",
+    "hours": 0.25
+  },
+  {
+    "task": "Vertex AI invoker role",
+    "description": "Confirm runtime SA on each RAG project.",
+    "hours": 0.5
+  },
+  {
+    "task": "Firestore access audit",
+    "description": "Least-privilege check for client-facing services.",
+    "hours": 0.75
+  },
+  {
+    "task": "Intelektex communication",
+    "description": "",
+    "hours": 6
+  },
+  {
+    "task": "DIPA communication",
+    "description": "",
+    "hours": 3.75
+  },
+  {
+    "task": "Chunk size experiments",
+    "description": "Grid search on overlap and token limits.",
+    "hours": 1
+  },
+  {
+    "task": "Relevance scoring tweaks",
+    "description": "Boost tables for curriculum vs exercise corpora.",
+    "hours": 1
+  },
+  {
+    "task": "Lithuanian query normalisation",
+    "description": "Diacritics, morphology, and synonym expansion pass.",
+    "hours": 1
+  },
+  {
+    "task": "Eval set scoring script",
+    "description": "Batch run golden questions against retrieval hits.",
+    "hours": 1.75
+  },
+  {
+    "task": "Per-corpus instructions UI",
+    "description": "Editable system hints stored per datastore.",
+    "hours": 1.5
+  },
+  {
+    "task": "Prompt enrichment layer",
+    "description": "Inject admin custom instructions before model call.",
+    "hours": 1.75
+  },
+  {
+    "task": "Firestore aggregation queries",
+    "description": "Daily chat volume and active user rollups.",
+    "hours": 1.25
+  },
+  {
+    "task": "Admin charts",
+    "description": "Corpus hit-rate and top-query tables.",
+    "hours": 1.25
+  },
+  {
+    "task": "Wizard upload indexing",
+    "description": "Gemini File Search ingest during project intake.",
+    "hours": 0.75
+  },
+  {
+    "task": "Matrix chat over files",
+    "description": "Retrieve uploaded briefs during dashboard Q&A.",
+    "hours": 0.75
+  },
+  {
+    "task": "Index cleanup job",
+    "description": "Remove stale file search stores on project delete.",
+    "hours": 0.75
+  },
+  {
+    "task": "Upload size guard",
+    "description": "Reject oversize briefs with user-facing limit message.",
+    "hours": 1
+  },
+  {
+    "task": "Pending approval gate",
+    "description": "Admin queue for new workspace invites.",
+    "hours": 0.25
+  },
+  {
+    "task": "Multi-tenant workspace model",
+    "description": "Company doc with member roles and project scoping.",
+    "hours": 0.25
+  },
+  {
+    "task": "People drawer search",
+    "description": "Filter by role, group, and invite status.",
+    "hours": 0.75
+  },
+  {
+    "task": "Dashboard JSON serializer",
+    "description": "Stable schema for offline project handoff.",
+    "hours": 0.75
+  },
+  {
+    "task": "Excel column mapping",
+    "description": "Matrix tasks, owners, and dates in workbook tabs.",
+    "hours": 1
+  },
+  {
+    "task": "Create/edit material pages",
+    "description": "Draft vs published state machine.",
+    "hours": 0.75
+  },
+  {
+    "task": "Public preview route",
+    "description": "Shareable read-only link for reviewers.",
+    "hours": 1
+  },
+  {
+    "task": "Pre-publish validator API",
+    "description": "Block invalid block combinations before save.",
+    "hours": 1.25
+  },
+  {
+    "task": "Classroom-ready ruleset",
+    "description": "Required fields for EU agency handoff.",
+    "hours": 1.25
+  },
+  {
+    "task": "Stale mapping detector",
+    "description": "Flag folders removed from shared drive.",
+    "hours": 0.25
+  },
+  {
+    "task": "Duplicate upload guard",
+    "description": "Hash compare before re-ingest to Vertex.",
+    "hours": 0.25
+  },
+  {
+    "task": "Code fence renderer",
+    "description": "Syntax highlight and scroll for long snippets.",
+    "hours": 0.25
+  },
+  {
+    "task": "Table layout pass",
+    "description": "Responsive tables in chat message bubble.",
+    "hours": 0.5
+  },
+  {
+    "task": "Revision smoke script",
+    "description": "Automated curl against /health after deploy.",
+    "hours": 0.75
+  },
+  {
+    "task": "Log error scan",
+    "description": "Alert on 5xx spike in first hour post-rollout.",
+    "hours": 0.75
+  },
+  {
+    "task": "Resend domain alignment",
+    "description": "SPF/DKIM verification for invite sender.",
+    "hours": 0.75
+  },
+  {
+    "task": "Link base URL test matrix",
+    "description": "Reset, invite, and share links across envs.",
+    "hours": 0.75
+  },
+  {
+    "task": "Intelektex communication",
+    "description": "",
+    "hours": 6.5
+  },
+  {
+    "task": "DIPA communication",
+    "description": "",
+    "hours": 4
+  },
+  {
+    "task": "Cloud Run revision deploy",
+    "description": "Build args, secrets, and min-instances config.",
+    "hours": 0.75
+  },
+  {
+    "task": "Post-deploy smoke tests",
+    "description": "Health, auth, and corpus connectivity checks.",
+    "hours": 0.75
+  },
+  {
+    "task": "Rollback notes",
+    "description": "Documented revert steps if retrieval latency spikes.",
+    "hours": 1.25
+  },
+  {
+    "task": "Sync job procedures",
+    "description": "Operator steps for failed Drive mirror batches.",
+    "hours": 1.25
+  },
+  {
+    "task": "Incident response outline",
+    "description": "Escalation contacts and rollback triggers.",
+    "hours": 1.25
+  },
+  {
+    "task": "Demo script prep",
+    "description": "Exercise-solver scenario with fallback slides.",
+    "hours": 1.25
+  },
+  {
+    "task": "Live environment checklist",
+    "description": "Pre-flight corpus and auth verification.",
+    "hours": 1.25
+  },
+  {
+    "task": "Task dedup validator",
+    "description": "Flag duplicate labels before Firestore write.",
+    "hours": 0.75
+  },
+  {
+    "task": "Timeline regeneration",
+    "description": "Rebuild Gantt rows when task dates shift.",
+    "hours": 0.75
+  },
+  {
+    "task": "Assignment normalisation",
+    "description": "Resolve owner aliases to canonical people records.",
+    "hours": 0.75
+  },
+  {
+    "task": "Matrix cell integrity scan",
+    "description": "Detect orphan task IDs and broken week references.",
+    "hours": 1.25
+  },
+  {
+    "task": "Stale closure fix",
+    "description": "Ref-based handler for matrix reload button.",
+    "hours": 0.5
+  },
+  {
+    "task": "Retry pill component",
+    "description": "Surface stream abort reason to user.",
+    "hours": 0.75
+  },
+  {
+    "task": "Router guard prompts",
+    "description": "Reduce spurious agent switches mid-lesson.",
+    "hours": 1
+  },
+  {
+    "task": "Handoff telemetry",
+    "description": "Log which specialist answered for QA review.",
+    "hours": 1.25
+  },
+  {
+    "task": "Vertex model ID pin",
+    "description": "EU-compliant model string in all env files.",
+    "hours": 0.25
+  },
+  {
+    "task": "Dependency lockfile review",
+    "description": "Ensure no US-only SDK defaults remain.",
+    "hours": 0.25
+  },
+  {
+    "task": "FastAPI allowlist update",
+    "description": "Production origin entries for admin SPA.",
+    "hours": 0.5
+  },
+  {
+    "task": "Service account selector",
+    "description": "Runtime switch between dev and prod credentials.",
+    "hours": 0.75
+  },
+  {
+    "task": "Scroll container fix",
+    "description": "Sticky input bar on long conversations.",
+    "hours": 0.5
+  },
+  {
+    "task": "Message spacing tokens",
+    "description": "Align bubble padding with design system.",
+    "hours": 0.75
+  },
+  {
+    "task": "Vertex usage export",
+    "description": "Monthly token and search query totals.",
+    "hours": 0.25
+  },
+  {
+    "task": "Cloud Run cost snapshot",
+    "description": "Per-service spend for active revisions.",
+    "hours": 0
+  },
+  {
+    "task": "Gemini rotation steps",
+    "description": "Secret Manager version bump procedure.",
+    "hours": 0.75
+  },
+  {
+    "task": "Resend key rotation",
+    "description": "Update env vars and redeploy affected services.",
+    "hours": 0.75
+  }
+];
+    function fmtH(h){const r=Math.round(h*100)/100;return Number.isInteger(r)?String(r):r.toFixed(2).replace(/0+$/,'').replace(/\.$/,'');}
+    function render(){
+      document.getElementById('body').innerHTML=ALL.map(t=>`
+        <tr class="data"><td class="task">${t.task}</td><td class="desc">${t.description}</td><td class="num">${fmtH(t.hours)}</td></tr>`).join('');
+    }
+    render();
+  </script>
+</body>
+</html>

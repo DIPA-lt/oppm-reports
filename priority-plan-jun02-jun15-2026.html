@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Work Report &amp; KPI — Eimantas Norvaišas · Jun 2026</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --rag: #fb923c;
+      --n8n: #f472b6;
+      --linas: #818cf8;
+      --eu: #34d399;
+      --oppm: #2dd4bf;
+      --meet: #94a3b8;
+      --adhoc: #a78bfa;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --risk: #f87171;
+      --accent: #38bdf8;
+      --plan: #60a5fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .week-block { border-bottom: 1px solid var(--border2); padding-bottom: 2rem; margin-bottom: 0.5rem; }
+    .week-block.plan-section { background: linear-gradient(180deg, rgba(96,165,250,0.04) 0%, transparent 100%); }
+    .week-header {
+      padding: 1.25rem 2rem 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge.done { background: rgba(74,222,128,0.15); color: var(--ok); border: 1px solid rgba(74,222,128,0.35); }
+    .badge.plan { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .banner {
+      margin: 0 2rem 0.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    .banner.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.28); color: #fde68a; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner strong { color: #fff; }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.74rem; font-weight: 600;
+      padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid;
+    }
+    .pill.linas { background: rgba(129,140,248,0.1); color: var(--linas); border-color: rgba(129,140,248,0.35); }
+    .pill.eu    { background: rgba(52,211,153,0.1);  color: var(--eu);    border-color: rgba(52,211,153,0.35); }
+    .pill.oppm  { background: rgba(45,212,191,0.1);  color: var(--oppm);  border-color: rgba(45,212,191,0.35); }
+    .pill.rag   { background: rgba(251,146,60,0.1);  color: var(--rag);   border-color: rgba(251,146,60,0.35); }
+    .pill.meet  { background: rgba(148,163,184,0.1); color: var(--meet);  border-color: rgba(148,163,184,0.35); }
+    .pill.adhoc { background: rgba(167,139,250,0.1); color: var(--adhoc); border-color: rgba(167,139,250,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n);   border-color: rgba(244,114,182,0.35); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.65rem;
+      padding: 0.25rem 2rem 1.1rem;
+    }
+    .kpi {
+      background: var(--panel2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 0.7rem 0.8rem;
+    }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+      margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .card {
+      border-radius: 12px;
+      padding: 1rem 1.05rem;
+      border: 1px solid var(--border2);
+      background: var(--panel2);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+    }
+    .card.c-linas::before { background: var(--linas); }
+    .card.c-eu::before    { background: var(--eu); }
+    .card.c-oppm::before  { background: var(--oppm); }
+    .card.c-rag::before   { background: var(--rag); }
+    .card.c-meet::before  { background: var(--meet); }
+    .card.c-adhoc::before { background: var(--adhoc); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-rag.late { border-color: rgba(248,113,113,0.35); }
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.65rem; margin-bottom: 0.5rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .act { color: var(--ok); display: block; }
+    .card-meta .est { color: var(--muted); font-size: 0.68rem; }
+    .card-path { font-size: 0.71rem; color: var(--accent); margin: 0 0 0.6rem; word-break: break-all; }
+    .card-path code { font-size: 0.68rem; }
+    .card-note {
+      font-size: 0.77rem; color: #cbd5e1;
+      margin: 0 0 0.7rem; padding: 0.5rem 0.68rem;
+      border-radius: 8px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task {
+      padding: 0.52rem 0.68rem;
+      border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-linas .task { border-left-color: rgba(129,140,248,0.55); }
+    .card.c-eu .task    { border-left-color: rgba(52,211,153,0.55); }
+    .card.c-oppm .task  { border-left-color: rgba(45,212,191,0.55); }
+    .card.c-rag .task   { border-left-color: rgba(251,146,60,0.55); }
+    .card.c-meet .task  { border-left-color: rgba(148,163,184,0.5); }
+    .card.c-adhoc .task { border-left-color: rgba(167,139,250,0.55); }
+    .card.c-n8n .task   { border-left-color: rgba(244,114,182,0.55); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--ok); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .task-h.plan { color: var(--plan); }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .task-desc code { font-size: 0.71rem; color: #7dd3fc; }
+    .divider {
+      margin: 2rem 2rem 1.5rem;
+      border: none;
+      border-top: 2px dashed var(--border2);
+    }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+    @media print {
+      body { background: #fff; color: #111; }
+      .card, .kpi, .banner { background: #fff !important; }
+      .task-h { color: #166534; }
+      .task-h.plan { color: #1d4ed8; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Priority plan — Eimantas Norvaišas</h1>
+    <p class="sub">Delivery report · 2–8 June 2026 &nbsp;|&nbsp; KPI targets · 8–15 June 2026</p>
+  </header>
+
+  <!-- ═══════════════ WEEK 2–8 JUNE: DELIVERED ═══════════════ -->
+  <section class="week-block">
+    <div class="week-header">
+      <h2>Week 2–8 June 2026</h2>
+      <span class="badge done">Delivered</span>
+    </div>
+
+    <div class="banner info">
+      <strong>Highlight:</strong> Linas RAG MVP v1.2 finished and handed off for client-side testing.
+      <strong>18 h</strong> logged (25 h planned scope — UAT / client testing support excluded from my hours).
+    </div>
+
+    <div class="legend">
+      <span class="pill linas"><span class="dot"></span> Linas RAG MVP — 18 h</span>
+      <span class="pill eu"><span class="dot"></span> EU Teaching Assistant — 8 h</span>
+      <span class="pill oppm"><span class="dot"></span> OPPM Assistant — 3 h</span>
+      <span class="pill rag"><span class="dot"></span> Intelektex · DIPA RAG — 6 h</span>
+      <span class="pill meet"><span class="dot"></span> Communication — 7 h</span>
+      <span class="pill adhoc"><span class="dot"></span> Ad hoc — 6 h</span>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="label">Total logged</div><div class="value">48 h</div><div class="sub">2–8 Jun</div></div>
+      <div class="kpi"><div class="label">Linas MVP</div><div class="value" style="color:var(--linas)">18 h</div><div class="sub">planned 25 h</div></div>
+      <div class="kpi"><div class="label">Technical</div><div class="value" style="color:var(--eu)">29 h</div><div class="sub">Linas + EU + OPPM</div></div>
+      <div class="kpi"><div class="label">DIPA RAG</div><div class="value" style="font-size:1rem;color:var(--risk)">Late</div><div class="sub">Intelektex blockers</div></div>
+    </div>
+
+    <main>
+      <p class="section-title">Main delivery streams</p>
+      <div class="grid">
+
+        <article class="card c-linas">
+          <div class="card-head">
+            <span class="card-name">UAB Linas — RAG MVP v1.2 complete</span>
+            <span class="card-meta"><span class="act">18.0 h act</span><span class="est">25 h planned</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/Cursor projects/linas-rag/linas-rag</code> · GCP <code>linas-rag</code> · Cloud Run <code>linas-rag-backend</code> / <code>linas-rag-frontend</code></p>
+          <p class="card-note">MVP scope delivered: B2B sales assistant with Outlook ingestion, Klientų užklausos workflow, multi-agent Pasiūlymų formatuotojas, and full Naudotojo vadovas. Client testing phase starts — not counted in my 18 h.</p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Outlook email pipeline (Graph → classify → inquiry)</span><span class="task-h">4.0 h</span></div>
+              <p class="task-desc"><code>outlook_service.py</code>, <code>outlook_email_classifier.py</code> (Gemini Flash-Lite categories), sync configs + REST in <code>api.py</code>; UI: <code>OutlookCredentialsForm</code>, <code>OutlookEmailsList</code>, <code>EmailRulesSettings</code>.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Klientų užklausos board + B2B validation</span><span class="task-h">3.5 h</span></div>
+              <p class="task-desc"><code>customer_inquiry_service.py</code>, <code>company_validator.py</code>, <code>company_history_service.py</code>; frontend <code>CustomerInquiriesBoard</code>, <code>CustomerInquiryDetailDrawer</code>, <code>EmailDraftPanel</code>; status flow new → draft_ready → needs_human → sent.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Išmanieji asistentai — multi-agent orchestrator</span><span class="task-h">3.5 h</span></div>
+              <p class="task-desc"><code>smart_agent_orchestrator.py</code> (Planner → Validator → Retriever → Drafter → Verifier → Finalizer); <code>ProposalFormatterWorkspace.tsx</code>, <code>AgentOrchestratorPanel.tsx</code>; scenarios: customer_inquiry, price_offer, product_search, follow_up.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Naudotojo vadovas v1.2 + interactive manual</span><span class="task-h">3.0 h</span></div>
+              <p class="task-desc"><code>Frontas/src/content/naudotojo-vadovas.md</code>; structured sections in <code>userManual/sections.ts</code>; <code>InteractiveUserManual.tsx</code> with search, tutorials, 7 SVG screenshots; covers Outlook, inquiries, chat modes, admin.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Cloud Run deploy + client handoff doc</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc"><code>deploy-cloudrun.ps1</code>, <code>cloudrun.env.template.yaml</code> secret injection; Vertex app migrated to <code>linas-main-datastore</code>; <code>PASIŪLYMO_ATASKAITA_KLIENTUI.md</code> with go-live checklist.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Demo corpus, tests, inquiry samples</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc"><code>rag-demo-documents/</code>, <code>uzklausos-pavyzdziai.md</code>; unit tests <code>test_company_validator.py</code>, <code>test_customer_inquiry_service.py</code>; reply-send scaffold gated by <code>OUTLOOK_SEND_ENABLED</code>.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-eu">
+          <div class="card-head">
+            <span class="card-name">EU Project — Teaching Assistant fixes &amp; deployment prep</span>
+            <span class="card-meta"><span class="act">8.0 h act</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/eu-agent/EU-AGENT</code> · <code>apps/teacher-web</code> · GCP <code>emerald-bastion-455709-i2</code></p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Admin infrastructure API + Discovery recreate</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc"><code>admin-infra.ts</code> LRO polling; Firebase-admin-gated <code>AdminInfraGate.tsx</code>; Discovery recreate with confirm phrase; <code>workspace-rag-bucket.ts</code> per-workspace GCS persistence.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">RAG sources — list / delete indexed docs</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc">New <code>bucket-objects/route.ts</code>, DELETE on <code>rag/documents</code>; <code>DataSourceDocumentsModal.tsx</code>; improved <code>RagUploadSection.tsx</code> upload + index cleanup UX.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Gemini model migration + fallback chain</span><span class="task-h">1.5 h</span></div>
+              <p class="task-desc">New <code>gemini-models.ts</code> — default <code>gemini-3.1-flash-lite</code>, 503 fallback chain; wired into <code>agent-orchestrator.ts</code> and <code>TECH-STACK.md</code>.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Content rendering + generation progress bug</span><span class="task-h">1.5 h</span></div>
+              <p class="task-desc"><code>BlockMarkdown.tsx</code> across quiz/text/list/callout blocks; <code>GenerationTracker.tsx</code> fix — progress from <code>generationProgress</code> + section title, not only inline JSON.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Admin bootstrap scripts</span><span class="task-h">1.0 h</span></div>
+              <p class="task-desc"><code>seed-admin-cli.sh</code>, <code>seed-admin-user.ts</code>; removed committed SA JSON from working tree; admin infra no longer requires shared secret in UI.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-oppm">
+          <div class="card-head">
+            <span class="card-name">OPPM Assistant — bug fixes &amp; user management</span>
+            <span class="card-meta"><span class="act">3.0 h act</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/OPPM-Assistant/oppm-assistant</code></p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Super-admin allowlist fallback</span><span class="task-h">0.5 h</span></div>
+              <p class="task-desc"><code>admin-emails.ts</code> fallback in <code>admin.service.ts</code>, <code>App.tsx</code>, <code>FinalAdminInterface.tsx</code> when Firestore profile fetch fails.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Companies tab + tenant creation</span><span class="task-h">0.75 h</span></div>
+              <p class="task-desc">New <code>CompaniesPage.tsx</code>, <code>CompanyFormDialog.tsx</code>; <code>createCompanyWithSetup()</code> with bulk invite + self-grant as company admin.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Invite flow — existing users get direct membership</span><span class="task-h">0.5 h</span></div>
+              <p class="task-desc"><code>inviteUserToCompany()</code> upserts membership when profile already exists; pending invites panel on <code>PeoplePage.tsx</code>.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Auth errors + workspace persistence bugs</span><span class="task-h">0.75 h</span></div>
+              <p class="task-desc"><code>auth.service.ts</code> maps <code>auth/invalid-credential</code>; <code>navigateRef</code> in auth listener; <code>workspace-context.tsx</code> persists computed default workspace to localStorage.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Firestore write hardening</span><span class="task-h">0.5 h</span></div>
+              <p class="task-desc">Strip <code>undefined</code> from company payloads; <code>getUserProjectAssignments()</code> returns [] on error to prevent PeopleDrawer crash.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-rag late">
+          <div class="card-head">
+            <span class="card-name">Intelektex · DIPA RAG — joint deploy (incomplete)</span>
+            <span class="card-meta"><span class="act">6.0 h act</span></span>
+          </div>
+          <p class="card-path">dipa.lt RAG · Intelektex subcontractor · refs: <code>Demo-RAG-klientu-pagalbos-agentas-oppm-1779296719436.json</code></p>
+          <div class="banner risk" style="margin:0 0 0.65rem;padding:0.55rem 0.7rem;font-size:0.76rem">
+            <strong>Slipped:</strong> Target was finish by last Friday. Intelektex did not complete their bug-fix report — pending tasks will be updated once their report arrives.
+          </div>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Deploy coordination calls with Intelektex</span><span class="task-h">2.5 h</span></div>
+              <p class="task-desc">Status sync on Cloud Build route, environment parity, and blocker list after their side fixes.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Smoke tests + env checklist on my side</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc">Prepared <code>/health</code> checks, auth domain list, Secret Manager binding review — waiting on Intelektex bug-fix deploy.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Test manual ingest prep (blocked)</span><span class="task-h">1.5 h</span></div>
+              <p class="task-desc">Staged test data and user manual PDFs for corpus upload — full ingest deferred until Intelektex confirms fix revision.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-meet">
+          <div class="card-head">
+            <span class="card-name">General communication</span>
+            <span class="card-meta"><span class="act">7.0 h act</span></span>
+          </div>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">DIPA communication</span><span class="task-h">3.5 h</span></div>
+              <p class="task-desc">Linas MVP handoff update, EU project status, DIPA RAG delay escalation, OS automation next steps with Greta.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Intelektex communication</span><span class="task-h">3.5 h</span></div>
+              <p class="task-desc">RAG deploy calls, bug-fix timeline follow-up, shared smoke-test window planning.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-adhoc">
+          <div class="card-head">
+            <span class="card-name">Ad hoc tasks</span>
+            <span class="card-meta"><span class="act">6.0 h act</span></span>
+          </div>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Supabase configuration</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc">Project setup, auth/storage config, connection strings and env wiring for downstream integration.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Interview with Anton</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc">Technical interview session — architecture discussion and capability assessment.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">N8N server work</span><span class="task-h">2.0 h</span></div>
+              <p class="task-desc">Server maintenance and workflow environment prep in <code>~/Documents/dipa-n8n</code> ahead of DIPA OS automation stage 1.</p>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </main>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ WEEK 8–15 JUNE: KPI PLAN ═══════════════ -->
+  <section class="week-block plan-section">
+    <div class="week-header">
+      <h2>Week 8–15 June 2026</h2>
+      <span class="badge plan">KPI targets</span>
+    </div>
+
+    <div class="banner warn">
+      <strong>Focus:</strong> Close EU project delivery, ship DIPA OS automation stage 1, support Linas MVP testing round, keep comm/ad hoc lean at 5 h.
+    </div>
+
+    <div class="legend">
+      <span class="pill eu"><span class="dot"></span> Finish EU project — 10 h</span>
+      <span class="pill n8n"><span class="dot"></span> DIPA OS automation stage 1 — 15 h</span>
+      <span class="pill linas"><span class="dot"></span> Linas MVP testing &amp; fixes — 10 h</span>
+      <span class="pill meet"><span class="dot"></span> Comm + ad hoc — 5 h</span>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="label">Total planned</div><div class="value" style="color:var(--plan)">40 h</div><div class="sub">8–15 Jun</div></div>
+      <div class="kpi"><div class="label">Priority #1</div><div class="value" style="font-size:1rem;color:var(--eu)">EU finish</div><div class="sub">10 h</div></div>
+      <div class="kpi"><div class="label">Priority #2</div><div class="value" style="font-size:1rem;color:var(--n8n)">DIPA OS</div><div class="sub">15 h stage 1</div></div>
+      <div class="kpi"><div class="label">Linas UAT</div><div class="value" style="color:var(--linas)">10 h</div><div class="sub">testing + fixes</div></div>
+    </div>
+
+    <main>
+      <p class="section-title">KPI breakdown — planned subtasks</p>
+      <div class="grid">
+
+        <article class="card c-eu">
+          <div class="card-head">
+            <span class="card-name">KPI 1 — Finish EU Teaching Assistant project</span>
+            <span class="card-meta"><span class="est">10 h est</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/eu-agent/EU-AGENT/apps/teacher-web</code></p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Commit + tag release candidate</span><span class="task-h plan">1.5 h</span></div>
+              <p class="task-desc">Commit uncommitted Jun work; changelog for admin infra, RAG delete, Gemini migration, block markdown fixes.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Production deploy path (first live environment)</span><span class="task-h plan">2.5 h</span></div>
+              <p class="task-desc">Finalize deploy script or Vercel/Cloud Run config; EU region env vars; post-deploy smoke on chat, library, sources admin.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Discovery + RAG infra sign-off</span><span class="task-h plan">2.0 h</span></div>
+              <p class="task-desc">Run <code>vertex-ai-search-create-apps.ps1</code> verification; curriculum + materials stores indexed; admin recreate flow documented.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Teacher testing handoff package</span><span class="task-h plan">2.0 h</span></div>
+              <p class="task-desc">Test accounts, authorized domains, known-limits doc; fix <code>PublicPreviewView.tsx</code> OPPM branding typo; agency comms template.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Regression pass on creation + preview flows</span><span class="task-h plan">2.0 h</span></div>
+              <p class="task-desc">Multi-agent lesson generation, block editor preview, RAG upload round-trip; fix any P1 blockers before external validation.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-n8n">
+          <div class="card-head">
+            <span class="card-name">KPI 2 — DIPA OS automation · stage 1 complete</span>
+            <span class="card-meta"><span class="est">15 h est</span></span>
+          </div>
+          <p class="card-path"><code>~/Documents/dipa-n8n</code> · stakeholder: Greta · Kajabi → custom dashboard</p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Freeze stage-1 scope doc from Greta requirements</span><span class="task-h plan">2.0 h</span></div>
+              <p class="task-desc">Lead lifecycle diagram, field mapping, acceptance criteria for qualified-lead → dashboard visibility.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Kajabi webhook → n8n intake workflow</span><span class="task-h plan">4.0 h</span></div>
+              <p class="task-desc">HTTP trigger, payload validation, idempotency key, error branch + retry, structured logging nodes.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Lead record → custom dashboard / Supabase API</span><span class="task-h plan">4.0 h</span></div>
+              <p class="task-desc">Map Kajabi fields to lead schema; create/update row; stage notification branch for sales ops.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Credentials + n8n server hardening</span><span class="task-h plan">2.0 h</span></div>
+              <p class="task-desc">Secret Manager / env wiring; webhook URL stability; operator runbook section for stage 1.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">End-to-end dry-run + Greta sign-off</span><span class="task-h plan">3.0 h</span></div>
+              <p class="task-desc">Sample Kajabi event → n8n → dashboard row visible → notification fires; demo for stage-1 closure.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-linas">
+          <div class="card-head">
+            <span class="card-name">KPI 3 — Linas RAG MVP testing, bug fixes</span>
+            <span class="card-meta"><span class="est">10 h est</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/Cursor projects/linas-rag/linas-rag</code></p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Client UAT support + bug triage</span><span class="task-h plan">3.0 h</span></div>
+              <p class="task-desc">Respond to Linas team feedback on Klientų užklausos, Outlook sync, and Pasiūlymų formatuotojas; prioritize P0/P1.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Outlook pipeline fixes from test reports</span><span class="task-h plan">2.5 h</span></div>
+              <p class="task-desc">Classification edge cases, inquiry auto-create rules, reclassify / approve-index flows in <code>OutlookEmailDetailModal</code>.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Multi-agent draft quality + verifier tuning</span><span class="task-h plan">2.0 h</span></div>
+              <p class="task-desc">Prompt adjustments in <code>smart_agent_orchestrator.py</code>; LaTeX/markdown output; human-in-the-loop gate for low-confidence drafts.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Deploy fix revision to Cloud Run</span><span class="task-h plan">1.5 h</span></div>
+              <p class="task-desc"><code>deploy-cloudrun.ps1</code> rollout; Firebase authorized domains; verify <code>linas-main-datastore</code> retrieval on prod URL.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Manual updates from tester feedback</span><span class="task-h plan">1.0 h</span></div>
+              <p class="task-desc">Patch <code>naudotojo-vadovas.md</code> / interactive sections for steps testers found unclear.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-meet">
+          <div class="card-head">
+            <span class="card-name">KPI 4 — Communication &amp; ad hoc</span>
+            <span class="card-meta"><span class="est">5 h est</span></span>
+          </div>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">DIPA + Intelektex communication</span><span class="task-h plan">3.0 h</span></div>
+              <p class="task-desc">Weekly sync — EU handoff, Linas UAT status, DIPA RAG pending Intelektex report, OS automation demo slot with Greta.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Ad hoc buffer</span><span class="task-h plan">2.0 h</span></div>
+              <p class="task-desc">n8n server, Supabase follow-up, or DIPA RAG catch-up if Intelektex report arrives mid-week.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-rag">
+          <div class="card-head">
+            <span class="card-name">Carry-over — DIPA RAG (if Intelektex report arrives)</span>
+            <span class="card-meta"><span class="est">from ad hoc buffer</span></span>
+          </div>
+          <p class="card-note">Not in the 40 h KPI total — handle inside ad hoc / comm buffer or slip to following week if report delayed again.</p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Apply Intelektex bug-fix revision + joint smoke test</span><span class="task-h plan">—</span></div>
+              <p class="task-desc">Merge their deploy, ingest test manuals, run golden eval, sign off go-live checklist.</p>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </main>
+  </section>
+
+  <footer>
+    Generated from codebase inspection (linas-rag, eu-agent, oppm-assistant) and weekly plan context · open in browser · Cmd+P for A4 print.
+  </footer>
+</body>
+</html>

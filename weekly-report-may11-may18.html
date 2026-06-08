@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly Delivery Report — 11–18 May 2026</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel: #111827;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border: #1e293b;
+      --border2: #334155;
+      --cloud: #38bdf8;
+      --oppm: #2dd4bf;
+      --teach: #34d399;
+      --dipa: #fb923c;
+      --linas: #818cf8;
+      --risk: #ef4444;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --danger: #f87171;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: #0a0f1e; color: #f1f5f9; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .static-note {
+      margin: 0;
+      padding: 0.55rem 2rem;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border2);
+    }
+    .static-note strong { color: #f8fafc; }
+    #boot-error {
+      display: none;
+      margin: 1rem 2rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.35);
+      color: #fecaca;
+      font-size: 0.82rem;
+    }
+    #boot-error.visible { display: block; }
+    #boot-error.warn {
+      background: rgba(251,191,36,0.1);
+      border-color: rgba(251,191,36,0.35);
+      color: #fde68a;
+    }
+
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; letter-spacing: -0.01em; }
+    header .week { font-size: 0.82rem; color: var(--muted); margin: 0 0 0.6rem; }
+    .project-legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .proj-pill {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; font-weight: 600;
+      padding: 0.2rem 0.7rem; border-radius: 20px; border: 1px solid;
+    }
+    .proj-pill.cloud { background: rgba(56,189,248,0.1); color: var(--cloud); border-color: rgba(56,189,248,0.3); }
+    .proj-pill.teach { background: rgba(52,211,153,0.1); color: var(--teach); border-color: rgba(52,211,153,0.3); }
+    .proj-pill.dipa { background: rgba(251,146,60,0.1); color: var(--dipa); border-color: rgba(251,146,60,0.3); }
+    .proj-pill.linas { background: rgba(129,140,248,0.1); color: var(--linas); border-color: rgba(129,140,248,0.3); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot.cloud { background: var(--cloud); }
+    .dot.teach { background: var(--teach); }
+    .dot.dipa { background: var(--dipa); }
+    .dot.linas { background: var(--linas); }
+
+    .work-summary {
+      padding: 1.4rem 2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(180deg, #0d1527 0%, #0a0f1e 100%);
+    }
+    .ws-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .ws-title { font-size: 1rem; font-weight: 700; color: var(--text); margin: 0; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.28rem 0.8rem; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .status-badge.success { background: rgba(74,222,128,0.15); color: var(--ok); border: 1px solid rgba(74,222,128,0.3); }
+    .status-badge.warn { background: rgba(251,191,36,0.15); color: var(--warn); border: 1px solid rgba(251,191,36,0.35); }
+    .status-badge.risk { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.35); }
+    .ws-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+    .ws-card {
+      border-radius: 12px; padding: 1rem 1.05rem 1.05rem;
+      border: 1px solid var(--border2); background: var(--panel2);
+      position: relative; overflow: hidden;
+    }
+    .ws-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+    .ws-card.c-cloud::before { background: var(--cloud); }
+    .ws-card.c-teach::before { background: var(--teach); }
+    .ws-card.c-dipa::before { background: var(--dipa); }
+    .ws-card.c-linas::before { background: var(--linas); }
+    .ws-card.c-risk { border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.05); }
+    .ws-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.65rem; gap: 0.65rem; }
+    .ws-card-name { font-size: 0.86rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .ws-card-hours { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .ws-card-status { font-size: 0.68rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 5px; white-space: nowrap; }
+    .ws-card-status.ok { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .ws-card-status.warn { background: rgba(251,191,36,0.15); color: var(--warn); }
+    .ws-list { display: flex; flex-direction: column; gap: 0.62rem; margin: 0; padding: 0; list-style: none; }
+    .ws-entry {
+      margin: 0; padding: 0.55rem 0.72rem; border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .c-cloud .ws-entry { border-left-color: rgba(56,189,248,0.6); }
+    .c-teach .ws-entry { border-left-color: rgba(52,211,153,0.6); }
+    .c-dipa .ws-entry { border-left-color: rgba(251,146,60,0.6); }
+    .c-linas .ws-entry { border-left-color: rgba(129,140,248,0.6); }
+    .ws-entry-kicker {
+      display: inline-block; font-size: 0.61rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--muted); margin-bottom: 0.25rem;
+    }
+    .ws-entry-title { font-size: 0.805rem; font-weight: 700; color: var(--text); margin: 0 0 0.3rem; line-height: 1.38; }
+    .ws-entry-desc { font-size: 0.782rem; color: #cbd5e1; margin: 0; line-height: 1.55; }
+    .ws-card code {
+      font-size: 0.74em; padding: 0.1em 0.38em; border-radius: 4px;
+      background: rgba(0,0,0,0.38); border: 1px solid rgba(255,255,255,0.06);
+      word-break: break-word;
+    }
+    .callout {
+      margin-top: 0.75rem; padding: 0.72rem 0.82rem;
+      border-radius: 9px; background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.3);
+      color: #fde68a; font-size: 0.76rem; line-height: 1.5;
+    }
+    .callout strong { color: #fff; }
+
+    .summary-row {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem; padding: 1.2rem 2rem;
+      background: var(--panel); border-bottom: 1px solid var(--border2);
+    }
+    .summary-card { border-radius: 12px; padding: 1rem 1.2rem; border: 1px solid var(--border2); }
+    .sc-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.4rem; }
+    .sc-name { font-size: 1rem; font-weight: 700; margin: 0 0 0.7rem; }
+    .sc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem; }
+    .sc-stat { text-align: center; }
+    .sc-stat .v { font-size: 1.25rem; font-weight: 800; }
+    .sc-stat .l { font-size: 0.62rem; text-transform: uppercase; color: var(--muted); margin-top: 0.1rem; }
+
+    main { padding: 1.2rem 2rem 3rem; max-width: 1600px; margin: 0 auto; }
+    .grid-kpi { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 0.7rem; margin: 0.5rem 0 1.5rem; }
+    .kpi { background: var(--panel2); border: 1px solid var(--border2); border-radius: 10px; padding: 0.8rem 0.9rem; }
+    .kpi .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.3rem; font-weight: 700; margin-top: 0.15rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+    .kpi.ok .value { color: var(--ok); }
+    .kpi.warn .value { color: var(--warn); }
+    .kpi.cloud-k .value { color: var(--cloud); }
+    .kpi.teach-k .value { color: var(--teach); }
+    .kpi.dipa-k .value { color: var(--dipa); }
+    .kpi.linas-k .value { color: var(--linas); }
+
+    .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .chart-card { background: var(--panel2); border: 1px solid var(--border2); border-radius: 12px; padding: 1rem; }
+    .chart-card h3 { margin: 0 0 0.7rem; font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .chart-box { position: relative; height: 210px; }
+    #weekBar-wrap { background: var(--panel2); border: 1px solid var(--border2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+    #weekBar-wrap h3 { margin: 0 0 0.7rem; font-size: 0.88rem; font-weight: 600; }
+    .bar-box { position: relative; height: 90px; }
+
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center;
+      padding: 0.7rem 1rem; background: var(--panel2);
+      border-radius: 10px; border: 1px solid var(--border2); margin: 1rem 0;
+    }
+    .controls label { font-size: 0.83rem; color: var(--muted); display: flex; align-items: center; gap: 0.3rem; }
+    select, input[type="search"] {
+      background: #0a0f1e; color: var(--text); border: 1px solid var(--border2);
+      border-radius: 7px; padding: 0.38rem 0.55rem; font-size: 0.85rem;
+    }
+
+    .table-wrap { overflow-x: auto; margin-top: 1rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.79rem; }
+    th, td { padding: 0.44rem 0.55rem; text-align: left; border-bottom: 1px solid var(--border2); vertical-align: top; }
+    th {
+      position: sticky; top: 0; background: #070c17;
+      font-weight: 600; font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--muted); cursor: pointer; user-select: none;
+    }
+    th:hover { color: var(--cloud); }
+    tr:hover td { background: rgba(255,255,255,0.03); }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .proj-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; flex-shrink: 0; }
+    .proj-dot.cloud { background: var(--cloud); }
+    .proj-dot.teach { background: var(--teach); }
+    .proj-dot.dipa { background: var(--dipa); }
+    .proj-dot.linas { background: var(--linas); }
+    .badge { display: inline-block; padding: 0.08rem 0.38rem; border-radius: 5px; font-size: 0.65rem; font-weight: 700; white-space: nowrap; }
+    .badge.ok { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .phase-tag { font-size: 0.62rem; padding: 0.06rem 0.32rem; border-radius: 4px; font-weight: 600; background: rgba(255,255,255,0.06); color: var(--muted); white-space: nowrap; }
+    .section-title { font-size: 1.05rem; font-weight: 700; margin: 2rem 0 0.5rem; border-left: 3px solid var(--cloud); padding-left: 0.6rem; }
+    .method { margin-top: 1.5rem; padding: 0.9rem 1rem; background: var(--panel2); border-radius: 10px; border: 1px solid var(--border2); font-size: 0.8rem; color: var(--muted); }
+    .method h2 { margin: 0 0 0.4rem; font-size: 0.9rem; color: var(--text); }
+    footer { padding: 1rem 2rem; color: var(--muted); font-size: 0.73rem; border-top: 1px solid var(--border2); }
+  </style>
+</head>
+<body>
+
+<p class="static-note">
+  <strong>Static weekly report</strong> — no Firestore or Firebase connection.
+  Data is embedded in this file only. OPPM Assistant uses Firebase project <code>oppm-496021</code> via <code>VITE_FIREBASE_PROJECT_ID</code> in <code>oppm-assistant/.env</code>.
+</p>
+<div id="boot-error" role="alert"></div>
+
+<header>
+  <h1>Weekly Delivery Report</h1>
+  <p class="week">11 May 2026 – 18 May 2026 &nbsp;·&nbsp; E. Norvaisas</p>
+  <div class="project-legend">
+    <div class="proj-pill cloud"><div class="dot cloud"></div>Google Cloud / Firebase recovery — 18 h</div>
+    <div class="proj-pill teach"><div class="dot teach"></div>EU Project “Teaching Assistant” — 10.5 h</div>
+    <div class="proj-pill dipa"><div class="dot dipa"></div>Intelektex · dipa.lt RAG — 4 h</div>
+    <div class="proj-pill linas"><div class="dot linas"></div>AB Linas RAG — 8 h</div>
+  </div>
+</header>
+
+<div class="work-summary">
+  <div class="ws-header">
+    <p class="ws-title">Week summary — recovery, deployment readiness and hand-offs</p>
+    <span class="status-badge success">✓ 40.5 h actual</span>
+    <span class="status-badge warn">△ Google account suspension recovery</span>
+    <span class="status-badge risk">Action required: Teaching Assistant stakeholder owner</span>
+  </div>
+
+  <div class="ws-grid">
+    <div class="ws-card c-cloud">
+      <div class="ws-card-head">
+        <span class="ws-card-name">Google Cloud / Firebase recovery — dipa.lt organization</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">18.0 h act</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-list">
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">Incident recovery</span>
+          <p class="ws-entry-title">New Google Cloud project baseline after account suspensions</p>
+          <p class="ws-entry-desc">Created and prepared a new cloud project under the dipa.lt organization, restored billing/IAM posture, enabled required services, and documented recovery steps for continuity.</p>
+        </li>
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">Migration</span>
+          <p class="ws-entry-title">Old project migration and dipa.lt website continuity</p>
+          <p class="ws-entry-desc">Moved core configuration assumptions from suspended / unreliable projects into the new organization project, including website deployment prerequisites and Cloud Build preparation.</p>
+        </li>
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">Firebase</span>
+          <p class="ws-entry-title">New Firebase project creation and data-layer reinstatement</p>
+          <p class="ws-entry-desc">Reinstated Firebase app setup, Firestore database structure, indexes/rules baseline, Storage buckets, Auth settings, service accounts, and secret/env bindings needed by dependent apps.</p>
+        </li>
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">OPPM Assistant</span>
+          <p class="ws-entry-title">Reinstating OPPM Assistant on the new cloud project</p>
+          <p class="ws-entry-desc">Prepared deployment tasks for the chat-based 13-step OPPM planning assistant: Firebase config, Firestore persistence, Gemini secrets, Cloud Run env vars, Cloud Build flow, smoke tests for chat, project saving, dashboard generation, and exports.</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-teach c-risk">
+      <div class="ws-card-head">
+        <span class="ws-card-name">EU Project “Teaching Assistant”</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">10.5 h act</span>
+          <span class="ws-card-status warn">Ready for testing</span>
+        </div>
+      </div>
+      <ul class="ws-list">
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">Multi-agent logic</span>
+          <p class="ws-entry-title">Fixed orchestration and agent handoff issues</p>
+          <p class="ws-entry-desc">Stabilized planner / retriever / verifier style logic so teacher-facing testing can start with fewer inconsistent agent transitions.</p>
+        </li>
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">Testing readiness</span>
+          <p class="ws-entry-title">Prepared for teachers’ validation round</p>
+          <p class="ws-entry-desc">Cleaned blocking issues, verified main flows, and brought the app to a state where teachers can test task solving and feedback quality.</p>
+        </li>
+      </ul>
+      <div class="callout">
+        <strong>Urgent question:</strong> who is responsible for passing this to schools / teachers, collecting structured testing feedback, and communicating status / next steps with the EU Project Agency?
+      </div>
+    </div>
+
+    <div class="ws-card c-dipa">
+      <div class="ws-card-head">
+        <span class="ws-card-name">Intelektex — dipa.lt RAG finalization</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">4.0 h act</span>
+          <span class="ws-card-status ok">✓ Done</span>
+        </div>
+      </div>
+      <ul class="ws-list">
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">RAG finalization</span>
+          <p class="ws-entry-title">dipa.lt RAG tasks and last-mile consultation</p>
+          <p class="ws-entry-desc">Finalized RAG-related tasks and aligned technical decisions with Intelektex around deployment, cloud project recovery, and environment readiness.</p>
+        </li>
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">Deployment</span>
+          <p class="ws-entry-title">Cloud Build / new project consultation</p>
+          <p class="ws-entry-desc">Consulted on migration into the new project, Cloud Build creation, service configuration, and risk areas after the Google account suspension incident.</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="ws-card c-linas">
+      <div class="ws-card-head">
+        <span class="ws-card-name">AB Linas RAG</span>
+        <div style="display:flex;gap:0.4rem;align-items:center">
+          <span class="ws-card-hours">8.0 h act</span>
+          <span class="ws-card-status ok">✓ MVP handed off</span>
+        </div>
+      </div>
+      <ul class="ws-list">
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">MVP</span>
+          <p class="ws-entry-title">Finished the MVP version</p>
+          <p class="ws-entry-desc">Closed remaining implementation issues, stabilized the app enough for organization-side internal testing, and caught up with delayed tasks from previous weeks.</p>
+        </li>
+        <li class="ws-entry">
+          <span class="ws-entry-kicker">Client coordination</span>
+          <p class="ws-entry-title">Weekly meetings with Linas organization</p>
+          <p class="ws-entry-desc">Together with Ausrine, held weekly alignment meetings with the Linas team and passed the current app version for internal testing and feedback.</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="summary-row">
+  <div class="summary-card" style="background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(0,0,0,0));border-color:rgba(56,189,248,0.2)">
+    <p class="sc-title">Recovery / Infra</p>
+    <p class="sc-name" style="color:var(--cloud)">Google Cloud + Firebase</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" id="sc-cloud-est" style="color:var(--cloud)">–</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-cloud-act" style="color:var(--cloud)">–</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-cloud-tasks" style="color:var(--cloud)">–</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+  <div class="summary-card" style="background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(0,0,0,0));border-color:rgba(52,211,153,0.2)">
+    <p class="sc-title">EU Project</p>
+    <p class="sc-name" style="color:var(--teach)">Teaching Assistant</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" id="sc-teach-est" style="color:var(--teach)">–</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-teach-act" style="color:var(--teach)">–</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-teach-tasks" style="color:var(--teach)">–</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+  <div class="summary-card" style="background:linear-gradient(135deg,rgba(251,146,60,0.08),rgba(0,0,0,0));border-color:rgba(251,146,60,0.2)">
+    <p class="sc-title">Intelektex</p>
+    <p class="sc-name" style="color:var(--dipa)">dipa.lt RAG</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" id="sc-dipa-est" style="color:var(--dipa)">–</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-dipa-act" style="color:var(--dipa)">–</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-dipa-tasks" style="color:var(--dipa)">–</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+  <div class="summary-card" style="background:linear-gradient(135deg,rgba(129,140,248,0.08),rgba(0,0,0,0));border-color:rgba(129,140,248,0.2)">
+    <p class="sc-title">Client RAG</p>
+    <p class="sc-name" style="color:var(--linas)">AB Linas RAG</p>
+    <div class="sc-grid">
+      <div class="sc-stat"><div class="v" id="sc-linas-est" style="color:var(--linas)">–</div><div class="l">Est h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-linas-act" style="color:var(--linas)">–</div><div class="l">Actual h</div></div>
+      <div class="sc-stat"><div class="v" id="sc-linas-tasks" style="color:var(--linas)">–</div><div class="l">Tasks</div></div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="grid-kpi" id="kpi-row"></section>
+
+  <div id="weekBar-wrap">
+    <h3>Weekly hours split by project</h3>
+    <div class="bar-box"><canvas id="weekBar"></canvas></div>
+  </div>
+
+  <section class="charts">
+    <div class="chart-card"><h3>Actual hours by project</h3><div class="chart-box"><canvas id="pieProject"></canvas></div></div>
+    <div class="chart-card"><h3>Actual hours by phase</h3><div class="chart-box"><canvas id="piePhase"></canvas></div></div>
+    <div class="chart-card"><h3>Task count by project</h3><div class="chart-box"><canvas id="pieTasks"></canvas></div></div>
+    <div class="chart-card"><h3>Recovery hours detail</h3><div class="chart-box"><canvas id="pieRecovery"></canvas></div></div>
+  </section>
+
+  <section class="controls">
+    <label>Project <select id="f-project"><option value="">All projects</option></select></label>
+    <label>Phase <select id="f-phase"><option value="">All phases</option></select></label>
+    <label>Search <input type="search" id="f-q" placeholder="task, subtask, description..." style="min-width:14rem" /></label>
+  </section>
+
+  <div class="table-wrap">
+    <table id="task-table">
+      <thead>
+        <tr>
+          <th data-sort="id">ID</th>
+          <th data-sort="project">Project</th>
+          <th data-sort="phase">Phase</th>
+          <th data-sort="task">Task</th>
+          <th data-sort="subtask">Subtask</th>
+          <th>Description</th>
+          <th data-sort="owner">Owner</th>
+          <th data-sort="estH" class="num">Est (h)</th>
+          <th data-sort="spentH" class="num">Actual (h)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="task-body"></tbody>
+      <tfoot id="task-foot"></tfoot>
+    </table>
+  </div>
+
+  <p class="section-title">Owner performance rollup</p>
+  <div class="table-wrap">
+    <table id="owner-table">
+      <thead>
+        <tr>
+          <th>Owner</th>
+          <th class="num">Tasks</th>
+          <th class="num">Est (h)</th>
+          <th class="num">Actual (h)</th>
+          <th class="num">Delivery index</th>
+        </tr>
+      </thead>
+      <tbody id="owner-body"></tbody>
+    </table>
+  </div>
+
+  <div class="method">
+    <h2>How numbers are computed</h2>
+    <p>Tasks model the week of <strong>11–18 May 2026</strong>. Rows are planning / accounting units based on the provided project notes. Actual total is <strong>40.5 h</strong>: Google Cloud / Firebase recovery 18 h, Teaching Assistant 10.5 h, Intelektex dipa.lt RAG 4 h, AB Linas RAG 8 h.</p>
+  </div>
+</main>
+
+<footer>
+  Week of <strong>11 – 18 May 2026</strong> &nbsp;·&nbsp;
+  Streams: Google Cloud / Firebase recovery, OPPM Assistant reinstatement, EU Project “Teaching Assistant”, Intelektex dipa.lt RAG, AB Linas RAG.
+  &nbsp;·&nbsp; If this page looks blank in an IDE preview, open it in a browser via
+  <code>python3 -m http.server 8765</code> then visit <code>http://localhost:8765/weekly-report-may11-may18.html</code>.
+</footer>
+
+<script type="application/json" id="tasks-embedded">[
+  {"id":"GC-001","phase":"GCP recovery","task":"New cloud project creation","subtask":"dipa.lt organization baseline","description":"Created new Google Cloud project under the dipa.lt organization after account suspension issues; restored billing, ownership and baseline IAM assumptions.","owner":"E. Norvaisas","estH":2.40,"spentH":2.40,"project":"Google Cloud / Firebase"},
+  {"id":"GC-002","phase":"GCP recovery","task":"API and IAM reinstatement","subtask":"services, service accounts, permissions","description":"Enabled required APIs and recreated / adjusted service accounts for Cloud Run, Cloud Build, Firebase, Firestore, Storage and application deployments.","owner":"E. Norvaisas","estH":2.10,"spentH":2.10,"project":"Google Cloud / Firebase"},
+  {"id":"GC-003","phase":"Migration","task":"Old project migration","subtask":"dipa.lt website continuity","description":"Moved deploy assumptions, project identifiers, website deployment prerequisites and configuration references into the new cloud project context.","owner":"E. Norvaisas","estH":2.20,"spentH":2.20,"project":"Google Cloud / Firebase"},
+  {"id":"GC-004","phase":"Firebase rebuild","task":"New Firebase project creation","subtask":"web app, Auth and SDK config","description":"Created / connected Firebase project resources, Firebase web app configuration, Auth settings and environment variables for dependent services.","owner":"E. Norvaisas","estH":2.00,"spentH":2.00,"project":"Google Cloud / Firebase"},
+  {"id":"GC-005","phase":"Firebase rebuild","task":"Firestore structure reinstatement","subtask":"collections, indexes and rules baseline","description":"Reinstated Firestore database structures, expected collections, security rules baseline, index assumptions and admin data access patterns.","owner":"E. Norvaisas","estH":2.20,"spentH":2.20,"project":"Google Cloud / Firebase"},
+  {"id":"GC-006","phase":"Firebase rebuild","task":"Storage reinstatement","subtask":"buckets, rules and app access","description":"Created storage buckets, checked upload/download assumptions, and aligned storage access rules with the new Firebase / GCP project.","owner":"E. Norvaisas","estH":1.40,"spentH":1.40,"project":"Google Cloud / Firebase"},
+  {"id":"GC-007","phase":"Deployment platform","task":"Cloud Build preparation","subtask":"build triggers and env/secrets flow","description":"Prepared Cloud Build path for redeployments, including build context checks, env var transfer and secret handling between build and runtime services.","owner":"E. Norvaisas","estH":1.60,"spentH":1.60,"project":"Google Cloud / Firebase"},
+  {"id":"GC-008","phase":"OPPM reinstatement","task":"OPPM Assistant redeploy readiness","subtask":"Cloud Run + Firebase + Gemini config","description":"Prepared the OPPM planning assistant for deployment on the new project: Firestore persistence, Firebase client config, Gemini API secrets, Cloud Run variables and smoke test checklist.","owner":"E. Norvaisas","estH":2.10,"spentH":2.10,"project":"Google Cloud / Firebase"},
+  {"id":"TA-001","phase":"Multi-agent logic","task":"Agent orchestration fixes","subtask":"planner / retriever / verifier flow","description":"Fixed multi-agent logic inconsistencies so the Teaching Assistant can answer and validate tasks with cleaner handoffs between internal agents.","owner":"E. Norvaisas","estH":3.00,"spentH":3.00,"project":"EU Teaching Assistant"},
+  {"id":"TA-002","phase":"Multi-agent logic","task":"Response quality stabilization","subtask":"teacher-facing answer flow","description":"Improved task solving flow, reduced inconsistent intermediate responses and prepared outputs for teacher validation.","owner":"E. Norvaisas","estH":2.20,"spentH":2.20,"project":"EU Teaching Assistant"},
+  {"id":"TA-003","phase":"Testing readiness","task":"Teacher testing handoff prep","subtask":"main flows and test readiness","description":"Verified primary user flows and prepared the system to be passed to teachers for testing.","owner":"E. Norvaisas","estH":2.30,"spentH":2.30,"project":"EU Teaching Assistant"},
+  {"id":"TA-004","phase":"Project coordination","task":"EU agency communication question","subtask":"owner / responsibility needs decision","description":"Captured urgent unresolved responsibility question: who passes the app to schools / teachers and communicates with the EU Project Agency.","owner":"E. Norvaisas","estH":1.40,"spentH":1.40,"project":"EU Teaching Assistant"},
+  {"id":"TA-005","phase":"Release readiness","task":"Final regression pass","subtask":"ready for validation","description":"Reviewed critical issues from previous state and moved the app into a ready-to-test state.","owner":"E. Norvaisas","estH":1.60,"spentH":1.60,"project":"EU Teaching Assistant"},
+  {"id":"DI-001","phase":"RAG finalization","task":"dipa.lt RAG finalization","subtask":"last-mile technical tasks","description":"Finalized remaining RAG tasks and confirmed technical direction for dipa.lt RAG work with Intelektex.","owner":"E. Norvaisas","estH":1.60,"spentH":1.60,"project":"Intelektex dipa.lt RAG"},
+  {"id":"DI-002","phase":"Consultation","task":"New cloud project deployment consultation","subtask":"project migration and deployment approach","description":"Consulted regarding deployment on the new project after the Google account incident, including project structure and service migration risks.","owner":"E. Norvaisas","estH":1.20,"spentH":1.20,"project":"Intelektex dipa.lt RAG"},
+  {"id":"DI-003","phase":"Deployment platform","task":"Cloud Build creation consultation","subtask":"CI/CD route and runtime config","description":"Discussed Cloud Build creation, build/deploy flow, runtime environment variables and service configuration for dipa.lt deployment.","owner":"E. Norvaisas","estH":1.20,"spentH":1.20,"project":"Intelektex dipa.lt RAG"},
+  {"id":"LR-001","phase":"MVP completion","task":"AB Linas RAG MVP finalization","subtask":"app version ready for internal testing","description":"Finished MVP-level implementation and stabilized the application version for Linas internal testing.","owner":"E. Norvaisas","estH":2.70,"spentH":2.70,"project":"AB Linas RAG"},
+  {"id":"LR-002","phase":"Client handoff","task":"Internal testing handoff","subtask":"testing package and feedback loop","description":"Passed the application version to Linas organization for internal testing and clarified feedback path.","owner":"E. Norvaisas","estH":1.70,"spentH":1.70,"project":"AB Linas RAG"},
+  {"id":"LR-003","phase":"Client coordination","task":"Weekly Linas meetings","subtask":"with Ausrine and Linas organization","description":"Together with Ausrine, held weekly alignment meetings with the Linas organization, reviewed progress and agreed next feedback cycle.","owner":"E. Norvaisas","estH":1.80,"spentH":1.80,"project":"AB Linas RAG"},
+  {"id":"LR-004","phase":"Stabilization","task":"Previous issue cleanup","subtask":"catch-up and backlog sorting","description":"Caught up with delayed tasks, sorted out previous issues and aligned the MVP state with current client expectations.","owner":"E. Norvaisas","estH":1.80,"spentH":1.80,"project":"AB Linas RAG"}
+]</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+
+<script>
+(function () {
+  function showBootError(message, warn) {
+    const el = document.getElementById('boot-error');
+    if (!el) return;
+    el.textContent = message;
+    el.classList.add('visible');
+    if (warn) el.classList.add('warn');
+  }
+
+  let TASKS;
+  try {
+    const raw = document.getElementById('tasks-embedded');
+    if (!raw) throw new Error('Embedded task data is missing.');
+    TASKS = JSON.parse(raw.textContent);
+  } catch (err) {
+    showBootError('Could not load task data: ' + (err && err.message ? err.message : String(err)));
+    return;
+  }
+  const PROJ_COLOR = {
+    'Google Cloud / Firebase': '#38bdf8',
+    'EU Teaching Assistant': '#34d399',
+    'Intelektex dipa.lt RAG': '#fb923c',
+    'AB Linas RAG': '#818cf8'
+  };
+  const PROJ_CLASS = {
+    'Google Cloud / Firebase': 'cloud',
+    'EU Teaching Assistant': 'teach',
+    'Intelektex dipa.lt RAG': 'dipa',
+    'AB Linas RAG': 'linas'
+  };
+  const SUMMARY_PREFIX = {
+    'Google Cloud / Firebase': 'cloud',
+    'EU Teaching Assistant': 'teach',
+    'Intelektex dipa.lt RAG': 'dipa',
+    'AB Linas RAG': 'linas'
+  };
+  const palette = ['#38bdf8','#34d399','#fb923c','#818cf8','#fbbf24','#f87171','#c084fc','#22d3ee'];
+  const charts = {};
+  const sum = (rows, fn) => rows.reduce((acc, row) => acc + fn(row), 0);
+
+  let sortKey = 'id';
+  let sortDir = 1;
+
+  function filteredTasks() {
+    const proj = document.getElementById('f-project').value;
+    const phase = document.getElementById('f-phase').value;
+    const q = document.getElementById('f-q').value.trim().toLowerCase();
+    return TASKS.filter(row => {
+      if (proj && row.project !== proj) return false;
+      if (phase && row.phase !== phase) return false;
+      if (q) {
+        const blob = `${row.task} ${row.subtask} ${row.description} ${row.phase} ${row.project}`.toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function projectRows(project) {
+    return TASKS.filter(row => row.project === project);
+  }
+
+  function renderSummaryCards() {
+    Object.entries(SUMMARY_PREFIX).forEach(([project, prefix]) => {
+      const rows = projectRows(project);
+      document.getElementById(`sc-${prefix}-est`).textContent = sum(rows, row => row.estH).toFixed(1);
+      document.getElementById(`sc-${prefix}-act`).textContent = sum(rows, row => row.spentH).toFixed(1);
+      document.getElementById(`sc-${prefix}-tasks`).textContent = rows.length;
+    });
+  }
+
+  function renderKPIs(rows) {
+    const totalEst = sum(rows, row => row.estH);
+    const totalSpent = sum(rows, row => row.spentH);
+    const projects = [...new Set(rows.map(row => row.project))];
+    const deliveryIndex = totalSpent > 0 ? Math.round(Math.min(100, (totalEst / totalSpent) * 100)) : 0;
+    document.getElementById('kpi-row').innerHTML = `
+      <div class="kpi"><div class="label">Total est</div><div class="value">${totalEst.toFixed(1)} h</div><div class="sub">Selected scope</div></div>
+      <div class="kpi ok"><div class="label">Total actual</div><div class="value">${totalSpent.toFixed(1)} h</div><div class="sub">11-18 May</div></div>
+      <div class="kpi cloud-k"><div class="label">Cloud recovery</div><div class="value">${sum(projectRows('Google Cloud / Firebase'), row => row.spentH).toFixed(1)} h</div><div class="sub">GCP / Firebase / OPPM</div></div>
+      <div class="kpi teach-k"><div class="label">Teaching Assistant</div><div class="value">${sum(projectRows('EU Teaching Assistant'), row => row.spentH).toFixed(1)} h</div><div class="sub">ready for teacher testing</div></div>
+      <div class="kpi dipa-k"><div class="label">dipa.lt RAG</div><div class="value">${sum(projectRows('Intelektex dipa.lt RAG'), row => row.spentH).toFixed(1)} h</div><div class="sub">Intelektex</div></div>
+      <div class="kpi linas-k"><div class="label">AB Linas RAG</div><div class="value">${sum(projectRows('AB Linas RAG'), row => row.spentH).toFixed(1)} h</div><div class="sub">MVP handoff</div></div>
+      <div class="kpi"><div class="label">Tasks</div><div class="value">${rows.length}</div><div class="sub">${projects.length} project streams</div></div>
+      <div class="kpi ${deliveryIndex >= 95 ? 'ok' : 'warn'}"><div class="label">Delivery index</div><div class="value">${deliveryIndex}</div><div class="sub">Σest / Σactual</div></div>
+    `;
+  }
+
+  function renderTable() {
+    let rows = filteredTasks();
+    rows = [...rows].sort((a, b) => {
+      const av = a[sortKey] ?? '';
+      const bv = b[sortKey] ?? '';
+      if (typeof av === 'number') return sortDir * (av - bv);
+      return sortDir * String(av).localeCompare(String(bv));
+    });
+
+    const tbody = document.getElementById('task-body');
+    const tfoot = document.getElementById('task-foot');
+    tbody.innerHTML = '';
+
+    rows.forEach(row => {
+      const pc = PROJ_CLASS[row.project] || 'cloud';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><code style="font-size:0.7rem;color:var(--muted)">${row.id}</code></td>
+        <td><span class="proj-dot ${pc}"></span><span style="font-size:0.75rem">${row.project}</span></td>
+        <td><span class="phase-tag">${row.phase}</span></td>
+        <td style="max-width:10rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${row.task}">${row.task}</td>
+        <td style="max-width:11rem;color:var(--muted);font-size:0.74rem">${row.subtask}</td>
+        <td style="max-width:20rem;font-size:0.73rem;color:var(--muted)">${row.description}</td>
+        <td>${row.owner}</td>
+        <td class="num">${row.estH.toFixed(2)}</td>
+        <td class="num">${row.spentH.toFixed(2)}</td>
+        <td><span class="badge ok">Done</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    const totalEst = sum(rows, row => row.estH);
+    const totalSpent = sum(rows, row => row.spentH);
+    tfoot.innerHTML = `<tr style="font-weight:700;border-top:2px solid #334155">
+      <td colspan="7">TOTAL — ${rows.length} tasks</td>
+      <td class="num">${totalEst.toFixed(2)}</td>
+      <td class="num">${totalSpent.toFixed(2)}</td>
+      <td></td>
+    </tr>`;
+
+    renderKPIs(rows);
+  }
+
+  function renderOwnerTable() {
+    const rows = filteredTasks();
+    const grouped = {};
+    rows.forEach(row => {
+      if (!grouped[row.owner]) grouped[row.owner] = { tasks: [], est: 0, spent: 0 };
+      grouped[row.owner].tasks.push(row);
+      grouped[row.owner].est += row.estH;
+      grouped[row.owner].spent += row.spentH;
+    });
+
+    const tbody = document.getElementById('owner-body');
+    tbody.innerHTML = '';
+    Object.entries(grouped).forEach(([owner, info]) => {
+      const deliveryIndex = info.spent > 0 ? Math.round(Math.min(100, (info.est / info.spent) * 100)) : 0;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${owner}</td>
+        <td class="num">${info.tasks.length}</td>
+        <td class="num">${info.est.toFixed(2)}</td>
+        <td class="num">${info.spent.toFixed(2)}</td>
+        <td class="num"><strong style="color:${deliveryIndex >= 95 ? 'var(--ok)' : 'var(--warn)'}">${deliveryIndex}</strong></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function buildChart(id, type, labels, data, colors) {
+    if (typeof Chart === 'undefined') return;
+    if (charts[id]) charts[id].destroy();
+    charts[id] = new Chart(document.getElementById(id).getContext('2d'), {
+      type,
+      data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1, borderColor: '#0a0f1e' }] },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 11, padding: 7 } },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${Number(ctx.raw).toFixed(2)}` } }
+        }
+      }
+    });
+  }
+
+  function buildBarChart(id, labels, datasets) {
+    if (typeof Chart === 'undefined') return;
+    if (charts[id]) charts[id].destroy();
+    charts[id] = new Chart(document.getElementById(id).getContext('2d'), {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 12 } },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${Number(ctx.raw).toFixed(1)} h` } }
+        },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: '#1e293b' } },
+          y: { stacked: true, ticks: { color: '#94a3b8', font: { size: 10 } } }
+        }
+      }
+    });
+  }
+
+  function renderCharts() {
+    const src = filteredTasks();
+    const projects = [...new Set(src.map(row => row.project))];
+    const phases = [...new Set(src.map(row => row.phase))];
+    buildChart('pieProject', 'doughnut', projects, projects.map(project => sum(src.filter(row => row.project === project), row => row.spentH)), projects.map(project => PROJ_COLOR[project]));
+    buildChart('piePhase', 'doughnut', phases, phases.map(phase => sum(src.filter(row => row.phase === phase), row => row.spentH)), phases.map((_, index) => palette[index % palette.length]));
+    buildChart('pieTasks', 'doughnut', projects, projects.map(project => src.filter(row => row.project === project).length), projects.map(project => PROJ_COLOR[project]));
+
+    const recoveryRows = src.filter(row => row.project === 'Google Cloud / Firebase');
+    buildChart('pieRecovery', 'doughnut', recoveryRows.map(row => row.phase), recoveryRows.map(row => row.spentH), recoveryRows.map((_, index) => palette[index % palette.length]));
+
+    buildBarChart('weekBar',
+      ['Actual'],
+      projects.map(project => ({
+        label: project,
+        data: [sum(src.filter(row => row.project === project), row => row.spentH)],
+        backgroundColor: `${PROJ_COLOR[project]}bf`
+      }))
+    );
+  }
+
+  function populateFilters() {
+    const add = (selId, items) => {
+      const sel = document.getElementById(selId);
+      items.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        sel.appendChild(option);
+      });
+    };
+    add('f-project', [...new Set(TASKS.map(row => row.project))]);
+    add('f-phase', [...new Set(TASKS.map(row => row.phase))]);
+  }
+
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (sortKey === key) sortDir *= -1;
+      else { sortKey = key; sortDir = 1; }
+      renderTable();
+      renderOwnerTable();
+    });
+  });
+
+  ['f-project','f-phase','f-q'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('change', () => { renderTable(); renderOwnerTable(); renderCharts(); });
+    if (id === 'f-q') el.addEventListener('input', () => { renderTable(); renderOwnerTable(); renderCharts(); });
+  });
+
+  function boot() {
+    try {
+      populateFilters();
+      renderSummaryCards();
+      renderTable();
+      renderOwnerTable();
+      if (typeof Chart === 'undefined') {
+        showBootError('Charts could not load (Chart.js blocked or offline). Summary and task table below still work.', true);
+      }
+      renderCharts();
+    } catch (err) {
+      showBootError('Report UI failed to initialize: ' + (err && err.message ? err.message : String(err)));
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>
