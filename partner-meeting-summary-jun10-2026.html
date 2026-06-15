@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Susitikimo santrauka — DIPA partneriai · 2026-06-10</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --rag: #fb923c;
+      --n8n: #f472b6;
+      --linas: #818cf8;
+      --lja: #34d399;
+      --oppm: #2dd4bf;
+      --meet: #94a3b8;
+      --adhoc: #a78bfa;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --risk: #f87171;
+      --accent: #38bdf8;
+      --plan: #60a5fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .week-block { border-bottom: 1px solid var(--border2); padding-bottom: 2rem; margin-bottom: 0.5rem; }
+    .week-block.plan-section { background: linear-gradient(180deg, rgba(96,165,250,0.04) 0%, transparent 100%); }
+    .week-block.secondary-section { background: linear-gradient(180deg, rgba(148,163,184,0.03) 0%, transparent 100%); }
+    .week-header {
+      padding: 1.25rem 2rem 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge.p0 { background: rgba(74,222,128,0.15); color: var(--ok); border: 1px solid rgba(74,222,128,0.35); }
+    .badge.p1 { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .badge.meet { background: rgba(56,189,248,0.12); color: var(--accent); border: 1px solid rgba(56,189,248,0.3); }
+    .banner {
+      margin: 0 2rem 0.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    .banner.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.28); color: #fde68a; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner strong { color: #fff; }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.74rem; font-weight: 600;
+      padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid;
+    }
+    .pill.linas { background: rgba(129,140,248,0.1); color: var(--linas); border-color: rgba(129,140,248,0.35); }
+    .pill.lja   { background: rgba(52,211,153,0.1);  color: var(--lja);   border-color: rgba(52,211,153,0.35); }
+    .pill.oppm  { background: rgba(45,212,191,0.1);  color: var(--oppm);  border-color: rgba(45,212,191,0.35); }
+    .pill.rag   { background: rgba(251,146,60,0.1);  color: var(--rag);   border-color: rgba(251,146,60,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n);   border-color: rgba(244,114,182,0.35); }
+    .pill.adhoc { background: rgba(167,139,250,0.1); color: var(--adhoc); border-color: rgba(167,139,250,0.35); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.65rem;
+      padding: 0.25rem 2rem 1.1rem;
+    }
+    .kpi {
+      background: var(--panel2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 0.7rem 0.8rem;
+    }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+      margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .card {
+      border-radius: 12px;
+      padding: 1rem 1.05rem;
+      border: 1px solid var(--border2);
+      background: var(--panel2);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+    }
+    .card.c-linas::before { background: var(--linas); }
+    .card.c-lja::before   { background: var(--lja); }
+    .card.c-oppm::before  { background: var(--oppm); }
+    .card.c-rag::before   { background: var(--rag); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-adhoc::before { background: var(--adhoc); }
+    .card.c-meet::before  { background: var(--meet); }
+    .card.blocked { border-color: rgba(248,113,113,0.35); }
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.65rem; margin-bottom: 0.5rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .est { color: var(--plan); display: block; }
+    .card-meta .tbd { color: var(--warn); display: block; font-size: 0.68rem; }
+    .card-meta .blocked { color: var(--risk); display: block; font-size: 0.68rem; }
+    .card-path { font-size: 0.71rem; color: var(--accent); margin: 0 0 0.6rem; word-break: break-all; }
+    .card-path code { font-size: 0.68rem; }
+    .card-note {
+      font-size: 0.77rem; color: #cbd5e1;
+      margin: 0 0 0.7rem; padding: 0.5rem 0.68rem;
+      border-radius: 8px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task {
+      padding: 0.52rem 0.68rem;
+      border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-linas .task { border-left-color: rgba(129,140,248,0.55); }
+    .card.c-lja .task   { border-left-color: rgba(52,211,153,0.55); }
+    .card.c-oppm .task { border-left-color: rgba(45,212,191,0.55); }
+    .card.c-rag .task  { border-left-color: rgba(251,146,60,0.55); }
+    .card.c-n8n .task  { border-left-color: rgba(244,114,182,0.55); }
+    .card.c-adhoc .task { border-left-color: rgba(167,139,250,0.55); }
+    .card.c-meet .task { border-left-color: rgba(148,163,184,0.5); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--plan); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .task-h.tbd { color: var(--warn); }
+    .task-h.blocked { color: var(--risk); }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .task-desc code { font-size: 0.71rem; color: #7dd3fc; }
+    .hierarchy {
+      margin: 0 2rem 1rem;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      background: var(--panel2);
+      border: 1px solid var(--border2);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+      overflow-x: auto;
+    }
+    .hierarchy .p0 { color: var(--ok); font-weight: 700; }
+    .hierarchy .p1 { color: var(--plan); }
+    .hierarchy .blk { color: var(--risk); }
+    .data-table-wrap { padding: 0 2rem 1rem; overflow-x: auto; }
+    table.data {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      background: var(--panel2);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+    table.data th, table.data td {
+      padding: 0.55rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border2);
+      vertical-align: top;
+    }
+    table.data th {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: rgba(10,15,30,0.5);
+    }
+    table.data tr:last-child td { border-bottom: none; }
+    .divider {
+      margin: 2rem 2rem 1.5rem;
+      border: none;
+      border-top: 2px dashed var(--border2);
+    }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+    @media print {
+      body { background: #fff; color: #111; }
+      .card, .kpi, .banner, table.data, .hierarchy { background: #fff !important; color: #111 !important; }
+      .task-h { color: #1d4ed8; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Susitikimo santrauka — prioritetų ir darbo plano suderinimas</h1>
+    <p class="sub">DIPA partneriai · 2026 m. birželio 10 d. · Eimantas Norvaišas</p>
+  </header>
+
+  <!-- ═══════════════ KONTEKSTAS ═══════════════ -->
+  <section class="week-block">
+    <div class="week-header">
+      <h2>Susitikimo esmė</h2>
+      <span class="badge meet">Partnerių susitikimas</span>
+    </div>
+
+    <div class="banner info">
+      <strong>Sutarta:</strong> aiškiai atskirti tris strateginius prioritetus (P0) nuo vystomų, bet antrinės eilės užduočių (P1).
+      OPPM ir Linas RAG multiagentinė architektūra — ilgalaikiai produktų pagrindai; DIPA OS — vidinės komandos efektyvumo ir pardavimų augimo (300&nbsp;%) instrumentas.
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="label">P0 įvertinta</div><div class="value" style="color:var(--ok)">~50 h</div><div class="sub">+ OPPM TBD</div></div>
+      <div class="kpi"><div class="label">P1 įvertinta</div><div class="value" style="color:var(--plan)">~32 h</div><div class="sub">DIPA RAG laukia</div></div>
+      <div class="kpi"><div class="label">Pardavimų tikslas</div><div class="value" style="font-size:1rem;color:var(--n8n)">+300 %</div><div class="sub">DIPA OS KPI</div></div>
+      <div class="kpi"><div class="label">RAG šablonas</div><div class="value" style="font-size:1rem;color:var(--linas)">Linas</div><div class="sub">multiagent core</div></div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ P0 PRIORITETAI ═══════════════ -->
+  <section class="week-block plan-section">
+    <div class="week-header">
+      <h2>Prioritetinės kryptys (P0)</h2>
+      <span class="badge p0">Pagrindinis fokusas</span>
+    </div>
+
+    <div class="legend">
+      <span class="pill oppm"><span class="dot"></span> OPPM finalizavimas — TBD</span>
+      <span class="pill linas"><span class="dot"></span> Linas RAG core — 20 h</span>
+      <span class="pill n8n"><span class="dot"></span> DIPA OS MVP — 30 h</span>
+    </div>
+
+    <main>
+      <p class="section-title">P0 — detalus aprašymas</p>
+      <div class="grid">
+
+        <article class="card c-oppm">
+          <div class="card-head">
+            <span class="card-name">P0-1 · OPPM (One Page Project Management) — finalizavimas</span>
+            <span class="card-meta"><span class="tbd">įvertinimas vėliau</span></span>
+          </div>
+          <p class="card-path"><code>oppm-assistant</code> · Cloud Run <code>oppm-assistant-v2</code> · <code>https://oppm.dipa.lt</code></p>
+          <p class="card-note">
+            Nuolatinis iteracinis procesas — ne vienkartinis release. Darbas pagal realų naudojimą ir gautą grįžtamąjį ryšį.
+          </p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Klaidų taisymas (bug fixes)</span><span class="task-h tbd">TBD</span></div>
+              <p class="task-desc">Stabilizavimas pagal naudotojų ir klientų atvejus: matricos generavimas, importai, teisių valdymas, kalbų palaikymas.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Grįžtamojo ryšio surinkimas</span><span class="task-h tbd">TBD</span></div>
+              <p class="task-desc">Struktūruotas feedback iš komandos ir klientų — kas neveikia, kas trūksta, prioritetų sąrašas.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Patobulinimai pagal feedback</span><span class="task-h tbd">TBD</span></div>
+              <p class="task-desc">Programinės įrangos atnaujinimai iteracijomis; laiko įvertinimas pateikiamas po pirmojo feedback ciklo.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-linas">
+          <div class="card-head">
+            <span class="card-name">P0-2 · Linas RAG — branduolio finalizavimas su multiagentais</span>
+            <span class="card-meta"><span class="est">~20 h</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/Cursor projects/linas-rag</code></p>
+          <p class="card-note">
+            <strong>Strateginė reikšmė:</strong> pagrindinis šablonas (template) visiems kitiems RAG sprendimams su multiagentine funkcionalumu —
+            pritaikomas kitų klientų poreikiams su minimaliu adaptavimo darbu. Apimtis pagal projektinį pasiūlymą.
+          </p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Multiagentinis orkestratorius (core)</span><span class="task-h">branduolys</span></div>
+              <p class="task-desc"><code>smart_agent_orchestrator.py</code> — Planner → Validator → Retriever → Drafter → Verifier → Finalizer; universalus scenarijų modelis.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Duomenų šaltinių ir agentų integracija</span><span class="task-h">branduolys</span></div>
+              <p class="task-desc">Vertex RAG, Outlook, inquiry workflow — konfigūruojamas šablonas kitiems klientams.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Diegimo ir konfigūracijos modelis</span><span class="task-h">branduolys</span></div>
+              <p class="task-desc">Cloud Run, Firebase, env šablonas — pakartojamas kitų RAG projektų diegimui.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-n8n">
+          <div class="card-head">
+            <span class="card-name">P0-3 · DIPA OS — vidinės komandos automatizacijos (MVP)</span>
+            <span class="card-meta"><span class="est">~30 h</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/dipa-os-presentation</code></p>
+          <p class="card-note">
+            Tikslas: padidinti vidinės komandos efektyvumą ir lead'ų kokybę siekiant <strong>300&nbsp;% pardavimų augimo</strong>.
+            MVP versija — komandos testavimui ir grįžtamajam ryšiui.
+          </p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">MVP versijos užbaigimas</span><span class="task-h">~30 h</span></div>
+              <p class="task-desc">Automatizacijų MVP, kad komanda galėtų pradėti testavimą ir teikti struktūruotą feedback.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Pardavimų komandos darbo laiko matavimas</span><span class="task-h">lygiagrečiai</span></div>
+              <p class="task-desc">Surinkti tikslius duomenis, kiek laiko užtrunka lead apdorojimas, skambučiai, follow-up ir pan. — matuojama nauda ir pritaikymas kituose atvejuose.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Komandos testavimo etapas</span><span class="task-h">po MVP</span></div>
+              <p class="task-desc">Vidinė komanda pradeda naudoti MVP, fiksuoja pastabas ir KPI prieš pilną automatizacijos plėtrą.</p>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <pre class="hierarchy"><span class="p0">P0-1</span>  OPPM finalizavimas          → nuolatinis ciklas (įvertinimas vėliau)
+<span class="p0">P0-2</span>  Linas RAG core + multiagent  → ~20 h | template visiems RAG
+<span class="p0">P0-3</span>  DIPA OS MVP                  → ~30 h | komandos testavimas + KPI matavimas</pre>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ P1 UŽDUOTYS ═══════════════ -->
+  <section class="week-block secondary-section">
+    <div class="week-header">
+      <h2>Vystomos užduotys (P1)</h2>
+      <span class="badge p1">Antrinė eilė</span>
+    </div>
+
+    <div class="banner warn">
+      <strong>Pastaba:</strong> šios užduotys tęsiamos lygiagrečiai, tačiau <strong>neperstumia P0 prioritetų</strong>.
+    </div>
+
+    <div class="legend">
+      <span class="pill lja"><span class="dot"></span> LJA RAG — 12 h</span>
+      <span class="pill adhoc"><span class="dot"></span> GCP migracija — 10 h</span>
+      <span class="pill rag"><span class="dot"></span> DIPA RAG — ~10 h · laukia Intelektex</span>
+    </div>
+
+    <main>
+      <p class="section-title">P1 — detalus aprašymas</p>
+      <div class="grid">
+
+        <article class="card c-lja">
+          <div class="card-head">
+            <span class="card-name">P1-1 · LJA RAG — užbaigimas ir grįžtamasis ryšys</span>
+            <span class="card-meta"><span class="est">~12 h</span></span>
+          </div>
+          <p class="card-path"><code>/Users/mac/Documents/Cursor projects/lja-ev-rag</code></p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Projekto užbaigimas</span><span class="task-h">~12 h</span></div>
+              <p class="task-desc">Likusių funkcijų implementacija ir stabilizavimas pagal projekto apimtį.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Grįžtamojo ryšio ciklas</span><span class="task-h">po delivery</span></div>
+              <p class="task-desc">Kliento / komandos testavimas, bug fix'ai ir patobulinimai pagal gautą feedback.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-adhoc">
+          <div class="card-head">
+            <span class="card-name">P1-2 · GCP migracija — senas DIPA Cloud → nauja organizacija</span>
+            <span class="card-meta"><span class="est">~10 h</span></span>
+          </div>
+          <p class="card-path">Likusių aplikacijų diegimas · DB perkėlimas · duomenų struktūrų kūrimas</p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Aplikacijų perkėlimas</span><span class="task-h">~10 h</span></div>
+              <p class="task-desc">Deploy likusių aplikacijų iš seno DIPA Cloud projekto į naują organizaciją.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Duomenų bazės ir struktūros</span><span class="task-h">įskaičiuota</span></div>
+              <p class="task-desc">DB migracija, Firestore / duomenų struktūrų sukūrimas ir konfigūracija naujoje aplinkoje.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-rag blocked">
+          <div class="card-head">
+            <span class="card-name">P1-3 · DIPA RAG — vidinis naudojimas (kartu su Intelektex)</span>
+            <span class="card-meta"><span class="blocked">laukia Intelektex</span><span class="est">~10 h</span></span>
+          </div>
+          <p class="card-note">
+            Darbas prasidės gavus Intelektex paskutinius bug fix'us. Diegimas ir testavimas — ~10 val. po fix'ų gavimo.
+          </p>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">Intelektex bug fix'ų laukimas</span><span class="task-h blocked">blocked</span></div>
+              <p class="task-desc">Paskutiniai Intelektex taisymai — priklausomybė, blokuojanti diegimą.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">Diegimas + testavimas</span><span class="task-h">~10 h</span></div>
+              <p class="task-desc">Deploy, smoke test, bendras testavimas su Intelektex — vidiniam DIPA naudojimui.</p>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <pre class="hierarchy"><span class="p1">P1-1</span>  LJA RAG + feedback           → ~12 h
+<span class="p1">P1-2</span>  GCP migracija (senas → naujas) → ~10 h
+<span class="p1">P1-3</span>  DIPA RAG + Intelektex       → ~10 h <span class="blk">| blocked: Intelektex</span></pre>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ RIZIKOS ═══════════════ -->
+  <section class="week-block">
+    <div class="week-header">
+      <h2>Rizikos ir priklausomybės</h2>
+    </div>
+    <div class="data-table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>Rizika</th>
+            <th>Poveikis</th>
+            <th>Mitigacija</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OPPM feedback gali išplėsti apimtį</td>
+            <td>Neaiškus laiko planas</td>
+            <td>Pirmas feedback ciklas → prioritetų sąrašas → įvertinimas</td>
+          </tr>
+          <tr>
+            <td>DIPA OS MVP reikalauja pardavimų komandos duomenų</td>
+            <td>Sunku įrodyti 300&nbsp;% tikslą</td>
+            <td>Pradėti laiko matavimą dar prieš pilną MVP</td>
+          </tr>
+          <tr>
+            <td>DIPA RAG blokuoja Intelektex</td>
+            <td>~10 h darbo negali prasidėti</td>
+            <td>Eskalacija Intelektex; lygiagretus P0 darbas</td>
+          </tr>
+          <tr>
+            <td>Daug lygiagrečių projektų</td>
+            <td>P0 gali vėluoti</td>
+            <td>Aiškus P0/P1 atskyrimas (šis dokumentas)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════════ VEIKSMAI ═══════════════ -->
+  <section class="week-block">
+    <div class="week-header">
+      <h2>Artimiausi veiksmai</h2>
+    </div>
+    <main>
+      <div class="grid">
+        <article class="card c-meet">
+          <div class="card-head">
+            <span class="card-name">Eimanto pusė</span>
+          </div>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">1. OPPM stabilizavimas ir feedback</span></div>
+              <p class="task-desc">Tęsti iteracinį tobulinimą be fiksuoto valandų limito; pateikti įvertinimą po pirmojo ciklo.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">2. Linas RAG branduolis</span><span class="task-h">20 h</span></div>
+              <p class="task-desc">Multiagentinė core dalis kaip universalus RAG šablonas.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">3. DIPA OS MVP</span><span class="task-h">30 h</span></div>
+              <p class="task-desc">MVP iki komandos testavimo; paraleliai — pardavimų darbo laiko fiksavimas.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">4. P1 užduotys</span></div>
+              <p class="task-desc">LJA RAG, migracija, DIPA RAG — pagal eilę ir Intelektex statusą.</p>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card c-meet">
+          <div class="card-head">
+            <span class="card-name">Partnerių / komandos pusė</span>
+          </div>
+          <ul class="tasks">
+            <li class="task">
+              <div class="task-top"><span class="task-title">1. OPPM naudojimas ir feedback</span></div>
+              <p class="task-desc">Aktyvus naudojimas; struktūruotas grįžtamasis ryšys — kas neveikia, kas trūksta.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">2. DIPA OS — pardavimų komanda</span></div>
+              <p class="task-desc">Sutarti, kaip ir ką matuoti (lead → skambutis → pasiūlymas) efektyvumui įrodyti.</p>
+            </li>
+            <li class="task">
+              <div class="task-top"><span class="task-title">3. Intelektex</span></div>
+              <p class="task-desc">Patvirtinti DIPA RAG bug fix'ų terminą.</p>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <div class="banner info" style="margin-top:0.5rem">
+      <strong>Santrauka:</strong> pagrindinis fokusas — OPPM iteracinis tobulinimas (be fiksuoto termino),
+      Linas RAG multiagentinis branduolys kaip universalus šablonas (~20&nbsp;h),
+      DIPA OS MVP komandos testavimui (~30&nbsp;h);
+      likusios užduotys (LJA RAG ~12&nbsp;h, migracija ~10&nbsp;h, DIPA RAG ~10&nbsp;h — laukiant Intelektex) vykdomos antrine eile.
+    </div>
+  </section>
+
+  <footer>
+    Partnerių susitikimo santrauka · 2026-06-10 · atidaryti naršyklėje · Cmd+P A4 spausdinimui
+  </footer>
+</body>
+</html>

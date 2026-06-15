@@ -6,6 +6,8 @@
 
 ### Latest
 
+- [Weekly projection — 15–22 Jun 2026](https://dipa-lt.github.io/oppm-reports/weekly-report-jun15-jun22-2026.html)
+- [Partner meeting summary — 10 Jun 2026](https://dipa-lt.github.io/oppm-reports/partner-meeting-summary-jun10-2026.html)
 - [Priority plan — 2–8 Jun delivered · 8–15 Jun KPI](https://dipa-lt.github.io/oppm-reports/priority-plan-jun02-jun15-2026.html)
 
 ### Why do I see HTML source code?
