@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly report — 17–23 Aug delivered · 24–30 Aug plan</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --oppm: #2dd4bf;
+      --adhoc: #a78bfa;
+      --n8n: #f472b6;
+      --meet: #94a3b8;
+      --strat: #38bdf8;
+      --infra: #f59e0b;
+      --client: #818cf8;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --risk: #f87171;
+      --plan: #60a5fa;
+      --partial: #fb923c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .week-header {
+      padding: 1.25rem 2rem 0.5rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+    }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .week-header.plan-week { padding-top: 2rem; border-top: 1px solid var(--border2); margin-top: 0.5rem; }
+    .badge {
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.2rem 0.65rem; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.partial { background: rgba(251,146,60,0.15); color: var(--partial); border: 1px solid rgba(251,146,60,0.35); }
+    .badge.plan { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .banner {
+      margin: 0 2rem 0.75rem;
+      padding: 0.85rem 1rem; border-radius: 10px;
+      font-size: 0.82rem; line-height: 1.55;
+    }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.28); color: #fde68a; }
+    .banner.ok { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.28); color: #bbf7d0; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner strong { color: #fff; }
+    .raga-legend {
+      display: flex; flex-wrap: wrap; gap: 0.65rem;
+      margin: 0 2rem 1rem; padding: 0.75rem 1rem;
+      border-radius: 10px; background: rgba(10,15,30,0.55);
+      border: 1px solid var(--border2); font-size: 0.78rem;
+    }
+    .raga-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .light { width: 10px; height: 10px; border-radius: 50%; }
+    .light.green { background: var(--ok); box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+    .light.amber { background: var(--partial); box-shadow: 0 0 8px rgba(251,146,60,0.45); }
+    .light.red { background: var(--risk); box-shadow: 0 0 8px rgba(248,113,113,0.45); }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.74rem; font-weight: 600;
+      padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid;
+    }
+    .pill.oppm  { background: rgba(45,212,191,0.1); color: var(--oppm); border-color: rgba(45,212,191,0.35); }
+    .pill.adhoc { background: rgba(167,139,250,0.1); color: var(--adhoc); border-color: rgba(167,139,250,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n); border-color: rgba(244,114,182,0.35); }
+    .pill.infra { background: rgba(245,158,11,0.1); color: var(--infra); border-color: rgba(245,158,11,0.35); }
+    .pill.client { background: rgba(129,140,248,0.1); color: var(--client); border-color: rgba(129,140,248,0.35); }
+    .pill.meet { background: rgba(148,163,184,0.12); color: #cbd5e1; border-color: rgba(148,163,184,0.4); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.65rem; padding: 0.25rem 2rem 1.1rem;
+    }
+    .kpi {
+      background: var(--panel2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 0.7rem 0.8rem;
+    }
+    .kpi.warn { border-color: rgba(251,191,36,0.35); }
+    .kpi.ok { border-color: rgba(74,222,128,0.35); }
+    .kpi.risk { border-color: rgba(248,113,113,0.35); }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    .grade-box {
+      margin: 0 2rem 1rem;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(96,165,250,0.06) 100%);
+      border: 1px solid rgba(251,191,36,0.25);
+      display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem;
+    }
+    .grade-note { flex: 1; min-width: 220px; font-size: 0.82rem; color: #cbd5e1; line-height: 1.55; }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .card {
+      border-radius: 12px; padding: 1rem 1.05rem;
+      border: 1px solid var(--border2); background: var(--panel2);
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+    }
+    .card.c-oppm::before  { background: var(--oppm); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-infra::before { background: var(--infra); }
+    .card.c-client::before { background: var(--client); }
+    .card.c-adhoc::before { background: var(--adhoc); }
+    .card.c-meet::before  { background: var(--meet); }
+    .card.p0 { border-color: rgba(248,113,113,0.25); }
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.65rem; margin-bottom: 0.5rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .act { color: var(--ok); display: block; }
+    .card-meta .est { color: var(--muted); font-size: 0.68rem; }
+    .card-meta .slip { color: var(--risk); display: block; }
+    .card-meta .p0 { color: var(--risk); display: block; }
+    .card-path { font-size: 0.71rem; color: var(--strat); margin: 0 0 0.6rem; word-break: break-all; }
+    .card-note {
+      font-size: 0.77rem; color: #cbd5e1; margin: 0 0 0.7rem;
+      padding: 0.5rem 0.68rem; border-radius: 8px;
+      background: rgba(10,15,30,0.45); border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task {
+      padding: 0.52rem 0.68rem; border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-oppm .task { border-left-color: rgba(45,212,191,0.55); }
+    .card.c-n8n .task { border-left-color: rgba(244,114,182,0.55); }
+    .card.c-infra .task { border-left-color: rgba(245,158,11,0.55); }
+    .card.c-client .task { border-left-color: rgba(129,140,248,0.55); }
+    .card.c-adhoc .task { border-left-color: rgba(167,139,250,0.55); }
+    .card.c-meet .task { border-left-color: rgba(148,163,184,0.55); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--ok); white-space: nowrap; }
+    .task-h.part { color: var(--partial); }
+    .task-h.slip { color: var(--risk); }
+    .task-h.plan { color: var(--plan); }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .task-desc code { font-size: 0.71rem; color: #7dd3fc; }
+    .status-chip {
+      display: inline-block; font-size: 0.62rem; font-weight: 700;
+      padding: 0.1rem 0.45rem; border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .status-chip.done { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .status-chip.part { background: rgba(251,146,60,0.15); color: var(--partial); }
+    .status-chip.no { background: rgba(248,113,113,0.15); color: var(--risk); }
+    .table-wrap { padding: 0 2rem 1.5rem; overflow-x: auto; }
+    table.data {
+      width: 100%; border-collapse: collapse; font-size: 0.78rem;
+      background: var(--panel2); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+    table.data th, table.data td {
+      padding: 0.55rem 0.75rem; text-align: left;
+      border-bottom: 1px solid var(--border2); vertical-align: top;
+    }
+    table.data th {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--muted); background: rgba(10,15,30,0.5);
+    }
+    table.data tr:last-child td { border-bottom: none; font-weight: 700; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .must { color: var(--risk); font-weight: 800; }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem; color: var(--muted);
+    }
+    @media print { body { background: #fff; color: #111; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Weekly report and plan</h1>
+  <p class="sub">Eimantas Norvaišas · 17–23 August 2026 delivered · 24–30 August 2026 plan</p>
+</header>
+
+<div class="banner info">
+  <strong>Focus last week:</strong> DIPA OS (claim ledger, empathetic call QA, metrics hub) and the new dipa.lt prototype.
+  OPPM: partial subtasks wired in the product (not yet marked on the matrix).
+  Unplanned: Intelektex — contact forms back into Google Sheets (2 h). Internal meetings stayed heavy.
+</div>
+
+<div class="raga-legend">
+  <strong style="color:#fff;margin-right:0.25rem">Traffic light:</strong>
+  <span><span class="light green"></span> Completed</span>
+  <span><span class="light amber"></span> In progress</span>
+  <span><span class="light red"></span> Carried over</span>
+</div>
+
+<!-- ========== LAST WEEK ========== -->
+<div class="week-header">
+  <h2>Week 17–23 August 2026 — delivered</h2>
+  <span class="badge partial">42 h delivered · 38 h planned</span>
+</div>
+
+<div class="legend">
+  <span class="pill n8n"><span class="dot"></span> DIPA OS — 22 h</span>
+  <span class="pill meet"><span class="dot"></span> Internal meetings — 7.5 h</span>
+  <span class="pill oppm"><span class="dot"></span> OPPM — 6 h</span>
+  <span class="pill adhoc"><span class="dot"></span> New dipa.lt — 4 h</span>
+  <span class="pill client"><span class="dot"></span> Intelektex — 2 h</span>
+  <span class="pill infra"><span class="dot"></span> Aušrinė first-look — 0.5 h</span>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi warn"><div class="label">Planned</div><div class="value" style="color:var(--plan)">38 h</div></div>
+  <div class="kpi ok"><div class="label">Delivered</div><div class="value">42 h</div></div>
+  <div class="kpi ok"><div class="label">Completed</div><div class="value" style="font-size:1rem;color:var(--ok)">4</div><div class="sub">Claims · call QA · Cloudflare · forms</div></div>
+  <div class="kpi warn"><div class="label">In progress</div><div class="value" style="font-size:1rem;color:var(--partial)">3</div><div class="sub">5 L1 KPIs · auth · new dipa.lt</div></div>
+  <div class="kpi risk"><div class="label">Carried over</div><div class="value" style="font-size:1rem;color:var(--risk)">2</div><div class="sub">Live ASAICHI numbers · user accounts</div></div>
+</div>
+
+<div class="grade-box">
+  <div class="grade-note" style="margin:0">
+    DIPA OS shipped the claim ledger (Fact / Diagnosis / Hypothesis / Person assumption) and a five-stage call-QA pipeline that no longer scores “close” on a hostile buyer.
+    Call evaluation now finishes in the background so Cloudflare no longer returns 524.
+    The 19 August KPI session set the five L1 targets (120 k € / month, 3 seats, ≤3 h / client, 20-day cycle, quality 80/100); those targets are not yet the live board.
+    The new dipa.lt prototype (LT + EN) was built in <code>new-dipa-web</code>.
+    Intelektex restored the contact-form → Google Sheet path (2 h). Aušrinė first-look was a short advisory (30 min).
+  </div>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Plan vs outcome — 17–23 Aug</p>
+  <table class="data">
+    <thead>
+      <tr><th>#</th><th>Must-do (from 17–23 plan)</th><th class="num">Plan h</th><th class="num">Est.</th><th>Status</th><th>What happened</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>OPPM — invitations and rules</td>
+        <td class="num">6</td><td class="num">1</td>
+        <td><span class="status-chip no">Carried</span></td>
+        <td>Invitation production gate still open. Ada Miller owns tracker status on the matrix.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>OPPM — matrix, review, partial subtasks</td>
+        <td class="num">6</td><td class="num">5</td>
+        <td><span class="status-chip part">In progress</span></td>
+        <td>Ada’s mobile / Full / Overview branch reviewed. Partial subtasks integrated in the product; status not yet marked on the OPPM matrix.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>DIPA OS — ASAICHI KPIs with Lauris</td>
+        <td class="num">8</td><td class="num">4</td>
+        <td><span class="status-chip part">In progress</span></td>
+        <td>19 Aug session agreed the five L1 targets and weekly 2-minute cause analysis. Metrics hub exists; live weekly numbers and new targets are not in the product yet.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>DIPA OS — agent claim standard (Marija)</td>
+        <td class="num">6</td><td class="num">11</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>Claim ledger live: extraction, verification, review queue, first-contact usage rules. Deep Research citations mapped in code. Tested on real leads.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>DIPA OS — remaining MVP / integrations</td>
+        <td class="num">4</td><td class="num">7</td>
+        <td><span class="status-chip part">In progress</span></td>
+        <td>Empathetic call QA (WF3 v2) shipped and deployed. Background eval for Cloudflare 524. Team course and MVP status pack. User accounts not started.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Mantinga, Emerald Bastion, accounts, authentication</td>
+        <td class="num">8</td><td class="num">—</td>
+        <td><span class="status-chip no">Carried</span></td>
+        <td>Cloudflare company-account cut-over done as part of the website stream. Authentication still the shared site gate. Mantinga decision window open to 26 August.</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>Internal meetings (not in the 17–23 hour table)</td>
+        <td class="num">—</td><td class="num">7.5</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>19 Aug KPI / advisor session (Igoris, Mantas, Lauris, Marija). 21 Aug R&amp;D (DIPA OS metrics, new dipa.lt, training). Further internal syncs through the week.</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>New dipa.lt website (new-dipa-web)</td>
+        <td class="num">—</td><td class="num">4</td>
+        <td><span class="status-chip part">In progress</span></td>
+        <td>Positioning pack, LT + EN prototype (Human → Team → Process → Business), preview with noindex. Open: ICP, public pricing, Client Zero wording.</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>Intelektex — dipa.lt contact forms</td>
+        <td class="num">—</td><td class="num">2</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>Urgent: website contact submissions were not reaching the Google Sheet. Restored with Intelektex.</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>Aušrinė — first-look (cemetery AI assistant)</td>
+        <td class="num">—</td><td class="num">0.5</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>Short advisory (30 min): hybrid system, not a full proposal. Answer handed to Aušrinė.</td>
+      </tr>
+      <tr>
+        <td colspan="2">TOTAL</td>
+        <td class="num">~38</td><td class="num">~42</td>
+        <td colspan="2">DIPA OS 22 · OPPM 6 · new website 4 · meetings 7.5 · Intelektex 2 · Aušrinė 0.5</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<main>
+  <p class="section-title">Delivered detail — 17–23 Aug</p>
+  <div class="grid">
+
+    <article class="card c-n8n">
+      <div class="card-head">
+        <span class="card-name">DIPA Revenue OS</span>
+        <span class="card-meta"><span class="act">Shipped / in progress</span><span class="est">22 h</span></span>
+      </div>
+      <p class="card-path">dipa-n8n/web · activity-log 17–20 Aug · Cloud Run <code>dipa-os</code></p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Claim ledger — Fact / Diagnosis / Hypothesis / Person</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Every research statement now has a tier, source, and first-contact rule. Person assumptions without a primary source are blocked. Review queue for sales or value owner. Deep Research <code>[cite: N]</code> mapped in code, not guessed by the model. Real-lead extraction was broken (0 claims on 57 finished reports) and is fixed.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Claim verification</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Verifier actually searches sources. Caught a real contradiction (two job titles for the same person) and fabricated career history. One claim per model call; latency 453 s → 39 s on the live check.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Empathetic call QA (WF3 v2)</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Buyer state is decided before scoring. Hostile-buyer test: mode <code>de_escalate</code>, closing marked N/A, coaching said step back. Methodology locked before the transcript. Fairness gates strip closing advice in de-escalate / listen-only.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Background call evaluation (Cloudflare 524)</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Pipeline ~98 s. API now returns 202 and finishes in the background. QA screen polls. Cloud Run deployed with CPU always-on so the job does not freeze after the response.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Metrics hub + Sales Advisor</span><span class="task-h part">In progress</span></div>
+          <p class="task-desc">Unified <code>/metrics</code> hub, advisor recommendations, 8 ROI dimensions. 19 Aug targets (120 k €, 3 seats, ≤3 h, 20 days, 300 k backlog, quality 80/100) are documented; the product still shows the old 60 k / 7.5 k world.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">User authentication</span><span class="task-h slip">Carried over</span></div>
+          <p class="task-desc">Still the shared site-gate password. Individual accounts were planned after ASAICHI numbers went live. Priority this week.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-meet">
+      <div class="card-head">
+        <span class="card-name">Internal meetings</span>
+        <span class="card-meta"><span class="act">Completed</span><span class="est">7.5 h</span></span>
+      </div>
+      <p class="card-path">19 Aug KPI session · 21 Aug R&amp;D · further internal syncs</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">19 Aug — KPI / advisor session</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Igoris, Mantas, Lauris, Marija, Eimantas. Five L1 metrics, 120 k € system target, ≤5 kaizens / week, weekly “we made X € → why → what we change”. Written up as the 19 Aug status note.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">21 Aug — R&amp;D meeting</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Eimantas, Mantas, Igoris, Ada. Agenda: put the five-metric tree in the product, Igoris ROI-rubric audit, new dipa.lt v6 decisions, internal training method. Sales not in the room — outcomes to be presented to Lauris and Marija separately.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Further internal syncs</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Follow-ups on agents, website positioning, Cloudflare cut-over, and OPPM / Ada split. This week was heavier on communication than a normal build week.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-client">
+      <div class="card-head">
+        <span class="card-name">Intelektex — dipa.lt contact forms</span>
+        <span class="card-meta"><span class="act">Completed</span><span class="est">2 h</span></span>
+      </div>
+      <p class="card-path">Urgent · joint with Intelektex · website → Google Sheet</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Inbound leads stopped reaching the sheet</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Contact-form submissions on dipa.lt were not arriving in the Google Sheet. Diagnosed and restored with Intelektex so new website leads are captured again.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-infra">
+      <div class="card-head">
+        <span class="card-name">Aušrinė — first-look</span>
+        <span class="card-meta"><span class="act">Completed</span><span class="est">0.5 h</span></span>
+      </div>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Cemetery sales / design assistant</span><span class="task-h">Done</span></div>
+          <p class="task-desc">30 min advisory only: hybrid system (AI extracts, code calculates and draws). Not a full proposal. Answer sent to Aušrinė.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-oppm">
+      <div class="card-head">
+        <span class="card-name">OPPM Assistant</span>
+        <span class="card-meta"><span class="act">In progress</span><span class="est">6 h</span></span>
+      </div>
+      <p class="card-path">Ada Miller on <code>oppm-bug-fixes</code> · Eimantas: subtasks + review</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Partial subtasks in the product</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Partial subtask support integrated in the app (cascade, schedule, drill-down). Status of those items is not yet marked on the OPPM matrix — tracker update still due.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Ada branch — mobile, Full / Overview, matrix</span><span class="task-h part">Reviewed</span></div>
+          <p class="task-desc">New commit pulled locally: mobile view, Overview closer to a Full view, matrix and shell fixes. Production on oppm.dipa.lt unchanged until the matrix view is ready.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Invitations and production gate</span><span class="task-h slip">Carried over</span></div>
+          <p class="task-desc">Not executed this week. Ada continues OPPM updates from the Development &amp; QA project plan.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-adhoc">
+      <div class="card-head">
+        <span class="card-name">New dipa.lt website</span>
+        <span class="card-meta"><span class="act">Prototype live</span><span class="est">4 h</span></span>
+      </div>
+      <p class="card-path"><code>new-dipa-web</code> · positioning 19 Aug · prototype LT + EN · preview noindex</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Positioning pack and v6 information architecture</span><span class="task-h">Done</span></div>
+          <p class="task-desc">From “DI training provider” to transformation partner. Public axis Human → Team → Process → Business. Design: light enterprise, not a dark GlobalNodes clone.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">LT + EN prototype pages</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Home, solutions, philosophy, case, insights, transformation sprint, and English mirrors. Preview published with noindex.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Open decisions (21 Aug R&amp;D)</span><span class="task-h part">In progress</span></div>
+          <p class="task-desc">ICP band, public pricing, Client Zero numbers, repo hygiene. Cloudflare company-account cut-over for live dipa.lt is done.</p>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<!-- ========== THIS WEEK ========== -->
+<div class="week-header plan-week">
+  <h2>Week 24–30 August 2026 — plan</h2>
+  <span class="badge plan">38 h planned</span>
+</div>
+
+<div class="banner info">
+  Carry the 19 Aug / 21 Aug decisions into the product: five L1 targets on the board, advisor headline “we made X € because…”, then individual user accounts.
+  Mantas and Igoris review the dashboard before Lauris and Marija see it.
+  Mantinga offer valid until 26 August.
+</div>
+
+<div class="banner warn">
+  <strong>Carry-over:</strong> live ASAICHI numbers with the new targets · DIPA OS user authentication · OPPM invitation production gate (Ada) · JSON parse fix still to deploy on Cloud Run.
+</div>
+
+<div class="legend">
+  <span class="pill n8n"><span class="dot"></span> DIPA OS — 22 h</span>
+  <span class="pill meet"><span class="dot"></span> Meetings / follow-up — 6 h</span>
+  <span class="pill oppm"><span class="dot"></span> OPPM — 4 h</span>
+  <span class="pill client"><span class="dot"></span> Mantinga + forms watch — 4 h</span>
+  <span class="pill infra"><span class="dot"></span> Deploy / accounts — 2 h</span>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="label">Planned</div><div class="value" style="color:var(--plan)">38 h</div></div>
+  <div class="kpi"><div class="label">Priorities</div><div class="value">3</div><div class="sub">5 L1 KPIs · auth · deploy</div></div>
+  <div class="kpi"><div class="label">Ada Miller</div><div class="value" style="font-size:1rem;color:var(--oppm)">OPPM matrix</div><div class="sub">Dev &amp; QA project in OPPM</div></div>
+  <div class="kpi"><div class="label">Gate</div><div class="value" style="font-size:1rem;color:var(--risk)">26 Aug</div><div class="sub">Mantinga decision</div></div>
+</div>
+
+<main>
+  <p class="section-title">Must-do streams — 24–30 Aug</p>
+  <div class="grid">
+
+    <article class="card c-n8n p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">1 ·</span> DIPA OS — five L1 targets on the board</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">10 h</span></span>
+      </div>
+      <p class="card-path">From 19 Aug agreement · 21 Aug R&amp;D stage 1–3</p>
+      <p class="card-note">Until targets change, the advisor is advising on the old world (60 k € / month, 7.5 k per person).</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Write the agreed targets into KPI seeds</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">120 k € / month · 30 k € / week · 3 seats · ≤3 h / client · 20-day cycle · ~300 k backlog · quality 80/100 · no-show ≤10 %.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Advisor headline on those five metrics</span><span class="task-h plan">5 h</span></div>
+          <p class="task-desc">“We made X € because… next week we change…”. Rank by impact on revenue, not call statistics.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Deploy JSON parse fix + re-run failed leads</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Fix is in the repo, not yet on Cloud Run. Then re-run failed research.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">2 ·</span> DIPA OS — user authentication</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">8 h</span></span>
+      </div>
+      <p class="card-path">Replace the shared password gate with individual accounts</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Individual login (no shared site password)</span><span class="task-h plan">6 h</span></div>
+          <p class="task-desc">Named accounts for the sales and R&amp;D team. Remove <code>--allow-unauthenticated</code> exposure on APIs where possible.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Roles and first-user smoke</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Admin vs seller. Confirm Lauris / Marija / Ada can sign in on staging before production.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n">
+      <div class="card-head">
+        <span class="card-name">3 · DIPA OS — Igoris ROI audit follow-up</span>
+        <span class="card-meta"><span class="est">4 h</span></span>
+      </div>
+      <p class="card-path">No Discovery-close code change until the written rule exists</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Send the 8-dimension list; wait for the audit</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Next-step closing, agenda, pain lock, KPI, executive buyer, value articulation, objection, indecision (JOLT).</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Quality average by meeting type × person</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Weekly average so the advisor can say “Lauris ROI 32/100 vs team 80”.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-meet">
+      <div class="card-head">
+        <span class="card-name">4 · Communication</span>
+        <span class="card-meta"><span class="est">6 h</span></span>
+      </div>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Present 21 Aug outcomes to Lauris and Marija</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">After Mantas / Igoris review. Do not ask them to fill the old 60 k board.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Internal syncs (lighter than last week)</span><span class="task-h plan">4 h</span></div>
+          <p class="task-desc">Website decisions if needed, training method proposal (learn-by-doing + Monday kaizen), Ada OPPM checkpoint.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-oppm">
+      <div class="card-head">
+        <span class="card-name">5 · OPPM — Ada lead, Eimantas review</span>
+        <span class="card-meta"><span class="est">4 h</span></span>
+      </div>
+      <p class="card-path">Development &amp; QA project in OPPM</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Review Ada’s Full / mobile / matrix work</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">Smoke the new views. No production merge until colours, person filter, and layout are ready.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Invitation rules — only if Ada is blocked</span><span class="task-h plan">1 h</span></div>
+          <p class="task-desc">Firestore rules deploy remains on Eimantas if she cannot proceed.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-client">
+      <div class="card-head">
+        <span class="card-name">6 · Clients and watch items</span>
+        <span class="card-meta"><span class="est">6 h</span></span>
+      </div>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Mantinga — decision by 26 August</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">If accepted: start Discovery and collect five to six further weekly cases.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Intelektex — confirm forms still land in the sheet</span><span class="task-h plan">1 h</span></div>
+          <p class="task-desc">One test submission after any website or Cloudflare change.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">new-dipa-web — repo + open decisions</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">ICP, public pricing, Client Zero wording. Preview stays noindex until copy is signed off.</p>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Day order — 24–30 August</p>
+  <table class="data">
+    <thead><tr><th>Day</th><th>Focus</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mon 24</strong></td><td>Write 5 L1 targets into the product · deploy JSON parse fix · re-run failed leads</td></tr>
+      <tr><td><strong>Tue 25</strong></td><td>Advisor headline on the five metrics · start individual user accounts</td></tr>
+      <tr><td><strong>Wed 26</strong></td><td>Mantinga decision · auth smoke · Mantas / Igoris dashboard review</td></tr>
+      <tr><td><strong>Thu 27</strong></td><td>Present outcomes to Lauris and Marija · quality-by-meeting-type slice</td></tr>
+      <tr><td><strong>Fri 28</strong></td><td>OPPM review with Ada · website decisions if unblocked · form watch test</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Hours — 24–30 August</p>
+  <table class="data">
+    <thead>
+      <tr><th>#</th><th>Item</th><th>When</th><th class="num">Hours</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>DIPA OS — five L1 targets + advisor + deploy</td><td>Mon–Tue</td><td class="num">10</td></tr>
+      <tr><td>2</td><td>DIPA OS — user authentication</td><td>Tue–Wed</td><td class="num">8</td></tr>
+      <tr><td>3</td><td>DIPA OS — Igoris ROI audit follow-up</td><td>Wed–Thu</td><td class="num">4</td></tr>
+      <tr><td>4</td><td>Internal meetings and Lauris / Marija brief</td><td>Wed–Thu</td><td class="num">6</td></tr>
+      <tr><td>5</td><td>OPPM review (Ada lead)</td><td>Fri</td><td class="num">4</td></tr>
+      <tr><td>6</td><td>Mantinga, form watch, new dipa.lt</td><td>Wed–Fri</td><td class="num">6</td></tr>
+      <tr><td colspan="3">Total — week 24–30 August 2026</td><td class="num">38</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  Eimantas Norvaišas · 17–23 August delivered · 24–30 August plan
+</footer>
+
+</body>
+</html>

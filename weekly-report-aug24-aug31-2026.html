@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly report — 24–31 Aug delivered · 31 Aug–6 Sep plan</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --oppm: #2dd4bf;
+      --adhoc: #a78bfa;
+      --n8n: #f472b6;
+      --meet: #94a3b8;
+      --strat: #38bdf8;
+      --infra: #f59e0b;
+      --client: #818cf8;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --risk: #f87171;
+      --plan: #60a5fa;
+      --partial: #fb923c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .week-header {
+      padding: 1.25rem 2rem 0.5rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+    }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .week-header.plan-week { padding-top: 2rem; border-top: 1px solid var(--border2); margin-top: 0.5rem; }
+    .badge {
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.2rem 0.65rem; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.partial { background: rgba(251,146,60,0.15); color: var(--partial); border: 1px solid rgba(251,146,60,0.35); }
+    .badge.plan { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .banner {
+      margin: 0 2rem 0.75rem;
+      padding: 0.85rem 1rem; border-radius: 10px;
+      font-size: 0.82rem; line-height: 1.55;
+    }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.28); color: #fde68a; }
+    .banner.ok { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.28); color: #bbf7d0; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner strong { color: #fff; }
+    .raga-legend {
+      display: flex; flex-wrap: wrap; gap: 0.65rem;
+      margin: 0 2rem 1rem; padding: 0.75rem 1rem;
+      border-radius: 10px; background: rgba(10,15,30,0.55);
+      border: 1px solid var(--border2); font-size: 0.78rem;
+    }
+    .raga-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .light { width: 10px; height: 10px; border-radius: 50%; }
+    .light.green { background: var(--ok); box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+    .light.amber { background: var(--partial); box-shadow: 0 0 8px rgba(251,146,60,0.45); }
+    .light.red { background: var(--risk); box-shadow: 0 0 8px rgba(248,113,113,0.45); }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.74rem; font-weight: 600;
+      padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid;
+    }
+    .pill.oppm  { background: rgba(45,212,191,0.1); color: var(--oppm); border-color: rgba(45,212,191,0.35); }
+    .pill.adhoc { background: rgba(167,139,250,0.1); color: var(--adhoc); border-color: rgba(167,139,250,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n); border-color: rgba(244,114,182,0.35); }
+    .pill.infra { background: rgba(245,158,11,0.1); color: var(--infra); border-color: rgba(245,158,11,0.35); }
+    .pill.client { background: rgba(129,140,248,0.1); color: var(--client); border-color: rgba(129,140,248,0.35); }
+    .pill.meet { background: rgba(148,163,184,0.12); color: #cbd5e1; border-color: rgba(148,163,184,0.4); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.65rem; padding: 0.25rem 2rem 1.1rem;
+    }
+    .kpi {
+      background: var(--panel2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 0.7rem 0.8rem;
+    }
+    .kpi.warn { border-color: rgba(251,191,36,0.35); }
+    .kpi.ok { border-color: rgba(74,222,128,0.35); }
+    .kpi.risk { border-color: rgba(248,113,113,0.35); }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    .grade-box {
+      margin: 0 2rem 1rem;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(45,212,191,0.08) 0%, rgba(96,165,250,0.06) 100%);
+      border: 1px solid rgba(45,212,191,0.25);
+      display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem;
+    }
+    .grade-note { flex: 1; min-width: 220px; font-size: 0.82rem; color: #cbd5e1; line-height: 1.55; }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .card {
+      border-radius: 12px; padding: 1rem 1.05rem;
+      border: 1px solid var(--border2); background: var(--panel2);
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+    }
+    .card.c-oppm::before  { background: var(--oppm); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-infra::before { background: var(--infra); }
+    .card.c-client::before { background: var(--client); }
+    .card.c-adhoc::before { background: var(--adhoc); }
+    .card.c-meet::before  { background: var(--meet); }
+    .card.p0 { border-color: rgba(248,113,113,0.25); }
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.65rem; margin-bottom: 0.5rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .act { color: var(--ok); display: block; }
+    .card-meta .est { color: var(--muted); font-size: 0.68rem; }
+    .card-meta .slip { color: var(--risk); display: block; }
+    .card-meta .p0 { color: var(--risk); display: block; }
+    .card-path { font-size: 0.71rem; color: var(--strat); margin: 0 0 0.6rem; word-break: break-all; }
+    .card-note {
+      font-size: 0.77rem; color: #cbd5e1; margin: 0 0 0.7rem;
+      padding: 0.5rem 0.68rem; border-radius: 8px;
+      background: rgba(10,15,30,0.45); border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task {
+      padding: 0.52rem 0.68rem; border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-oppm .task { border-left-color: rgba(45,212,191,0.55); }
+    .card.c-n8n .task { border-left-color: rgba(244,114,182,0.55); }
+    .card.c-infra .task { border-left-color: rgba(245,158,11,0.55); }
+    .card.c-client .task { border-left-color: rgba(129,140,248,0.55); }
+    .card.c-adhoc .task { border-left-color: rgba(167,139,250,0.55); }
+    .card.c-meet .task { border-left-color: rgba(148,163,184,0.55); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--ok); white-space: nowrap; }
+    .task-h.part { color: var(--partial); }
+    .task-h.slip { color: var(--risk); }
+    .task-h.plan { color: var(--plan); }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .task-desc code { font-size: 0.71rem; color: #7dd3fc; }
+    .status-chip {
+      display: inline-block; font-size: 0.62rem; font-weight: 700;
+      padding: 0.1rem 0.45rem; border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .status-chip.done { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .status-chip.part { background: rgba(251,146,60,0.15); color: var(--partial); }
+    .status-chip.no { background: rgba(248,113,113,0.15); color: var(--risk); }
+    .table-wrap { padding: 0 2rem 1.5rem; overflow-x: auto; }
+    table.data {
+      width: 100%; border-collapse: collapse; font-size: 0.78rem;
+      background: var(--panel2); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+    table.data th, table.data td {
+      padding: 0.55rem 0.75rem; text-align: left;
+      border-bottom: 1px solid var(--border2); vertical-align: top;
+    }
+    table.data th {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--muted); background: rgba(10,15,30,0.5);
+    }
+    table.data tr:last-child td { border-bottom: none; font-weight: 700; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .must { color: var(--risk); font-weight: 800; }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem; color: var(--muted);
+    }
+    @media print { body { background: #fff; color: #111; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Weekly report and plan</h1>
+  <p class="sub">Eimantas Norvaišas · 24–31 August 2026 delivered · 31 August–6 September 2026 plan</p>
+</header>
+
+<div class="banner info">
+  <strong>Focus last week:</strong> OPPM went to production (invites, Full / Overview, owner visibility) — ahead of the September merge window.
+  DIPA OS spent the week on the ICP universe and Lead Finder plan, not on the five L1 board or user accounts.
+  New dipa.lt preview was published and Lithuanian copy was revised across the prototype.
+</div>
+
+<div class="raga-legend">
+  <strong style="color:#fff;margin-right:0.25rem">Traffic light:</strong>
+  <span><span class="light green"></span> Completed</span>
+  <span><span class="light amber"></span> In progress</span>
+  <span><span class="light red"></span> Carried over</span>
+</div>
+
+<!-- ========== LAST WEEK ========== -->
+<div class="week-header">
+  <h2>Week 24–31 August 2026 — delivered</h2>
+  <span class="badge partial">40 h delivered · 38 h planned</span>
+</div>
+
+<div class="legend">
+  <span class="pill oppm"><span class="dot"></span> OPPM — 14 h</span>
+  <span class="pill n8n"><span class="dot"></span> DIPA OS — 12 h</span>
+  <span class="pill adhoc"><span class="dot"></span> New dipa.lt — 8 h</span>
+  <span class="pill meet"><span class="dot"></span> Internal meetings — 6 h</span>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi warn"><div class="label">Planned</div><div class="value" style="color:var(--plan)">38 h</div></div>
+  <div class="kpi ok"><div class="label">Delivered</div><div class="value">40 h</div></div>
+  <div class="kpi ok"><div class="label">Completed</div><div class="value" style="font-size:1rem;color:var(--ok)">3</div><div class="sub">OPPM prod · ICP universe · dipa.lt copy</div></div>
+  <div class="kpi warn"><div class="label">In progress</div><div class="value" style="font-size:1rem;color:var(--partial)">2</div><div class="sub">Lead Finder · website review</div></div>
+  <div class="kpi risk"><div class="label">Carried over</div><div class="value" style="font-size:1rem;color:var(--risk)">3</div><div class="sub">5 L1 board · user auth · Opatrip</div></div>
+</div>
+
+<div class="grade-box">
+  <div class="grade-note" style="margin:0">
+    The week did not follow the 24–30 plan. OPPM (planned 4 h, review only) became the main ship: invitations no longer expire after seven days, <code>/invite</code> works before sign-in, Full / Overview is on <code>main</code>, and production is <code>oppm-assistant-v2-00009</code>.
+    DIPA OS (planned 22 h on five L1 targets and authentication) went to market data instead: ICP universe of <strong>4 631</strong> companies from Registrų centras + Sodra, live <code>/icp-visata</code>, and the 26 August review pack.
+    New dipa.lt left “prototype on disk” and became a noindex preview with a full Lithuanian copy pass on 28 August.
+  </div>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Plan vs outcome — 24–31 Aug</p>
+  <table class="data">
+    <thead>
+      <tr><th>#</th><th>Must-do (from 24–30 plan)</th><th class="num">Plan h</th><th class="num">Est.</th><th>Status</th><th>What happened</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>DIPA OS — five L1 targets on the board</td>
+        <td class="num">10</td><td class="num">—</td>
+        <td><span class="status-chip no">Carried</span></td>
+        <td>Targets (120 k € / month, 3 seats, ≤3 h / client, 20-day cycle, quality 80/100) are still documented only. <code>KPI_SEEDS</code> and the advisor headline were not changed. JSON parse fix was not the Cloud Run work this week.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>DIPA OS — user authentication</td>
+        <td class="num">8</td><td class="num">—</td>
+        <td><span class="status-chip no">Carried</span></td>
+        <td>Still the shared site-gate password. Individual accounts move to this week, with Ada, together with issue debugging.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>DIPA OS — Igoris ROI audit follow-up</td>
+        <td class="num">4</td><td class="num">—</td>
+        <td><span class="status-chip no">Carried</span></td>
+        <td>No written audit landed in the repo. Quality-by-meeting-type slice not built. Capacity went to ICP / Lead Finder instead.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Internal meetings / Lauris &amp; Marija brief</td>
+        <td class="num">6</td><td class="num">6</td>
+        <td><span class="status-chip part">Partial</span></td>
+        <td>26 August ICP universe review (4 631 companies, freight niche 460, seven decisions). Not the planned “present 21 Aug outcomes on the new 120 k board” — that board is still the old world.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>OPPM — Ada lead, Eimantas review (4 h)</td>
+        <td class="num">4</td><td class="num">14</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>Ahead of plan. Invites + Full / Overview merged to <code>main</code> (PRs #1–#3). Firestore rules republished. Production on oppm.dipa.lt. C-11 owner visibility closed. Overview leftover width goes to task names.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Mantinga, form watch, new dipa.lt</td>
+        <td class="num">6</td><td class="num">8</td>
+        <td><span class="status-chip part">Partial</span></td>
+        <td>new-dipa-web: preview published (24 Aug) and Lithuanian copy revised (28 Aug). Mantinga 26 Aug window — no written outcome in the repos. Form-watch test not recorded.</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>DIPA OS — WF9 Lead Finder + ICP universe (not in the 24–30 hour table)</td>
+        <td class="num">—</td><td class="num">12</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>Registrų centras + Sodra measured for real (not from docs). ICP = 4 631 firms, ~1.46 bn € monthly wage bill. Live <code>/icp-visata</code> on Cloud Run <code>dipa-os-00013-78m</code>. First pilot niche: road freight (460).</td>
+      </tr>
+      <tr>
+        <td colspan="2">TOTAL</td>
+        <td class="num">~38</td><td class="num">~40</td>
+        <td colspan="2">OPPM 14 · DIPA OS 12 · new website 8 · meetings 6</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<main>
+  <p class="section-title">Delivered detail — 24–31 Aug</p>
+  <div class="grid">
+
+    <article class="card c-oppm">
+      <div class="card-head">
+        <span class="card-name">OPPM Assistant</span>
+        <span class="card-meta"><span class="act">Shipped to production</span><span class="est">14 h</span></span>
+      </div>
+      <p class="card-path">oppm.dipa.lt · <code>main</code> via PRs #1–#3 · Cloud Run <code>oppm-assistant-v2-00009</code> · 26 Aug</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Company invitations — production gate closed</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Invites no longer expire after seven days. Logged-out users can open <code>/invite</code>. People can cancel and resend. Firestore: get-by-id for invitations; folder <code>get</code> matches <code>owners[].email</code> or <code>linkedUserId</code>.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Full / Overview matrix on main</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Ada’s Full / Overview work merged and deployed. First type-scale pass sent leftover width to date squares; the real fix gives leftover width to the Task column (min 320 px) so names wrap.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">C-11 — owner visibility</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Folder access now matches owner email <em>or</em> linked user id. Same rule in app code and Firestore. Existing users can see projects they own after the invite / account link path.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Dev &amp; QA matrix</span><span class="task-h part">In progress</span></div>
+          <p class="task-desc">34 subtasks marked done; 17 still open. T9 and T5 completed. T12.2 done ahead of 8–11 Sep. Still behind: Opatrip re-invite and LT reply (T1.3 / T1.5 / T12.3).</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n">
+      <div class="card-head">
+        <span class="card-name">DIPA Revenue OS</span>
+        <span class="card-meta"><span class="act">ICP shipped · board / auth not</span><span class="est">12 h</span></span>
+      </div>
+      <p class="card-path">dipa-n8n/web · activity-log 24 Aug · Cloud Run <code>dipa-os-00013-78m</code></p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">ICP universe from real registers</span><span class="task-h">Done</span></div>
+          <p class="task-desc">4 631 companies: turnover &gt; 2 mln € and 20+ employees, not bankrupt. Monthly wage bill ~1.46 bn €. Firmographics are free (JAR + Sodra). Construction (520) was a blind spot in the old plan. Freight road haulage is the first homogeneous niche (460).</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Live /icp-visata + prospecting prototype</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Interactive list (filters, sort, CSV export) on Cloud Run, public path, no login. Row actions (CRM / Research / Queue) are a demo of what DIPA OS would do live. WF9 numbering: WF7 ASAICHI, WF8 Sales Advisor, WF9 Lead Finder.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Five L1 targets on the live board</span><span class="task-h slip">Carried over</span></div>
+          <p class="task-desc">Advisor still sits on the old 60 k / 7.5 k world. Seeds and headline were the planned Monday–Tuesday work and did not start.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">User authentication</span><span class="task-h slip">Carried over</span></div>
+          <p class="task-desc">Second week in a row. Shared site gate remains. This week: start with Ada — debug known issues and introduce named accounts.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-adhoc">
+      <div class="card-head">
+        <span class="card-name">New dipa.lt website</span>
+        <span class="card-meta"><span class="act">Preview + LT copy</span><span class="est">8 h</span></span>
+      </div>
+      <p class="card-path"><code>new-dipa-web</code> · GitHub Pages preview · noindex</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Preview published (24 Aug)</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Pages workflow, robots / noindex, DIPA OS product frames, copy, and motion. Axiom quotes given real padding. Preview: <code>dipa-lt.github.io/dipa-web-preview/</code>.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Lithuanian copy and quotes (28 Aug)</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Pass across all prototype pages (home, academy, products, cases, philosophy, contacts). Positioning stays Human → Team → Process → Business.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Team feedback and improvements</span><span class="task-h part">Next week</span></div>
+          <p class="task-desc">Preview is ready to review. This week: collect comments from the team and apply the first improvement pass. Still not production; still noindex.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-meet">
+      <div class="card-head">
+        <span class="card-name">Internal meetings</span>
+        <span class="card-meta"><span class="act">Completed</span><span class="est">6 h</span></span>
+      </div>
+      <p class="card-path">26 Aug ICP universe · Ada OPPM checkpoint · lighter internals than 17–23</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">26 Aug — ICP visata review</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Numbers, section and niche cuts, geography, seven decisions with owners. Interactive list of all 4 631 firms in the meeting document. Freight as first Lead Finder pilot.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Ada — OPPM production checkpoint</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Invite / Overview / C-11 review, merge to main, and production revisions on the same day. Tracker updated on the Dev &amp; QA project.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">21 Aug outcomes to Lauris and Marija</span><span class="task-h slip">Carried over</span></div>
+          <p class="task-desc">Held until the five L1 numbers are on the board. Do not brief sales on the old 60 k dashboard.</p>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<!-- ========== THIS WEEK ========== -->
+<div class="week-header plan-week">
+  <h2>Week 31 August–6 September 2026 — plan</h2>
+  <span class="badge plan">38 h planned</span>
+</div>
+
+<div class="banner info">
+  Existing OPPM users need a communication pack and at least one tutorial (methodology + user manual) for the version now on oppm.dipa.lt.
+  DIPA OS: Ada and Eimantas start debugging and introduce user authentication.
+  Internal coaching needs training material for DIPA OS and for OPPM’s new features.
+  New dipa.lt: gather team feedback and apply improvements.
+</div>
+
+<div class="banner warn">
+  <strong>Carry-over (do not drop, but not this week’s headline):</strong> five L1 targets still not in the product · Opatrip re-invite / LT reply · Mantinga outcome still unrecorded · shared DIPA OS password gate until auth ships.
+</div>
+
+<div class="legend">
+  <span class="pill oppm"><span class="dot"></span> OPPM comms + tutorial — 10 h</span>
+  <span class="pill n8n"><span class="dot"></span> DIPA OS debug + auth — 12 h</span>
+  <span class="pill infra"><span class="dot"></span> Training material (OS + OPPM) — 8 h</span>
+  <span class="pill adhoc"><span class="dot"></span> Dipa Web feedback — 8 h</span>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="label">Planned</div><div class="value" style="color:var(--plan)">38 h</div></div>
+  <div class="kpi"><div class="label">Priorities</div><div class="value">4</div><div class="sub">Comms · auth · training · web</div></div>
+  <div class="kpi"><div class="label">Ada Miller</div><div class="value" style="font-size:1rem;color:var(--n8n)">DIPA OS</div><div class="sub">Debug + authentication</div></div>
+  <div class="kpi"><div class="label">Gate</div><div class="value" style="font-size:1rem;color:var(--oppm)">Users</div><div class="sub">OPPM update briefing</div></div>
+</div>
+
+<main>
+  <p class="section-title">Must-do streams — 31 Aug–6 Sep</p>
+  <div class="grid">
+
+    <article class="card c-oppm p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">1 ·</span> OPPM — communication package</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">10 h</span></span>
+      </div>
+      <p class="card-path">Instruct existing users on the version now live on oppm.dipa.lt</p>
+      <p class="card-note">Production already moved (invites, Full / Overview, owner visibility). Users have not been walked through what changed.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">What’s new for current users</span><span class="task-h plan">4 h</span></div>
+          <p class="task-desc">Short pack: how to invite (no 7-day expiry, open the link before sign-in), where Full vs Overview lives, what owners now see. Email / Slack text the team can send as-is.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Tutorial — methodology + user manual</span><span class="task-h plan">6 h</span></div>
+          <p class="task-desc">At least one tutorial: OPPM methodology (how the matrix is meant to be used) and the user manual for the updated app. Record or write so coaching can reuse it.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">2 ·</span> DIPA OS — debug + user authentication</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">12 h</span></span>
+      </div>
+      <p class="card-path">Together with Ada · replace the shared site password</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Start debugging known issues with Ada</span><span class="task-h plan">4 h</span></div>
+          <p class="task-desc">Reproduce what the team is hitting (login gate, stuck runs, KPI board still on old targets). Write the issue list before changing auth so we do not debug a moving target.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Introduce individual user accounts</span><span class="task-h plan">6 h</span></div>
+          <p class="task-desc">Named accounts for sales and R&amp;D. Remove shared site-gate password. Keep <code>/icp-visata</code> public if the team still wants the meeting list without login.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Roles and first-user smoke</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Admin vs seller. Confirm Ada / Lauris / Marija can sign in on staging before production.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-infra">
+      <div class="card-head">
+        <span class="card-name"><span class="must">3 ·</span> Training material — internal coaching</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">8 h</span></span>
+      </div>
+      <p class="card-path">DIPA OS coaching pack · OPPM new-feature addendum</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">DIPA OS — coach pack</span><span class="task-h plan">5 h</span></div>
+          <p class="task-desc">What the team uses day to day: metrics hub, call QA, claims, ICP list. Short enough for an internal session; not a product spec.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">OPPM — new features for coaches</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">Same story as the user tutorial, written for internal coaching: invitations, Full / Overview, who can see whose folder.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-adhoc">
+      <div class="card-head">
+        <span class="card-name"><span class="must">4 ·</span> Dipa Web — feedback and improvements</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">8 h</span></span>
+      </div>
+      <p class="card-path"><code>new-dipa-web</code> · preview stays noindex</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Collect team feedback</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">Walk the preview with the team. Capture copy, structure, and DIPA OS frame comments in one list. Do not open ICP / public pricing / Client Zero again unless the team unblocks them.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Apply the first improvement pass</span><span class="task-h plan">5 h</span></div>
+          <p class="task-desc">Fix what the review actually asked for. Preview remains noindex until copy is signed off for production.</p>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Day order — 31 August–6 September</p>
+  <table class="data">
+    <thead><tr><th>Day</th><th>Focus</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mon 31</strong></td><td>OPPM “what’s new” outline · DIPA OS issue list with Ada</td></tr>
+      <tr><td><strong>Tue 1</strong></td><td>OPPM tutorial (methodology + user manual) first draft</td></tr>
+      <tr><td><strong>Wed 2</strong></td><td>DIPA OS authentication — named accounts on staging</td></tr>
+      <tr><td><strong>Thu 3</strong></td><td>Internal coaching packs (DIPA OS + OPPM new features) · auth smoke</td></tr>
+      <tr><td><strong>Fri 4</strong></td><td>Dipa Web team review · first improvement pass · send OPPM comms pack</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Hours — 31 August–6 September</p>
+  <table class="data">
+    <thead>
+      <tr><th>#</th><th>Item</th><th>When</th><th class="num">Hours</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>OPPM — communication package + tutorial</td><td>Mon–Tue</td><td class="num">10</td></tr>
+      <tr><td>2</td><td>DIPA OS — debug with Ada + user authentication</td><td>Mon, Wed–Thu</td><td class="num">12</td></tr>
+      <tr><td>3</td><td>Training material — DIPA OS coaching + OPPM features</td><td>Thu</td><td class="num">8</td></tr>
+      <tr><td>4</td><td>Dipa Web — team feedback and improvements</td><td>Fri</td><td class="num">8</td></tr>
+      <tr><td colspan="3">Total — week 31 August–6 September 2026</td><td class="num">38</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  Eimantas Norvaišas · 24–31 August delivered · 31 August–6 September plan
+</footer>
+
+</body>
+</html>

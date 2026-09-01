@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly Report — Eimantas Norvaišas · 20 Jul – 10 Aug 2026</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --oppm: #2dd4bf;
+      --adhoc: #a78bfa;
+      --linas: #818cf8;
+      --n8n: #f472b6;
+      --teach: #34d399;
+      --meet: #94a3b8;
+      --strat: #38bdf8;
+      --infra: #f59e0b;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --risk: #f87171;
+      --plan: #60a5fa;
+      --partial: #fb923c;
+      --ahead: #a3e635;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .week-block { border-bottom: 1px solid var(--border2); padding-bottom: 2rem; margin-bottom: 0.5rem; }
+    .week-block.focus { background: linear-gradient(180deg, rgba(74,222,128,0.05) 0%, transparent 100%); }
+    .week-block.holiday { background: linear-gradient(180deg, rgba(248,113,113,0.04) 0%, transparent 100%); }
+    .week-header {
+      padding: 1.25rem 2rem 0.5rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+    }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .badge {
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.2rem 0.65rem; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.done { background: rgba(74,222,128,0.15); color: var(--ok); border: 1px solid rgba(74,222,128,0.35); }
+    .badge.plan { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .badge.partial { background: rgba(251,146,60,0.15); color: var(--partial); border: 1px solid rgba(251,146,60,0.35); }
+    .badge.ahead { background: rgba(163,230,53,0.12); color: var(--ahead); border: 1px solid rgba(163,230,53,0.35); }
+    .badge.risk { background: rgba(248,113,113,0.15); color: var(--risk); border: 1px solid rgba(248,113,113,0.35); }
+    .banner {
+      margin: 0 2rem 0.75rem;
+      padding: 0.85rem 1rem; border-radius: 10px;
+      font-size: 0.82rem; line-height: 1.55;
+    }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.28); color: #fde68a; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner.ok { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.28); color: #bbf7d0; }
+    .banner strong { color: #fff; }
+    .raga-legend {
+      display: flex; flex-wrap: wrap; gap: 0.65rem;
+      margin: 0 2rem 1rem; padding: 0.75rem 1rem;
+      border-radius: 10px; background: rgba(10,15,30,0.55);
+      border: 1px solid var(--border2); font-size: 0.78rem;
+    }
+    .raga-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .light { width: 10px; height: 10px; border-radius: 50%; }
+    .light.green { background: var(--ok); box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+    .light.amber { background: var(--partial); box-shadow: 0 0 8px rgba(251,146,60,0.45); }
+    .light.red { background: var(--risk); box-shadow: 0 0 8px rgba(248,113,113,0.45); }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.74rem; font-weight: 600;
+      padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid;
+    }
+    .pill.oppm  { background: rgba(45,212,191,0.1);  color: var(--oppm);  border-color: rgba(45,212,191,0.35); }
+    .pill.adhoc { background: rgba(167,139,250,0.1); color: var(--adhoc); border-color: rgba(167,139,250,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n);   border-color: rgba(244,114,182,0.35); }
+    .pill.meet  { background: rgba(148,163,184,0.1); color: var(--meet);  border-color: rgba(148,163,184,0.35); }
+    .pill.strat { background: rgba(56,189,248,0.1);  color: var(--strat); border-color: rgba(56,189,248,0.25); }
+    .pill.infra { background: rgba(245,158,11,0.1);  color: var(--infra); border-color: rgba(245,158,11,0.35); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.65rem; padding: 0.25rem 2rem 1.1rem;
+    }
+    .kpi {
+      background: var(--panel2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 0.7rem 0.8rem;
+    }
+    .kpi.ok   { border-color: rgba(74,222,128,0.35); }
+    .kpi.warn { border-color: rgba(251,191,36,0.35); }
+    .kpi.risk { border-color: rgba(248,113,113,0.35); }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    .grade-box {
+      margin: 0 2rem 1rem;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(96,165,250,0.06) 100%);
+      border: 1px solid rgba(251,191,36,0.25);
+      display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem;
+    }
+    .grade-main { text-align: center; min-width: 90px; }
+    .grade-main .letter { font-size: 2.4rem; font-weight: 900; color: var(--partial); line-height: 1; }
+    .grade-main .score { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .grade-note { flex: 1; min-width: 220px; font-size: 0.82rem; color: #cbd5e1; line-height: 1.55; }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+      margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .card {
+      border-radius: 12px; padding: 1rem 1.05rem;
+      border: 1px solid var(--border2); background: var(--panel2);
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+    }
+    .card.c-oppm::before  { background: var(--oppm); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-meet::before  { background: var(--meet); }
+    .card.c-strat::before { background: var(--strat); }
+    .card.c-adhoc::before { background: var(--adhoc); }
+    .card.late { border-color: rgba(248,113,113,0.35); }
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.65rem; margin-bottom: 0.5rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .act { color: var(--ok); display: block; }
+    .card-meta .est { color: var(--muted); font-size: 0.68rem; }
+    .card-meta .slip { color: var(--risk); display: block; font-size: 0.68rem; }
+    .card-path { font-size: 0.71rem; color: var(--strat); margin: 0 0 0.6rem; word-break: break-all; }
+    .card-path code { font-size: 0.68rem; }
+    .card-note {
+      font-size: 0.77rem; color: #cbd5e1;
+      margin: 0 0 0.7rem; padding: 0.5rem 0.68rem;
+      border-radius: 8px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task {
+      padding: 0.52rem 0.68rem; border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-oppm .task  { border-left-color: rgba(45,212,191,0.55); }
+    .card.c-n8n .task   { border-left-color: rgba(244,114,182,0.55); }
+    .card.c-meet .task  { border-left-color: rgba(148,163,184,0.5); }
+    .card.c-strat .task { border-left-color: rgba(56,189,248,0.55); }
+    .card.c-adhoc .task { border-left-color: rgba(167,139,250,0.55); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--ok); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .task-h.plan { color: var(--plan); }
+    .task-h.slip { color: var(--risk); }
+    .task-h.part { color: var(--partial); }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .task-desc code { font-size: 0.71rem; color: #7dd3fc; }
+    .status-chip {
+      display: inline-block; font-size: 0.62rem; font-weight: 700;
+      padding: 0.1rem 0.45rem; border-radius: 4px; margin-left: 0.35rem;
+      text-transform: uppercase; vertical-align: middle;
+    }
+    .status-chip.done { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .status-chip.part { background: rgba(251,146,60,0.15); color: var(--partial); }
+    .status-chip.no   { background: rgba(248,113,113,0.15); color: var(--risk); }
+    .status-chip.over { background: rgba(248,113,113,0.15); color: var(--risk); }
+    .table-wrap { padding: 0 2rem 1.5rem; overflow-x: auto; }
+    table.data {
+      width: 100%; border-collapse: collapse; font-size: 0.78rem;
+      background: var(--panel2); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+    table.data th, table.data td {
+      padding: 0.55rem 0.75rem; text-align: left;
+      border-bottom: 1px solid var(--border2); vertical-align: top;
+    }
+    table.data th {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--muted); background: rgba(10,15,30,0.5);
+    }
+    table.data tr:last-child td { border-bottom: none; font-weight: 700; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .index-bar { display: flex; align-items: center; gap: 0.5rem; }
+    .index-bar-track { flex: 1; height: 6px; background: rgba(51,65,85,0.6); border-radius: 3px; overflow: hidden; min-width: 60px; }
+    .index-bar-fill { height: 100%; border-radius: 3px; }
+    .index-bar-fill.ok { background: var(--ok); }
+    .index-bar-fill.warn { background: var(--warn); }
+    .index-bar-fill.risk { background: var(--risk); }
+    .index-val { font-weight: 800; font-variant-numeric: tabular-nums; min-width: 2rem; text-align: right; }
+    .divider { margin: 2rem 2rem 1.5rem; border: none; border-top: 2px dashed var(--border2); }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem; color: var(--muted);
+    }
+    @media print { body { background: #fff; color: #111; } .card, .kpi, .banner, table.data { background: #fff !important; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>ASAICHI Weekly Report — 3-Week Rollup</h1>
+  <p class="sub">Eimantas Norvaišas · 20 Jul – 10 Aug 2026 · pre-holiday handoff · holiday coverage · post-holiday catch-up (2 active days)</p>
+</header>
+
+<div class="raga-legend">
+  <strong style="color:#fff;margin-right:0.25rem">Traffic light:</strong>
+  <span><span class="light green"></span> Green — planned &amp; delivered</span>
+  <span><span class="light amber"></span> Amber — partial / in progress / deferred with reason</span>
+  <span><span class="light red"></span> Red — not done / blocked / slipped during holiday</span>
+</div>
+
+<div class="banner info" style="margin-top:0">
+  <strong>3-week summary:</strong> Week <strong>20–27 Jul</strong> — partial pre-holiday push on DIPA Revenue OS. Week <strong>27 Jul – 3 Aug</strong> — planned holiday (limited availability; Ada covering IT). Week <strong>4–10 Aug</strong> — return &amp; catch-up on <strong>2 working days</strong> (Thu–Fri 6–7 Aug): inbox, Ada/OPPM QA, DIPA OS updates + stakeholder feedback, June billing/timesheet close-out.
+</div>
+
+<!-- ═══════════════ WEEK 1 ═══════════════ -->
+<section class="week-block">
+  <div class="week-header">
+    <h2>Week 20–27 July 2026</h2>
+    <span class="badge partial">Partial — holiday start 27 Jul</span>
+  </div>
+
+  <div class="banner warn">
+    <strong>Context:</strong> Carried plan from <code>weekly-report-jul13-jul20-2026.html</code> — <strong>36 h</strong> budget (DIPA OS 24 · OPPM 10 · comm 2). Holiday announced from <strong>Mon 27 Jul</strong>; last working days used for handoff + DIPA OS push, not full plan completion.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi warn"><div class="label">Planned</div><div class="value" style="color:var(--plan)">36 h</div></div>
+    <div class="kpi warn"><div class="label">Est. logged</div><div class="value">~14 h</div><div class="sub">Mon–Sat before leave</div></div>
+    <div class="kpi ok"><div class="label">Green</div><div class="value" style="font-size:1rem;color:var(--ok)">2</div><div class="sub">streams</div></div>
+    <div class="kpi warn"><div class="label">Amber / Red</div><div class="value" style="font-size:1rem;color:var(--partial)">5</div><div class="sub">deferred</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <p class="section-title" style="padding-left:0">Plan vs outcome — week 20–27 July</p>
+    <table class="data">
+      <thead>
+        <tr><th>#</th><th>Stream</th><th class="num">Planned</th><th class="num">Est.</th><th>Status</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>DIPA OS — agent logic &amp; calibration</td>
+          <td class="num">8 h</td><td class="num">~4 h</td>
+          <td><span class="status-chip part">Amber</span></td>
+          <td>Prompt/schema tweaks started; full calibration with Lauris deferred to post-holiday.</td>
+        </tr>
+        <tr>
+          <td>2</td><td>DIPA OS — integration testing</td>
+          <td class="num">6 h</td><td class="num">~3 h</td>
+          <td><span class="status-chip part">Amber</span></td>
+          <td>Smoke on Kajabi → n8n path; regression suite not finished.</td>
+        </tr>
+        <tr>
+          <td>3</td><td>DIPA OS — ASAICHI / As-Is metrics</td>
+          <td class="num">6 h</td><td class="num">~2 h</td>
+          <td><span class="status-chip no">Red</span></td>
+          <td>Baseline field design only; pipeline not wired before leave.</td>
+        </tr>
+        <tr>
+          <td>4</td><td>DIPA OS — Firebase Authentication</td>
+          <td class="num">4 h</td><td class="num">0 h</td>
+          <td><span class="status-chip no">Red</span></td>
+          <td>Explicitly deferred — holiday priority was agent flows + handoff.</td>
+        </tr>
+        <tr>
+          <td>5</td><td>OPPM Matrix drill-down (Wed target)</td>
+          <td class="num">6 h</td><td class="num">~3 h</td>
+          <td><span class="status-chip part">Amber</span></td>
+          <td>Ada checkpoint held; not closed before leave — carry-over.</td>
+        </tr>
+        <tr>
+          <td>6</td><td>OPPM interactive manual starter</td>
+          <td class="num">4 h</td><td class="num">0 h</td>
+          <td><span class="status-chip no">Red</span></td>
+          <td>Deferred.</td>
+        </tr>
+        <tr>
+          <td>7</td><td>Communication + holiday handoff</td>
+          <td class="num">2 h</td><td class="num">~2 h</td>
+          <td><span class="status-chip done">Green</span></td>
+          <td>Ada coverage agreed; team notified (Jul 27 – Aug 5 OOO).</td>
+        </tr>
+        <tr>
+          <td colspan="2">TOTAL</td>
+          <td class="num">36 h</td><td class="num">~14 h</td>
+          <td colspan="2"><strong>Partial week</strong> — DIPA OS &amp; comm OK; metrics/auth/manual red</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ═══════════════ WEEK 2 ═══════════════ -->
+<section class="week-block holiday">
+  <div class="week-header">
+    <h2>Week 27 July – 3 August 2026</h2>
+    <span class="badge risk">Holiday — limited availability</span>
+  </div>
+
+  <div class="banner risk">
+    <strong>OOO:</strong> Jul 27 – Aug 5. IT routed to <strong>Ada</strong>. Critical/urgent items only — sync with Ada as needed. <strong>No planned delivery</strong> against DIPA OS / OPPM backlog this week.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi risk"><div class="label">Planned (prior)</div><div class="value" style="color:var(--plan)">36 h</div><div class="sub">rolled from 20–27</div></div>
+    <div class="kpi risk"><div class="label">Est. logged</div><div class="value">~2 h</div><div class="sub">critical only</div></div>
+    <div class="kpi"><div class="label">Ada coverage</div><div class="value" style="font-size:0.95rem;color:var(--ok)">Active</div><div class="sub">OPPM / IT first line</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <p class="section-title" style="padding-left:0">Plan vs outcome — holiday week</p>
+    <table class="data">
+      <thead>
+        <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>DIPA OS P0 backlog (agents, ASAICHI, Firebase Auth)</td><td><span class="status-chip no">Red</span></td><td>Not executed — expected during OOO.</td></tr>
+        <tr><td>OPPM matrix close-out + manual</td><td><span class="status-chip no">Red</span></td><td>Ada continued familiarisation; formal bug list in progress on her branch.</td></tr>
+        <tr><td>Stakeholder comms (Marija / Lauris / DIPA)</td><td><span class="status-chip part">Amber</span></td><td>Async email only where urgent; no structured feedback loop.</td></tr>
+        <tr><td>IT coverage via Ada</td><td><span class="status-chip done">Green</span></td><td>First-line support maintained per handoff plan.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ═══════════════ WEEK 3 — FOCUS ═══════════════ -->
+<section class="week-block focus">
+  <div class="week-header">
+    <h2>Week 4–10 August 2026</h2>
+    <span class="badge done">Return — catch-up</span>
+    <span class="badge partial">2 active days (6–7 Aug)</span>
+  </div>
+
+  <div class="banner ok">
+    <strong>Focus:</strong> Post-holiday <strong>re-onboarding</strong> — not greenfield delivery. Priorities: (1) inbox + meeting summaries, (2) Ada / OPPM QA &amp; bugs, (3) DIPA Revenue OS push + Marija/Lauris feedback, (4) close June admin (timesheet + invoice).
+  </div>
+
+  <div class="legend">
+    <span class="pill meet"><span class="dot"></span> Admin / catch-up — ~5 h</span>
+    <span class="pill oppm"><span class="dot"></span> OPPM + Ada — ~4 h</span>
+    <span class="pill n8n"><span class="dot"></span> DIPA Revenue OS — ~5 h</span>
+    <span class="pill adhoc"><span class="dot"></span> Billing / timesheet — ~2 h</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi ok"><div class="label">Active days</div><div class="value">2</div><div class="sub">Thu–Fri 6–7 Aug</div></div>
+    <div class="kpi"><div class="label">Est. logged</div><div class="value">~16 h</div><div class="sub">catch-up week</div></div>
+    <div class="kpi ok"><div class="label">Green</div><div class="value" style="color:var(--ok)">4</div><div class="sub">tasks</div></div>
+    <div class="kpi warn"><div class="label">Amber</div><div class="value" style="color:var(--partial)">3</div><div class="sub">in flight</div></div>
+    <div class="kpi risk"><div class="label">Red</div><div class="value" style="color:var(--risk)">2</div><div class="sub">blocked / waiting</div></div>
+  </div>
+
+  <div class="grade-box">
+    <div class="grade-main">
+      <div class="letter">B</div>
+      <div class="score">7.2 / 10 · catch-up week</div>
+    </div>
+    <div class="grade-note">
+      Appropriate reset week: context restored, stakeholders re-synced, June billing closed. OPPM formal QA doc shipped to Ada; her bug branch pending. DIPA OS updates pushed but ASAICHI metrics + Firebase Auth still red from pre-holiday slip. Not a delivery sprint — plan adherence measured against <em>catch-up goals</em>, not the original 36 h P0 plan.
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <p class="section-title" style="padding-left:0">Performance indexes — week 4–10 August (catch-up)</p>
+    <table class="data">
+      <thead>
+        <tr><th>Index</th><th>Code</th><th class="num">Score</th><th>Visual</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Context Recovery</strong></td><td>CR</td>
+          <td class="num"><span class="index-val" style="color:var(--ok)">85</span></td>
+          <td><div class="index-bar"><div class="index-bar-track"><div class="index-bar-fill ok" style="width:85%"></div></div></div></td>
+          <td>Inbox, meet summaries, and stakeholder threads reviewed; back on track for DIPA OS decisions.</td>
+        </tr>
+        <tr>
+          <td><strong>Plan Adherence</strong></td><td>PAI</td>
+          <td class="num"><span class="index-val" style="color:var(--partial)">68</span></td>
+          <td><div class="index-bar"><div class="index-bar-track"><div class="index-bar-fill warn" style="width:68%"></div></div></div></td>
+          <td>Catch-up goals met; original Jul P0 items (ASAICHI pipeline, Firebase Auth) still open.</td>
+        </tr>
+        <tr>
+          <td><strong>Team Enablement</strong></td><td>TEI</td>
+          <td class="num"><span class="index-val" style="color:var(--ok)">82</span></td>
+          <td><div class="index-bar"><div class="index-bar-track"><div class="index-bar-fill ok" style="width:82%"></div></div></div></td>
+          <td>Ada QA task doc (<code>ADA_QA_AND_FIX_TASKS.md</code>); call scheduled; branch push incoming.</td>
+        </tr>
+        <tr>
+          <td><strong>Stakeholder Sync</strong></td><td>SS</td>
+          <td class="num"><span class="index-val" style="color:var(--ok)">80</span></td>
+          <td><div class="index-bar"><div class="index-bar-track"><div class="index-bar-fill ok" style="width:80%"></div></div></div></td>
+          <td>Marija (DIPA OS) re-engaged; Lauris feedback loop restarted; deeper notes expected from partner side.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <p class="section-title" style="padding-left:0">Plan vs outcome — week 4–10 August (detailed)</p>
+    <table class="data">
+      <thead>
+        <tr><th>#</th><th>Task</th><th class="num">Est. h</th><th>Status</th><th>Outcome</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Email + meeting summary catch-up</strong></td>
+          <td class="num">3.0</td>
+          <td><span class="status-chip done">Green</span></td>
+          <td>Inbox triaged; DIPA OS / OPPM / partner threads read; holiday backlog understood.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>Review meet notes &amp; DIPA OS direction (Marija thread)</strong></td>
+          <td class="num">2.0</td>
+          <td><span class="status-chip done">Green</span></td>
+          <td>Revenue OS scope refreshed — in-scope company data + call-participant authority called out as product gaps (awaiting formal spec from Marija/Lauris).</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><strong>Ada sync — OPPM bugs &amp; QA plan</strong></td>
+          <td class="num">2.0</td>
+          <td><span class="status-chip done">Green</span></td>
+          <td>Walkthrough of <code>ADA_QA_AND_FIX_TASKS.md</code> (41 bugs, phased plan); Ada preparing branch <code>ada/qa-fixes-2026-07</code>.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>OPPM bug triage (matrix / permissions / i18n)</strong></td>
+          <td class="num">2.0</td>
+          <td><span class="status-chip part">Amber</span></td>
+          <td>Critical items identified with Ada; fixes wait on her PR — not merged this week.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>DIPA Revenue OS — push updates to staging/prod</strong></td>
+          <td class="num">3.0</td>
+          <td><span class="status-chip done">Green</span></td>
+          <td>Pending agent/integration changes from pre-holiday work deployed; smoke OK.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><strong>DIPA OS — feedback loop (Marija + Lauris)</strong></td>
+          <td class="num">2.0</td>
+          <td><span class="status-chip part">Amber</span></td>
+          <td>Initial feedback collected on call-eval agents; calibration samples still needed.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><strong>ASAICHI / As-Is metrics integration</strong></td>
+          <td class="num">—</td>
+          <td><span class="status-chip no">Red</span></td>
+          <td>Carried from Jul — no progress this week (deprioritised for catch-up).</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><strong>Firebase Authentication (DIPA OS)</strong></td>
+          <td class="num">—</td>
+          <td><span class="status-chip no">Red</span></td>
+          <td>Still open; blocked on post-holiday capacity allocation.</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><strong>June timesheet + invoice (151.5 h) + cost-center summary</strong></td>
+          <td class="num">2.0</td>
+          <td><span class="status-chip done">Green</span></td>
+          <td><code>timesheet-june-2026.html</code> · S2026 Nr. 6 · consolidated hours by cost center for accounting.</td>
+        </tr>
+        <tr>
+          <td colspan="2">TOTAL (active work)</td>
+          <td class="num">~16 h</td>
+          <td colspan="2"><strong>Catch-up complete</strong> · Jul P0 carry-over remains</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <main>
+    <p class="section-title">Delivered detail — week 4–10 August</p>
+    <div class="grid">
+
+      <article class="card c-meet">
+        <div class="card-head">
+          <span class="card-name">1 · Admin catch-up</span>
+          <span class="card-meta"><span class="act">Green</span><span class="est">~5 h</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">Inbox + meet summaries</span><span class="task-h">Done</span></div>
+            <p class="task-desc">Holiday threads closed or flagged; DIPA partner context restored.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">June billing close-out</span><span class="task-h">Done</span></div>
+            <p class="task-desc">Timesheet 151.5 h · invoice 3787.50 € · cost-center block for buhalterija.</p>
+          </li>
+        </ul>
+      </article>
+
+      <article class="card c-oppm">
+        <div class="card-head">
+          <span class="card-name">2 · OPPM + Ada QA</span>
+          <span class="card-meta"><span class="slip">Amber</span><span class="est">~4 h</span></span>
+        </div>
+        <p class="card-path"><code>oppm-assistant/docs/ADA_QA_AND_FIX_TASKS.md</code> · https://oppm.dipa.lt</p>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">QA doc + bug registry (41 items)</span><span class="task-h">Done</span></div>
+            <p class="task-desc">Critical / Medium / Low + 3-phase fix plan for Ada.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Ada bug branch + fixes</span><span class="task-h part">In progress</span></div>
+            <p class="task-desc">Handwritten notes being typed; PR expected this week.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Matrix drill-down close-out</span><span class="task-h part">Carry-over</span></div>
+            <p class="task-desc">From Jul — still open pending QA pass.</p>
+          </li>
+        </ul>
+      </article>
+
+      <article class="card c-n8n">
+        <div class="card-head">
+          <span class="card-name">3 · DIPA Revenue OS</span>
+          <span class="card-meta"><span class="act">Mixed</span><span class="est">~5 h</span></span>
+        </div>
+        <p class="card-path"><code>~/Documents/dipa-n8n</code> · dipa-os-*.run.app · Marija / Lauris</p>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">Deploy pending updates</span><span class="task-h">Done</span></div>
+            <p class="task-desc">Pre-holiday agent + integration work pushed; basic smoke passed.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Stakeholder feedback (Marija / Lauris)</span><span class="task-h part">Amber</span></div>
+            <p class="task-desc">Call-eval direction confirmed; formal requirements doc pending from partner.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">In-scope company data + caller authority</span><span class="task-h part">Amber</span></div>
+            <p class="task-desc">Product gap identified (Ada + partner meetings) — needs data model + UI spec.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">ASAICHI metrics pipeline</span><span class="task-h slip">Red</span></div>
+            <p class="task-desc">Jul P0 — not started this week.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Firebase Auth</span><span class="task-h slip">Red</span></div>
+            <p class="task-desc">Jul P0 — deferred again.</p>
+          </li>
+        </ul>
+      </article>
+
+    </div>
+  </main>
+
+  <div class="table-wrap">
+    <p class="section-title" style="padding-left:0">Next week — must-do · 11–17 August 2026</p>
+    <table class="data">
+      <thead><tr><th>#</th><th>Must-do</th><th>Priority</th><th>When</th><th class="num">Hours</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Google GCP</strong> — contact Google rep; resolve <strong>Emerald Bastion</strong> suspended project</td><td>P0</td><td>Mon</td><td class="num">1</td></tr>
+        <tr><td>2</td><td><strong>Mantinga Agent</strong> — review solution; send deliverable to client</td><td>P0</td><td>Mon–Wed</td><td class="num">2–3</td></tr>
+        <tr><td>3</td><td><strong>Account migration</strong> — move tools, code repos &amp; services from personal → company accounts</td><td>P0</td><td>Wed–Fri</td><td class="num">6</td></tr>
+        <tr><td>4</td><td><strong>OPPM</strong> — review Ada's branch; fix remaining UI + backend bugs</td><td>P0</td><td>Thu–Fri</td><td class="num">6</td></tr>
+        <tr><td>5</td><td><strong>DIPA Revenue OS</strong> — fix subagent logic; add ASAICHI metrics &amp; pipeline</td><td>P0</td><td>Ongoing</td><td class="num">20</td></tr>
+        <tr><td colspan="4">TOTAL — week 11–17 Aug · detail: <code>priority-plan-aug11-aug17-2026.html</code></td><td class="num">~35.5</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  ASAICHI weekly rollup · 20 Jul – 10 Aug 2026 ·
+  prior: <code>weekly-report-jul13-jul20-2026.html</code> ·
+  June billing: <code>timesheet-june-2026.html</code> · Cmd+P for A4 print
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Priority Plan — Eimantas Norvaišas · 11–17 Aug 2026</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --oppm: #2dd4bf;
+      --n8n: #f472b6;
+      --infra: #f59e0b;
+      --client: #818cf8;
+      --meet: #94a3b8;
+      --ok: #4ade80;
+      --risk: #f87171;
+      --plan: #60a5fa;
+      --partial: #fb923c;
+      --accent: #38bdf8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { padding: 1.6rem 2rem 1.2rem; border-bottom: 1px solid var(--border2); background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%); }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .banner { margin: 0 2rem 0.75rem; padding: 0.85rem 1rem; border-radius: 10px; font-size: 0.82rem; line-height: 1.55; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner strong { color: #fff; }
+    .week-header { padding: 1.25rem 2rem 0.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .badge { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .badge.plan { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .badge.risk { background: rgba(248,113,113,0.15); color: var(--risk); border: 1px solid rgba(248,113,113,0.35); }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 600; padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid; }
+    .pill.infra  { background: rgba(245,158,11,0.1); color: var(--infra); border-color: rgba(245,158,11,0.35); }
+    .pill.client { background: rgba(129,140,248,0.1); color: var(--client); border-color: rgba(129,140,248,0.35); }
+    .pill.oppm   { background: rgba(45,212,191,0.1); color: var(--oppm); border-color: rgba(45,212,191,0.35); }
+    .pill.n8n    { background: rgba(244,114,182,0.1); color: var(--n8n); border-color: rgba(244,114,182,0.35); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.65rem; padding: 0.25rem 2rem 1.1rem; }
+    .kpi { background: var(--panel2); border: 1px solid var(--border2); border-radius: 10px; padding: 0.7rem 0.8rem; }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.85rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+    .card { border-radius: 12px; padding: 1rem 1.05rem; border: 1px solid var(--border2); background: var(--panel2); position: relative; overflow: hidden; }
+    .card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+    .card.c-infra::before  { background: var(--infra); }
+    .card.c-client::before { background: var(--client); }
+    .card.c-oppm::before   { background: var(--oppm); }
+    .card.c-n8n::before    { background: var(--n8n); }
+    .card.p0 { border-color: rgba(248,113,113,0.25); }
+    .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.65rem; margin-bottom: 0.5rem; }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .p0 { color: var(--risk); display: block; }
+    .card-meta .due { color: var(--partial); display: block; font-size: 0.68rem; }
+    .card-path { font-size: 0.71rem; color: var(--accent); margin: 0 0 0.6rem; }
+    .card-note { font-size: 0.77rem; color: #cbd5e1; margin: 0 0 0.7rem; padding: 0.5rem 0.68rem; border-radius: 8px; background: rgba(10,15,30,0.45); border: 1px solid rgba(51,65,85,0.55); }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task { padding: 0.52rem 0.68rem; border-radius: 9px; background: rgba(10,15,30,0.45); border: 1px solid rgba(51,65,85,0.55); border-left: 3px solid rgba(148,163,184,0.45); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--plan); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .table-wrap { padding: 0 2rem 1.5rem; overflow-x: auto; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 0.78rem; background: var(--panel2); border-radius: 10px; overflow: hidden; border: 1px solid var(--border2); }
+    table.data th, table.data td { padding: 0.55rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border2); vertical-align: top; }
+    table.data th { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); background: rgba(10,15,30,0.5); }
+    table.data tr:last-child td { border-bottom: none; font-weight: 700; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .must { color: var(--risk); font-weight: 800; }
+    footer { padding: 1rem 2rem 1.5rem; border-top: 1px solid var(--border2); font-size: 0.73rem; color: var(--muted); }
+    @media print { body { background: #fff; color: #111; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Priority Plan — Must-Do Week</h1>
+  <p class="sub">Eimantas Norvaišas · 11–17 August 2026 · post-holiday sprint</p>
+</header>
+
+<div class="banner risk">
+  <strong>Hard deadlines:</strong> (1) <strong>Google / Emerald Bastion</strong> — suspended GCP project blocks infra. (2) <strong>Mantinga Agent</strong> — review &amp; deliverable to client <strong>Mon–Wed</strong>. Everything else runs in parallel but yields if these slip.
+</div>
+
+<div class="banner info">
+  <strong>Capacity:</strong> ~35.5 h planned · 5 must-do streams · primary focus <strong>DIPA Revenue OS (20 h)</strong> · follows catch-up week (<code>weekly-report-jul20-aug10-2026.html</code>).
+</div>
+
+<div class="week-header">
+  <h2>Week 11–17 August 2026</h2>
+  <span class="badge plan">Plan</span>
+  <span class="badge risk">2 urgent gates</span>
+</div>
+
+<div class="legend">
+  <span class="pill infra"><span class="dot"></span> Infra / GCP — 7 h</span>
+  <span class="pill client"><span class="dot"></span> Mantinga — 2–3 h</span>
+  <span class="pill oppm"><span class="dot"></span> OPPM — 6 h</span>
+  <span class="pill n8n"><span class="dot"></span> DIPA Revenue OS — 20 h</span>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="label">Total planned</div><div class="value" style="color:var(--plan)">~35.5 h</div></div>
+  <div class="kpi"><div class="label">P0 items</div><div class="value">5</div><div class="sub">all must-do</div></div>
+  <div class="kpi"><div class="label">Due Mon–Wed</div><div class="value" style="font-size:1rem;color:var(--risk)">2</div><div class="sub">Google + Mantinga</div></div>
+</div>
+
+<main>
+  <p class="section-title">Must-do streams — detail</p>
+  <div class="grid">
+
+    <article class="card c-infra p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">1 ·</span> Google GCP — Emerald Bastion</span>
+        <span class="card-meta"><span class="p0">P0 · Mon</span><span class="due">Blocked project</span></span>
+      </div>
+      <p class="card-path">GCP project · Emerald Bastion (suspended) · Google contact</p>
+      <p class="card-note"><strong>Must:</strong> Contact Google rep and resolve suspension — unblocks Cloud Run, Firebase, and shared infra used by OPPM + DIPA OS.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Contact Google rep — suspension + next steps</span><span class="task-h">1.0 h</span></div>
+          <p class="task-desc">Email/call with project ID, billing account, suspension notice; confirm remediation path (follow-up async if needed).</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-client p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">2 ·</span> Mantinga Agent — review &amp; delivery</span>
+        <span class="card-meta"><span class="p0">P0 · ASAP</span><span class="due">Send Mon–Wed</span></span>
+      </div>
+      <p class="card-note"><strong>Must:</strong> Full review of Mantinga Agent solution; written feedback + deliverable sent to client in the <strong>first half of the week</strong>.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Agent flow review + short written feedback</span><span class="task-h">1.5 h</span></div>
+          <p class="task-desc">Architecture, prompts, key edge cases — focused review, not full refactor.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Send to Mantinga (email + attachments)</span><span class="task-h">1.0 h</span></div>
+          <p class="task-desc">Target: Mon–Wed · ~2–3 h total.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-infra">
+      <div class="card-head">
+        <span class="card-name"><span class="must">3 ·</span> Personal → company account migration</span>
+        <span class="card-meta"><span class="p0">P0</span><span class="due">Wed–Fri</span></span>
+      </div>
+      <p class="card-note">Inventory tools, repos, API keys, and services on personal accounts; recreate or transfer under DIPA company accounts.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Audit list (GitHub, GCP, Firebase, n8n, APIs, domains)</span><span class="task-h">2.0 h</span></div>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Migrate / recreate critical services on company account</span><span class="task-h">3.0 h</span></div>
+          <p class="task-desc">Priority: anything blocking OPPM prod or DIPA OS staging.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Update env vars, deploy scripts, handoff doc</span><span class="task-h">1.0 h</span></div>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-oppm p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">4 ·</span> OPPM — Ada PR + bug fixes</span>
+        <span class="card-meta"><span class="p0">P0</span><span class="due">Thu–Fri merge</span></span>
+      </div>
+      <p class="card-path"><code>ada/qa-fixes-2026-07</code> · <code>ADA_QA_AND_FIX_TASKS.md</code> · https://oppm.dipa.lt</p>
+      <p class="card-note">Review Ada's pushed code; fix remaining bugs — UI (matrix, wizard, permissions) and backend (API, Firestore rules).</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Review Ada branch — PR + pair on critical fixes</span><span class="task-h">2.0 h</span></div>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Top UI/backend bugs (Phase 1 from registry)</span><span class="task-h">3.0 h</span></div>
+          <p class="task-desc">Permissions, matrix save, highest-impact items only.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Deploy + smoke on oppm.dipa.lt</span><span class="task-h">1.0 h</span></div>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">5 ·</span> DIPA Revenue OS — subagents + ASAICHI</span>
+        <span class="card-meta"><span class="p0">P0</span><span class="due">Ongoing</span></span>
+      </div>
+      <p class="card-path"><code>~/Documents/dipa-n8n</code> · Marija / Lauris · ASAICHI module</p>
+      <p class="card-note">Fix subagent orchestration logic; implement ASAICHI metrics layer (As-Is baselines, KPI pipeline, dashboard hooks).</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Subagent logic fixes (routing, validation, handoffs)</span><span class="task-h">10.0 h</span></div>
+          <p class="task-desc">Call-eval + automation agents; guardrails on failed outputs — main engineering focus.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">ASAICHI — As-Is baseline fields + import path</span><span class="task-h">5.0 h</span></div>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Metrics pipeline + cockpit logic (n8n → KPI layer)</span><span class="task-h">5.0 h</span></div>
+          <p class="task-desc">Carry-over from Jul plan — FinancialMetric read path + dashboard hooks.</p>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Hours summary — must-do week</p>
+  <table class="data">
+    <thead>
+      <tr><th>#</th><th>Must-do</th><th>When</th><th class="num">Hours</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Google GCP — Emerald Bastion suspension</td><td>Mon (urgent)</td><td class="num">1.0</td></tr>
+      <tr><td>2</td><td>Mantinga Agent — review + client delivery</td><td>Mon–Wed</td><td class="num">2–3</td></tr>
+      <tr><td>3</td><td>Personal → company account migration</td><td>Wed–Fri</td><td class="num">6.0</td></tr>
+      <tr><td>4</td><td>OPPM — Ada PR review + UI/backend bug fixes</td><td>Thu–Fri</td><td class="num">6.0</td></tr>
+      <tr><td>5</td><td>DIPA Revenue OS — subagents + ASAICHI metrics</td><td>Ongoing</td><td class="num">20.0</td></tr>
+      <tr><td colspan="3">TOTAL — week 11–17 August 2026</td><td class="num">~35.5</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Suggested day order</p>
+  <table class="data">
+    <thead><tr><th>Day</th><th>Focus</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mon</strong></td><td>Google contact (1 h) · Mantinga review + send (2–3 h) · DIPA subagents (rest of day)</td></tr>
+      <tr><td><strong>Tue–Wed</strong></td><td>DIPA Revenue OS — subagent logic (primary) · account migration audit start</td></tr>
+      <tr><td><strong>Thu</strong></td><td>DIPA ASAICHI metrics · account migration · Ada PR review</td></tr>
+      <tr><td><strong>Fri</strong></td><td>DIPA OS pipeline + cockpit logic · OPPM fixes + deploy (6 h cap)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  Priority plan · 11–17 Aug 2026 ·
+  rollup: <code>weekly-report-jul20-aug10-2026.html</code> · Cmd+P for print
+</footer>
+
+</body>
+</html>

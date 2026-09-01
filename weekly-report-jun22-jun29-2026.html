@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly Report — Eimantas Norvaišas · 15–29 Jun 2026</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --oppm: #2dd4bf;
+      --adhoc: #a78bfa;
+      --linas: #818cf8;
+      --n8n: #f472b6;
+      --teach: #34d399;
+      --meet: #94a3b8;
+      --strat: #38bdf8;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --risk: #f87171;
+      --plan: #60a5fa;
+      --partial: #fb923c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .week-block { border-bottom: 1px solid var(--border2); padding-bottom: 2rem; margin-bottom: 0.5rem; }
+    .week-block.plan-section { background: linear-gradient(180deg, rgba(96,165,250,0.04) 0%, transparent 100%); }
+    .week-header {
+      padding: 1.25rem 2rem 0.5rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+    }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .badge {
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.2rem 0.65rem; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.done { background: rgba(74,222,128,0.15); color: var(--ok); border: 1px solid rgba(74,222,128,0.35); }
+    .badge.plan { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .badge.partial { background: rgba(251,146,60,0.15); color: var(--partial); border: 1px solid rgba(251,146,60,0.35); }
+    .badge.risk { background: rgba(248,113,113,0.15); color: var(--risk); border: 1px solid rgba(248,113,113,0.35); }
+    .banner {
+      margin: 0 2rem 0.75rem;
+      padding: 0.85rem 1rem; border-radius: 10px;
+      font-size: 0.82rem; line-height: 1.55;
+    }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.28); color: #fde68a; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner.ok { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.28); color: #bbf7d0; }
+    .banner strong { color: #fff; }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.74rem; font-weight: 600;
+      padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid;
+    }
+    .pill.oppm  { background: rgba(45,212,191,0.1);  color: var(--oppm);  border-color: rgba(45,212,191,0.35); }
+    .pill.adhoc { background: rgba(167,139,250,0.1); color: var(--adhoc); border-color: rgba(167,139,250,0.35); }
+    .pill.linas { background: rgba(129,140,248,0.1); color: var(--linas); border-color: rgba(129,140,248,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n);   border-color: rgba(244,114,182,0.35); }
+    .pill.teach { background: rgba(52,211,153,0.1);  color: var(--teach); border-color: rgba(52,211,153,0.35); }
+    .pill.meet  { background: rgba(148,163,184,0.1); color: var(--meet);  border-color: rgba(148,163,184,0.35); }
+    .pill.strat { background: rgba(56,189,248,0.1);  color: var(--strat); border-color: rgba(56,189,248,0.25); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.65rem; padding: 0.25rem 2rem 1.1rem;
+    }
+    .kpi {
+      background: var(--panel2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 0.7rem 0.8rem;
+    }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+      margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .card {
+      border-radius: 12px; padding: 1rem 1.05rem;
+      border: 1px solid var(--border2); background: var(--panel2);
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+    }
+    .card.c-oppm::before  { background: var(--oppm); }
+    .card.c-adhoc::before { background: var(--adhoc); }
+    .card.c-linas::before { background: var(--linas); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-teach::before { background: var(--teach); }
+    .card.c-meet::before  { background: var(--meet); }
+    .card.c-strat::before { background: var(--strat); }
+    .card.late { border-color: rgba(248,113,113,0.35); }
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.65rem; margin-bottom: 0.5rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .act { color: var(--ok); display: block; }
+    .card-meta .est { color: var(--muted); font-size: 0.68rem; }
+    .card-meta .slip { color: var(--risk); display: block; font-size: 0.68rem; }
+    .card-path { font-size: 0.71rem; color: var(--strat); margin: 0 0 0.6rem; word-break: break-all; }
+    .card-path code { font-size: 0.68rem; }
+    .card-note {
+      font-size: 0.77rem; color: #cbd5e1;
+      margin: 0 0 0.7rem; padding: 0.5rem 0.68rem;
+      border-radius: 8px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task {
+      padding: 0.52rem 0.68rem; border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-oppm .task  { border-left-color: rgba(45,212,191,0.55); }
+    .card.c-adhoc .task { border-left-color: rgba(167,139,250,0.55); }
+    .card.c-linas .task { border-left-color: rgba(129,140,248,0.55); }
+    .card.c-n8n .task   { border-left-color: rgba(244,114,182,0.55); }
+    .card.c-teach .task { border-left-color: rgba(52,211,153,0.55); }
+    .card.c-meet .task  { border-left-color: rgba(148,163,184,0.5); }
+    .card.c-strat .task { border-left-color: rgba(56,189,248,0.55); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--ok); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .task-h.plan { color: var(--plan); }
+    .task-h.slip { color: var(--risk); }
+    .task-h.part { color: var(--partial); }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .task-desc code { font-size: 0.71rem; color: #7dd3fc; }
+    .status-chip {
+      display: inline-block; font-size: 0.62rem; font-weight: 700;
+      padding: 0.1rem 0.45rem; border-radius: 4px; margin-left: 0.35rem;
+      text-transform: uppercase; vertical-align: middle;
+    }
+    .status-chip.done { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .status-chip.part { background: rgba(251,146,60,0.15); color: var(--partial); }
+    .status-chip.no   { background: rgba(248,113,113,0.15); color: var(--risk); }
+    .table-wrap { padding: 0 2rem 1.5rem; overflow-x: auto; }
+    table.data {
+      width: 100%; border-collapse: collapse; font-size: 0.78rem;
+      background: var(--panel2); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+    table.data th, table.data td {
+      padding: 0.55rem 0.75rem; text-align: left;
+      border-bottom: 1px solid var(--border2); vertical-align: top;
+    }
+    table.data th {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--muted); background: rgba(10,15,30,0.5);
+    }
+    table.data tr:last-child td { border-bottom: none; font-weight: 700; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .divider { margin: 2rem 2rem 1.5rem; border: none; border-top: 2px dashed var(--border2); }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem; color: var(--muted);
+    }
+    @media print { body { background: #fff; color: #111; } .card, .kpi, .banner, table.data { background: #fff !important; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Weekly Report — Delivery &amp; Plan</h1>
+  <p class="sub">Eimantas Norvaišas · 15–22 Jun delivered · 22–29 Jun projection · P0/P1 aligned with partner agreement (2026-06-10)</p>
+</header>
+
+<!-- ═══════════════ LAST WEEK: DELIVERED ═══════════════ -->
+<section class="week-block">
+  <div class="week-header">
+    <h2>Week 15–22 June 2026</h2>
+    <span class="badge done">Delivered — on plan</span>
+  </div>
+
+  <div class="banner ok">
+    <strong>Verdict:</strong> <strong>6 of 7 streams completed</strong> against the 48 h projection. Only <strong>EU Teaching Assistant</strong> slipped — deferred due to other commitments. OPPM, DIPA OS, Linas, ad hoc, strategic session, and communication all delivered.
+  </div>
+
+  <div class="banner info">
+    <strong>Planned last week (48 h):</strong> OPPM 10 h · Ad hoc 6 h · Linas 4 h · DIPA OS 11 h · EU Teaching 5 h · Strategic 8 h · Communication 4 h.
+    <strong>Estimated logged ~48 h</strong> — EU block reallocated across completed streams.
+  </div>
+
+  <div class="legend">
+    <span class="pill oppm"><span class="dot"></span> OPPM — ~12 h act</span>
+    <span class="pill n8n"><span class="dot"></span> DIPA OS — ~11 h act</span>
+    <span class="pill strat"><span class="dot"></span> Strategic — ~8 h act</span>
+    <span class="pill adhoc"><span class="dot"></span> Ad hoc — ~6 h act</span>
+    <span class="pill linas"><span class="dot"></span> Linas — ~4 h act</span>
+    <span class="pill meet"><span class="dot"></span> Comm — ~4 h act</span>
+    <span class="pill teach"><span class="dot"></span> EU — 0 h</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">Planned</div><div class="value" style="color:var(--plan)">48 h</div><div class="sub">projection</div></div>
+    <div class="kpi"><div class="label">Est. logged</div><div class="value">~48 h</div><div class="sub">15–22 Jun</div></div>
+    <div class="kpi"><div class="label">Streams done</div><div class="value" style="color:var(--ok)">6 / 7</div><div class="sub">EU deferred</div></div>
+    <div class="kpi"><div class="label">Carry-over</div><div class="value" style="font-size:1rem;color:var(--teach)">EU only</div><div class="sub">teacher handoff</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <p class="section-title" style="padding-left:0">Last week — plan vs outcome</p>
+    <table class="data">
+      <thead>
+        <tr><th>Stream</th><th>Planned</th><th>Est. actual</th><th>Outcome</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OPPM Assistant</td><td class="num">10 h</td><td class="num">~12 h</td>
+          <td><span class="status-chip done">Done</span></td>
+          <td>Help Center (30 topics LT/EN), i18n + LT|EN toggle, Cloud Run deploy, wizard uploads, admin/companies, matrix fixes — planned P0 scope delivered (+ Help Center bonus)</td>
+        </tr>
+        <tr>
+          <td>Ad hoc</td><td class="num">6 h</td><td class="num">~6 h</td>
+          <td><span class="status-chip part">Mostly done</span></td>
+          <td>Transcriber deployed; DIPA RAG regression partially complete (Intelektex path still open); LJA per plan</td>
+        </tr>
+        <tr>
+          <td>Linas RAG</td><td class="num">4 h</td><td class="num">~4 h</td>
+          <td><span class="status-chip done">Done</span></td>
+          <td>Planned updates shipped — awaiting client UAT feedback before next iteration</td>
+        </tr>
+        <tr>
+          <td>DIPA OS</td><td class="num">11 h</td><td class="num">~11 h</td>
+          <td><span class="status-chip done">Done</span></td>
+          <td>UI work finished; demo agents built and ready for team review</td>
+        </tr>
+        <tr>
+          <td>EU Teaching Assistant</td><td class="num">5 h</td><td class="num">0 h</td>
+          <td><span class="status-chip no">Deferred</span></td>
+          <td>Not started — other commitments; teacher submission package moved to this week</td>
+        </tr>
+        <tr>
+          <td>Strategic session</td><td class="num">8 h</td><td class="num">~8 h</td>
+          <td><span class="status-chip done">Done</span></td>
+          <td>Partner / Dev lead strategic session completed — P0/P1 vs Jun 10 agreement reviewed</td>
+        </tr>
+        <tr>
+          <td>Communication</td><td class="num">4 h</td><td class="num">~4 h</td>
+          <td><span class="status-chip done">Done</span></td>
+          <td>Partner syncs, DIPA OS discovery with Greta/Marija, Linas status updates</td>
+        </tr>
+        <tr>
+          <td colspan="2">TOTAL</td><td class="num">~48 h</td><td colspan="2"><strong>On target</strong> — only EU Teaching deferred to week 22–29</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <main>
+    <p class="section-title">Main planned work last week — detail</p>
+    <div class="grid">
+
+      <article class="card c-oppm">
+        <div class="card-head">
+          <span class="card-name">1 · OPPM — P0 finalization</span>
+          <span class="card-meta"><span class="act">~12 h act</span><span class="est">10 h planned</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task">
+            <div class="task-top"><span class="task-title">Create OPPM projects for initiatives</span><span class="task-h">Done</span></div>
+            <p class="task-desc">Active client projects tracked in OPPM; portfolio workflow in use per Jun 4 process.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Bug fixes from feedback</span><span class="task-h">Done</span></div>
+            <p class="task-desc">Deploy fixes, workspace/i18n sync, permissions, matrix compiler, step detection, wizard file types, admin companies flow.</p>
+          </li>
+          <li class="task">
+            <div class="task-top"><span class="task-title">Multilanguage LT / EN + Help Center</span><span class="task-h">Done+</span></div>
+            <p class="task-desc">Full i18n pass, top-bar LT|EN toggle, generation language sync, in-app Help Center (30 topics, screenshot pipeline).</p>
+          </li>
+        </ul>
+      </article>
+
+      <article class="card c-adhoc">
+        <div class="card-head">
+          <span class="card-name">2 · Ad hoc</span>
+          <span class="card-meta"><span class="act">~6 h act</span><span class="est">6 h planned</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Transcriber deployment</span><span class="task-h">Done</span></div></li>
+          <li class="task"><div class="task-top"><span class="task-title">DIPA RAG testing</span><span class="task-h part">Partial</span></div><p class="task-desc">Smoke/regression run; full sign-off pending Intelektex revision.</p></li>
+          <li class="task"><div class="task-top"><span class="task-title">LJA RAG submission</span><span class="task-h">Done</span></div></li>
+        </ul>
+      </article>
+
+      <article class="card c-linas">
+        <div class="card-head">
+          <span class="card-name">3 · Linas RAG</span>
+          <span class="card-meta"><span class="act">~4 h act</span><span class="est">4 h planned</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Planned updates &amp; UAT prep</span><span class="task-h">Done</span></div><p class="task-desc">Delivered updates on schedule — waiting for client feedback before next fixes.</p></li>
+          <li class="task"><div class="task-top"><span class="task-title">Multi-agent core template</span><span class="task-h">Done</span></div><p class="task-desc">Incremental progress per P0-2 scope; no open dev blockers on our side.</p></li>
+        </ul>
+      </article>
+
+      <article class="card c-n8n">
+        <div class="card-head">
+          <span class="card-name">4 · DIPA OS</span>
+          <span class="card-meta"><span class="act">~11 h act</span><span class="est">11 h planned</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">UI work</span><span class="task-h">Done</span></div><p class="task-desc">Sales ops UI surfaces finished for internal demo.</p></li>
+          <li class="task"><div class="task-top"><span class="task-title">Demo agents</span><span class="task-h">Done</span></div><p class="task-desc">Demo agent set built and ready for Greta/Marija review.</p></li>
+        </ul>
+      </article>
+
+      <article class="card c-teach late">
+        <div class="card-head">
+          <span class="card-name">5 · EU Teaching Assistant</span>
+          <span class="card-meta"><span class="slip">0 h · deferred</span><span class="est">5 h planned</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">User mgmt · agent API · teacher submission</span><span class="task-h slip">Deferred</span></div><p class="task-desc">Other commitments — moved to week 22–29.</p></li>
+        </ul>
+      </article>
+
+      <article class="card c-strat">
+        <div class="card-head">
+          <span class="card-name">6a · Strategic session</span>
+          <span class="card-meta"><span class="act">~8 h act</span><span class="est">8 h planned</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Partner / Dev lead strategic session</span><span class="task-h">Done</span></div></li>
+        </ul>
+      </article>
+
+      <article class="card c-meet">
+        <div class="card-head">
+          <span class="card-name">6b · Communication</span>
+          <span class="card-meta"><span class="act">~4 h act</span><span class="est">4 h planned</span></span>
+        </div>
+      </article>
+    </div>
+  </main>
+</section>
+
+<hr class="divider" />
+
+<!-- ═══════════════ THIS WEEK: PLAN ═══════════════ -->
+<section class="week-block plan-section">
+  <div class="week-header">
+    <h2>Week 22–29 June 2026</h2>
+    <span class="badge plan">Projection</span>
+  </div>
+
+  <div class="banner info">
+    <strong>Focus:</strong> EU Teaching teacher handoff (only carry-over from last week), DIPA OS stage 2 (wire demo agents / first live automation), OPPM Help Center prod deploy, Linas feedback triage when client responds.
+  </div>
+
+  <div class="banner warn">
+    <strong>Hours note:</strong> 40 h planned — EU Teaching gets the 5 h deferred from last week (+3 h buffer for handoff quality).
+  </div>
+
+  <div class="legend">
+    <span class="pill teach"><span class="dot"></span> EU Teaching — 8 h</span>
+    <span class="pill n8n"><span class="dot"></span> DIPA OS — 10 h</span>
+    <span class="pill oppm"><span class="dot"></span> OPPM — 6 h</span>
+    <span class="pill linas"><span class="dot"></span> Linas — 2 h</span>
+    <span class="pill adhoc"><span class="dot"></span> Ad hoc — 2 h</span>
+    <span class="pill meet"><span class="dot"></span> Communication — 4 h</span>
+    <span class="pill strat"><span class="dot"></span> Buffer — 8 h</span>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">Total planned</div><div class="value" style="color:var(--plan)">40 h</div><div class="sub">22–29 Jun</div></div>
+    <div class="kpi"><div class="label">Carry-over</div><div class="value" style="font-size:1rem;color:var(--teach)">EU only</div><div class="sub">from last week</div></div>
+    <div class="kpi"><div class="label">DIPA OS</div><div class="value" style="color:var(--n8n)">10 h</div><div class="sub">stage 2</div></div>
+    <div class="kpi"><div class="label">Linas</div><div class="value" style="color:var(--linas)">2 h</div><div class="sub">feedback slot</div></div>
+  </div>
+
+  <main>
+    <p class="section-title">This week — planned subtasks</p>
+    <div class="grid">
+
+      <article class="card c-n8n">
+        <div class="card-head">
+          <span class="card-name">1 · DIPA OS — stage 2 (post UI + demo agents)</span>
+          <span class="card-meta"><span class="est">10 h est</span></span>
+        </div>
+        <p class="card-path"><code>~/Documents/dipa-os-presentation</code> · Greta / Marija</p>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Team demo review + feedback capture</span><span class="task-h plan">2.0 h</span></div></li>
+          <li class="task"><div class="task-top"><span class="task-title">Wire demo agents to first live workflow</span><span class="task-h plan">5.0 h</span></div><p class="task-desc">Connect UI + agents to n8n / backend intake path per approved scope.</p></li>
+          <li class="task"><div class="task-top"><span class="task-title">Dry-run + OPPM stage-2 backlog</span><span class="task-h plan">3.0 h</span></div></li>
+        </ul>
+      </article>
+
+      <article class="card c-teach">
+        <div class="card-head">
+          <span class="card-name">2 · EU Teaching Assistant — teacher handoff (carry-over)</span>
+          <span class="card-meta"><span class="est">8 h est</span></span>
+        </div>
+        <p class="card-path"><code>~/Documents/eu-agent/EU-AGENT/apps/teacher-web</code></p>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">User management + pilot invites</span><span class="task-h plan">2.5 h</span></div></li>
+          <li class="task"><div class="task-top"><span class="task-title">Agent API regression + hardening</span><span class="task-h plan">2.0 h</span></div></li>
+          <li class="task"><div class="task-top"><span class="task-title">Teacher submission package + agency comms</span><span class="task-h plan">2.0 h</span></div></li>
+          <li class="task"><div class="task-top"><span class="task-title">Prod deploy smoke</span><span class="task-h plan">1.5 h</span></div></li>
+        </ul>
+      </article>
+
+      <article class="card c-oppm">
+        <div class="card-head">
+          <span class="card-name">3 · OPPM — Help Center prod + polish</span>
+          <span class="card-meta"><span class="est">6 h est</span></span>
+        </div>
+        <p class="card-path"><code>oppm-assistant</code> · Cloud Run <code>oppm-assistant-v2</code></p>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Prod deploy (Help Center + LT|EN toggle)</span><span class="task-h plan">2.0 h</span></div></li>
+          <li class="task"><div class="task-top"><span class="task-title">Screenshot capture + remaining help topics</span><span class="task-h plan">2.0 h</span></div></li>
+          <li class="task"><div class="task-top"><span class="task-title">Feedback triage from active clients</span><span class="task-h plan">2.0 h</span></div></li>
+        </ul>
+      </article>
+
+      <article class="card c-linas">
+        <div class="card-head">
+          <span class="card-name">4 · Linas RAG — client feedback slot</span>
+          <span class="card-meta"><span class="est">2 h est</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Triage UAT feedback (when received)</span><span class="task-h plan">2.0 h</span></div><p class="task-desc">Fix-only if client returns items; otherwise hold slot.</p></li>
+        </ul>
+      </article>
+
+      <article class="card c-adhoc">
+        <div class="card-head">
+          <span class="card-name">5 · Ad hoc — close partial items</span>
+          <span class="card-meta"><span class="est">2 h est</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">DIPA RAG regression — finish partial run</span><span class="task-h plan">2.0 h</span></div><p class="task-desc">Complete sign-off when Intelektex revision lands.</p></li>
+        </ul>
+      </article>
+
+      <article class="card c-meet">
+        <div class="card-head">
+          <span class="card-name">6 · Communication</span>
+          <span class="card-meta"><span class="est">4 h est</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Weekly syncs · stakeholder updates</span><span class="task-h plan">4.0 h</span></div></li>
+        </ul>
+      </article>
+
+      <article class="card c-strat">
+        <div class="card-head">
+          <span class="card-name">7 · Flexible / buffer</span>
+          <span class="card-meta"><span class="est">8 h est</span></span>
+        </div>
+        <ul class="tasks">
+          <li class="task"><div class="task-top"><span class="task-title">Unplanned P0/P1 or client escalations</span><span class="task-h plan">8.0 h</span></div></li>
+        </ul>
+      </article>
+
+    </div>
+  </main>
+
+  <div class="table-wrap">
+    <p class="section-title" style="padding-left:0">Hours summary — week 22–29 June</p>
+    <table class="data">
+      <thead><tr><th>#</th><th>Stream</th><th>Priority</th><th>Notes</th><th class="num">Hours</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>EU Teaching Assistant</td><td>Delivery</td><td>Teacher handoff — carry-over from last week</td><td class="num">8.0</td></tr>
+        <tr><td>2</td><td>DIPA OS</td><td>P0-3</td><td>Stage 2 — wire demo agents / live workflow</td><td class="num">10.0</td></tr>
+        <tr><td>3</td><td>OPPM Assistant</td><td>P0-1</td><td>Help Center prod deploy + polish</td><td class="num">6.0</td></tr>
+        <tr><td>4</td><td>Linas RAG</td><td>P0-2 slice</td><td>Client feedback triage (when received)</td><td class="num">2.0</td></tr>
+        <tr><td>5</td><td>Ad hoc</td><td>P1</td><td>DIPA RAG regression — finish partial</td><td class="num">2.0</td></tr>
+        <tr><td>6</td><td>Communication</td><td>—</td><td>Syncs · stakeholder updates</td><td class="num">4.0</td></tr>
+        <tr><td>7</td><td>Buffer</td><td>—</td><td>Flexible P0/P1 / escalations</td><td class="num">8.0</td></tr>
+        <tr><td colspan="4">TOTAL — week 22–29 June 2026</td><td class="num">40.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  Weekly report · 15–22 Jun actual + 22–29 Jun plan · related:
+  <code>weekly-report-jun15-jun22-2026.html</code> (original projection) ·
+  <code>docs/partner-darbo-planas-2026-06-10.md</code> · Cmd+P for A4 print
+</footer>
+
+</body>
+</html>

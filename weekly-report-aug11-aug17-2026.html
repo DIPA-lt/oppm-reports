@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ASAICHI — 11–17 Aug delivered · 17–23 Aug plan</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel2: #1e293b;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border2: #334155;
+      --oppm: #2dd4bf;
+      --adhoc: #a78bfa;
+      --n8n: #f472b6;
+      --meet: #94a3b8;
+      --strat: #38bdf8;
+      --infra: #f59e0b;
+      --client: #818cf8;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --risk: #f87171;
+      --plan: #60a5fa;
+      --partial: #fb923c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 1.6rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(140deg, #0d1f3c 0%, #0a0f1e 55%);
+    }
+    header h1 { margin: 0 0 0.2rem; font-size: 1.55rem; font-weight: 800; }
+    header .sub { font-size: 0.82rem; color: var(--muted); margin: 0; }
+    .week-header {
+      padding: 1.25rem 2rem 0.5rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+    }
+    .week-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .week-header.plan-week { padding-top: 2rem; border-top: 1px solid var(--border2); margin-top: 0.5rem; }
+    .badge {
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.2rem 0.65rem; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.partial { background: rgba(251,146,60,0.15); color: var(--partial); border: 1px solid rgba(251,146,60,0.35); }
+    .badge.plan { background: rgba(96,165,250,0.15); color: var(--plan); border: 1px solid rgba(96,165,250,0.35); }
+    .banner {
+      margin: 0 2rem 0.75rem;
+      padding: 0.85rem 1rem; border-radius: 10px;
+      font-size: 0.82rem; line-height: 1.55;
+    }
+    .banner.info { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #bae6fd; }
+    .banner.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.28); color: #fde68a; }
+    .banner.ok { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.28); color: #bbf7d0; }
+    .banner.risk { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.28); color: #fecaca; }
+    .banner strong { color: #fff; }
+    .raga-legend {
+      display: flex; flex-wrap: wrap; gap: 0.65rem;
+      margin: 0 2rem 1rem; padding: 0.75rem 1rem;
+      border-radius: 10px; background: rgba(10,15,30,0.55);
+      border: 1px solid var(--border2); font-size: 0.78rem;
+    }
+    .raga-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .light { width: 10px; height: 10px; border-radius: 50%; }
+    .light.green { background: var(--ok); box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+    .light.amber { background: var(--partial); box-shadow: 0 0 8px rgba(251,146,60,0.45); }
+    .light.red { background: var(--risk); box-shadow: 0 0 8px rgba(248,113,113,0.45); }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 2rem 0.75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.74rem; font-weight: 600;
+      padding: 0.2rem 0.68rem; border-radius: 20px; border: 1px solid;
+    }
+    .pill.oppm  { background: rgba(45,212,191,0.1); color: var(--oppm); border-color: rgba(45,212,191,0.35); }
+    .pill.adhoc { background: rgba(167,139,250,0.1); color: var(--adhoc); border-color: rgba(167,139,250,0.35); }
+    .pill.n8n   { background: rgba(244,114,182,0.1); color: var(--n8n); border-color: rgba(244,114,182,0.35); }
+    .pill.infra { background: rgba(245,158,11,0.1); color: var(--infra); border-color: rgba(245,158,11,0.35); }
+    .pill.client { background: rgba(129,140,248,0.1); color: var(--client); border-color: rgba(129,140,248,0.35); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.65rem; padding: 0.25rem 2rem 1.1rem;
+    }
+    .kpi {
+      background: var(--panel2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 0.7rem 0.8rem;
+    }
+    .kpi.warn { border-color: rgba(251,191,36,0.35); }
+    .kpi.ok { border-color: rgba(74,222,128,0.35); }
+    .kpi.risk { border-color: rgba(248,113,113,0.35); }
+    .kpi .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .kpi .value { font-size: 1.28rem; font-weight: 800; margin-top: 0.12rem; }
+    .kpi .sub { font-size: 0.7rem; color: var(--muted); }
+    .grade-box {
+      margin: 0 2rem 1rem;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(96,165,250,0.06) 100%);
+      border: 1px solid rgba(251,191,36,0.25);
+      display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem;
+    }
+    .grade-main { text-align: center; min-width: 90px; }
+    .grade-main .letter { font-size: 2.4rem; font-weight: 900; color: var(--partial); line-height: 1; }
+    .grade-main .score { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .grade-note { flex: 1; min-width: 220px; font-size: 0.82rem; color: #cbd5e1; line-height: 1.55; }
+    main { padding: 0 2rem 1.5rem; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.85rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .card {
+      border-radius: 12px; padding: 1rem 1.05rem;
+      border: 1px solid var(--border2); background: var(--panel2);
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+    }
+    .card.c-oppm::before  { background: var(--oppm); }
+    .card.c-n8n::before   { background: var(--n8n); }
+    .card.c-infra::before { background: var(--infra); }
+    .card.c-client::before { background: var(--client); }
+    .card.c-adhoc::before { background: var(--adhoc); }
+    .card.p0 { border-color: rgba(248,113,113,0.25); }
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 0.65rem; margin-bottom: 0.5rem;
+    }
+    .card-name { font-size: 0.88rem; font-weight: 700; line-height: 1.35; }
+    .card-meta { font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; text-align: right; }
+    .card-meta .act { color: var(--ok); display: block; }
+    .card-meta .est { color: var(--muted); font-size: 0.68rem; }
+    .card-meta .slip { color: var(--risk); display: block; }
+    .card-meta .p0 { color: var(--risk); display: block; }
+    .card-path { font-size: 0.71rem; color: var(--strat); margin: 0 0 0.6rem; word-break: break-all; }
+    .card-note {
+      font-size: 0.77rem; color: #cbd5e1; margin: 0 0 0.7rem;
+      padding: 0.5rem 0.68rem; border-radius: 8px;
+      background: rgba(10,15,30,0.45); border: 1px solid rgba(51,65,85,0.55);
+    }
+    .tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .task {
+      padding: 0.52rem 0.68rem; border-radius: 9px;
+      background: rgba(10,15,30,0.45);
+      border: 1px solid rgba(51,65,85,0.55);
+      border-left: 3px solid rgba(148,163,184,0.45);
+    }
+    .card.c-oppm .task { border-left-color: rgba(45,212,191,0.55); }
+    .card.c-n8n .task { border-left-color: rgba(244,114,182,0.55); }
+    .card.c-infra .task { border-left-color: rgba(245,158,11,0.55); }
+    .card.c-client .task { border-left-color: rgba(129,140,248,0.55); }
+    .card.c-adhoc .task { border-left-color: rgba(167,139,250,0.55); }
+    .task-top { display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.2rem; }
+    .task-title { font-size: 0.79rem; font-weight: 700; line-height: 1.35; }
+    .task-h { font-size: 0.71rem; font-weight: 700; color: var(--ok); white-space: nowrap; }
+    .task-h.part { color: var(--partial); }
+    .task-h.slip { color: var(--risk); }
+    .task-h.plan { color: var(--plan); }
+    .task-desc { font-size: 0.75rem; color: #cbd5e1; margin: 0; line-height: 1.48; }
+    .task-desc code { font-size: 0.71rem; color: #7dd3fc; }
+    .status-chip {
+      display: inline-block; font-size: 0.62rem; font-weight: 700;
+      padding: 0.1rem 0.45rem; border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .status-chip.done { background: rgba(74,222,128,0.15); color: var(--ok); }
+    .status-chip.part { background: rgba(251,146,60,0.15); color: var(--partial); }
+    .status-chip.no { background: rgba(248,113,113,0.15); color: var(--risk); }
+    .table-wrap { padding: 0 2rem 1.5rem; overflow-x: auto; }
+    table.data {
+      width: 100%; border-collapse: collapse; font-size: 0.78rem;
+      background: var(--panel2); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+    table.data th, table.data td {
+      padding: 0.55rem 0.75rem; text-align: left;
+      border-bottom: 1px solid var(--border2); vertical-align: top;
+    }
+    table.data th {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--muted); background: rgba(10,15,30,0.5);
+    }
+    table.data tr:last-child td { border-bottom: none; font-weight: 700; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .must { color: var(--risk); font-weight: 800; }
+    footer {
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border2);
+      font-size: 0.73rem; color: var(--muted);
+    }
+    @media print { body { background: #fff; color: #111; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Weekly report and plan</h1>
+  <p class="sub">Eimantas Norvaišas · 11–17 August 2026 delivered · 17–23 August 2026 plan</p>
+</header>
+
+<div class="banner info">
+  <strong>OPPM development tracking.</strong>
+  Progress for the OPPM product team (Eimantas Norvaišas, Ada Miller) is now planned and followed in OPPM:
+  project <em>OPPM Assistant — Development &amp; QA</em>, 14 August – 11 September, six objectives, tasks T1–T14.
+  DIPA OS remains a separate project in the same system.
+</div>
+
+<div class="raga-legend">
+  <strong style="color:#fff;margin-right:0.25rem">Traffic light:</strong>
+  <span><span class="light green"></span> Completed</span>
+  <span><span class="light amber"></span> In progress</span>
+  <span><span class="light red"></span> Carried over</span>
+</div>
+
+<!-- ========== LAST WEEK ========== -->
+<div class="week-header">
+  <h2>Week 11–17 August 2026 — delivered</h2>
+  <span class="badge partial">40 h delivered · 35.5 h planned</span>
+</div>
+
+<div class="legend">
+  <span class="pill oppm"><span class="dot"></span> OPPM — 12 h</span>
+  <span class="pill n8n"><span class="dot"></span> DIPA OS — 14 h</span>
+  <span class="pill infra"><span class="dot"></span> Tools / accounts — 5 h</span>
+  <span class="pill client"><span class="dot"></span> Mantinga — 2 h</span>
+  <span class="pill adhoc"><span class="dot"></span> ST Impress, admin, GCP — 7 h</span>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi warn"><div class="label">Planned</div><div class="value" style="color:var(--plan)">35.5 h</div></div>
+  <div class="kpi ok"><div class="label">Delivered</div><div class="value">40 h</div></div>
+  <div class="kpi ok"><div class="label">Completed</div><div class="value" style="font-size:1rem;color:var(--ok)">3</div><div class="sub">Mantinga · Google Support · ST Impress</div></div>
+  <div class="kpi warn"><div class="label">In progress</div><div class="value" style="font-size:1rem;color:var(--partial)">3</div><div class="sub">OPPM · DIPA OS · account migration</div></div>
+  <div class="kpi risk"><div class="label">Carried over</div><div class="value" style="font-size:1rem;color:var(--risk)">1</div><div class="sub">ASAICHI KPI integration</div></div>
+</div>
+
+<div class="grade-box">
+  <div class="grade-note" style="margin:0">
+    Client proposals issued: Mantinga (four-stage email-assistant offer, valid until 26 August) and ST Impress (narrow scope only).
+    OPPM invitation defects were fixed with Ada Miller; a staging environment is live. Production on <code>oppm.dipa.lt</code> was held until the matrix view is ready.
+    Google Support was contacted about the suspended Emerald Bastion project.
+    DIPA OS agent work continued. Live ASAICHI KPI tracking in the product is the priority for 17–23 August, with Lauris back.
+  </div>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Plan vs outcome — 11–17 Aug</p>
+  <table class="data">
+    <thead>
+      <tr><th>#</th><th>Must-do (from 11–17 plan)</th><th class="num">Plan h</th><th class="num">Est.</th><th>Status</th><th>What happened</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Google GCP — Emerald Bastion</td>
+        <td class="num">1</td><td class="num">0.5</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>Google Support contacted. Awaiting reply. Project still suspended.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Mantinga — AI klientų laiškų asistentas</td>
+        <td class="num">2–3</td><td class="num">2</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>12 August proposal to Rokas Grigas (valid to 26 August). Discovery 1 500–3 000 € · PoC 4 000–8 000 € · MVP 15 000–35 000 € · support 400–1 500 €/month. Outlook draft with human approval.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Personal → company accounts</td>
+        <td class="num">6</td><td class="num">5</td>
+        <td><span class="status-chip part">In progress</span></td>
+        <td>Inventory complete. Company-account transfers not yet executed.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>OPPM — development and QA with Ada Miller</td>
+        <td class="num">6</td><td class="num">12</td>
+        <td><span class="status-chip part">In progress</span></td>
+        <td>Invitation defects fixed. Staging environment deployed. Development &amp; QA project created in OPPM. Production release deferred until matrix view is ready.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>DIPA Revenue OS — subagents + ASAICHI</td>
+        <td class="num">20</td><td class="num">14</td>
+        <td><span class="status-chip part">In progress</span></td>
+        <td>Agent and QA updates, testing plan in OPPM, MVP status deck. Live ASAICHI KPI integration continues this week with Lauris.</td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>ST Impress + admin / reports</td>
+        <td class="num">—</td><td class="num">6.5</td>
+        <td><span class="status-chip done">Completed</span></td>
+        <td>ST Impress: full RFP declined; Discovery-only path on Hanna #5. Weekly plan and tools inventory published.</td>
+      </tr>
+      <tr>
+        <td colspan="2">TOTAL</td>
+        <td class="num">~35.5</td><td class="num">~40</td>
+        <td colspan="2">DIPA OS 14 of 20 planned; ASAICHI KPI integration continues 17–23 August</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<main>
+  <p class="section-title">Delivered detail — 11–17 Aug</p>
+  <div class="grid">
+
+    <article class="card c-oppm">
+      <div class="card-head">
+        <span class="card-name">OPPM Assistant</span>
+        <span class="card-meta"><span class="act">In progress</span><span class="est">12 h</span></span>
+      </div>
+      <p class="card-path">Working session with Ada Miller · staging Cloud Run · OPPM project <em>Development &amp; QA</em></p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">User invitations</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Administrators can cancel, resend, or cancel all pending invitations. Invitation links no longer expire prematurely. Fixes are on staging; production release follows the matrix work.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Development &amp; QA project in OPPM</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Created for the two-person product team. Six objectives, T1–T14, 14 August – 11 September. Planned capacity 120 h (Ada Miller 72, Eimantas Norvaišas 40, buffer 8). Used to track remaining work before production.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Matrix view</span><span class="task-h part">In progress</span></div>
+          <p class="task-desc">Simplified and full views designed. Remaining: distinct project colours, filter by responsible person, and responsive layout. Assigned to Ada Miller this week.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Security and quality review</span><span class="task-h part">In progress</span></div>
+          <p class="task-desc">Ada Miller identified repository secrets, a money-parsing defect, a divide-by-zero risk, and an unauthorised super-admin path. Fixes are scheduled; company email will be used as the super-admin account.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Release</span><span class="task-h part">Staging only</span></div>
+          <p class="task-desc">Staging is live. Production on oppm.dipa.lt is unchanged until the matrix view is ready. Mantas will be informed of the release date.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n">
+      <div class="card-head">
+        <span class="card-name">DIPA Revenue OS</span>
+        <span class="card-meta"><span class="slip">In progress</span><span class="est">14 h of 20 planned</span></span>
+      </div>
+      <p class="card-path">Tracked in OPPM · DIPA OS Revenue AI (MVP)</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Agents, leads, and call QA</span><span class="task-h part">In progress</span></div>
+          <p class="task-desc">Lead scoring, ROI call scoring, impact estimates, and ICP prompts updated. Further orchestration work remains.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Testing plan in OPPM</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Core build tasks T1–T6 are complete. Open: integrations, QA gold set, Command Center, training, and post-MVP extras.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">ASAICHI KPI integration</span><span class="task-h slip">Carried over</span></div>
+          <p class="task-desc">The KPI board exists. The first live weekly numbers are not yet in the system. Priority for 17–23 August with Lauris.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-client">
+      <div class="card-head">
+        <span class="card-name">Mantinga — AI klientų laiškų asistentas</span>
+        <span class="card-meta"><span class="act">Completed</span><span class="est">2 h</span></span>
+      </div>
+      <p class="card-path">12 Aug · Rokas Grigas, UAB Mantinga · valid to 2026-08-26</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">4-stage commercial path</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Discovery 1 500–3 000 € · PoC 4 000–8 000 € · MVP 15 000–35 000 € · support 400–1 500 €/month. Each stage ordered separately. Outlook draft with human approval before send. Client decision by 26 August.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-infra">
+      <div class="card-head">
+        <span class="card-name">Infrastructure and other clients</span>
+        <span class="card-meta"><span class="act">Completed / in progress</span><span class="est">12 h</span></span>
+      </div>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">DIPA tools inventory</span><span class="task-h part">In progress</span></div>
+          <p class="task-desc">GCP, Cloud Run, GitHub, and third-party services listed. Company-account transfers are not yet executed.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Emerald Bastion — Google Support</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Support contacted regarding the suspended GCP project. Awaiting Google’s reply.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">ST Impress</span><span class="task-h">Done</span></div>
+          <p class="task-desc">Full automation RFP declined. Conditional path: Hanna item #5 with a paid Discovery.</p>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<!-- ========== THIS WEEK ========== -->
+<div class="week-header plan-week">
+  <h2>Week 17–23 August 2026 — plan</h2>
+  <span class="badge plan">38 h planned</span>
+</div>
+
+<div class="banner info">
+  Taken from the live OPPM projects.
+  <em>OPPM Assistant — Development &amp; QA</em> (Eimantas Norvaišas, Ada Miller).
+  <em>DIPA OS Revenue AI (MVP)</em> (Greta, Marija, Lauris, Eimantas, Aušrinė, Igoris, Mantas).
+  Invitation objective is due 21 August. DIPA OS planned end date was 16 August; remaining work continues this week.
+</div>
+
+<div class="legend">
+  <span class="pill oppm"><span class="dot"></span> OPPM — 12 h</span>
+  <span class="pill n8n"><span class="dot"></span> DIPA OS — 18 h</span>
+  <span class="pill client"><span class="dot"></span> Mantinga — 2 h</span>
+  <span class="pill infra"><span class="dot"></span> Infrastructure — 6 h</span>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="label">Planned</div><div class="value" style="color:var(--plan)">38 h</div></div>
+  <div class="kpi"><div class="label">Priorities</div><div class="value">4</div><div class="sub">Invites · ASAICHI · agent claims · matrix</div></div>
+  <div class="kpi"><div class="label">Ada Miller</div><div class="value" style="font-size:1rem;color:var(--oppm)">Matrix + security</div><div class="sub">Tracked in the same OPPM project</div></div>
+  <div class="kpi"><div class="label">Gate</div><div class="value" style="font-size:1rem;color:var(--risk)">21 Aug</div><div class="sub">Invitations working</div></div>
+</div>
+
+<main>
+  <p class="section-title">Must-do streams — 17–23 Aug</p>
+  <div class="grid">
+
+    <article class="card c-oppm p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">1 ·</span> OPPM — invitations</span>
+        <span class="card-meta"><span class="p0">Priority · 21 Aug</span><span class="est">6 h</span></span>
+      </div>
+      <p class="card-path">T1, T12.1 · production app unchanged until matrix is ready</p>
+      <p class="card-note">Deploy security rules so pending users can accept invitations. Keep the new application on staging until the matrix view is ready. Inform Mantas of the production date.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Deploy Firestore invitation rules</span><span class="task-h plan">1 h</span></div>
+          <p class="task-desc">Due 18 August. Rules only — no data deletion.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Clear duplicate invitations and re-invite Opatrip users</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">Three users. Staging first if production still runs the previous build.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Regression and client confirmation</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Duplicate prevention, timeout, and invitation-link edge cases.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-oppm p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">2 ·</span> OPPM — matrix and review with Ada Miller</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">6 h</span></span>
+      </div>
+      <p class="card-path">T9, T2, T4, T5, T13 · tracked in OPPM Development &amp; QA</p>
+      <p class="card-note">Ada Miller: project colours, person filter, responsive matrix, security fixes, company-email super-admin. Eimantas Norvaišas: review and release decisions.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Review the development branch</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Kanban, full matrix view, homepage, invitations. No production merge until the matrix view is ready.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Timer, hours roll-up, and report sanitisation</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">Ada Miller implements; Eimantas Norvaišas reviews.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Release communication</span><span class="task-h plan">1 h</span></div>
+          <p class="task-desc">Inform Mantas that production waits on matrix colours, filters, and layout.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">3 ·</span> DIPA OS — ASAICHI KPIs with Lauris</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">8 h</span></span>
+      </div>
+      <p class="card-path">T8.7 · T13.1 · KPI board already in the product</p>
+      <p class="card-note">First weekly KPI set must be visible in DIPA OS. The board is built; live numbers are not yet loaded.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Agree the first KPI set with Lauris</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">Sales leading indicators already defined: DD sales, win rate, ROI sessions, call quality.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Load the first week of numbers</span><span class="task-h plan">5 h</span></div>
+          <p class="task-desc">Import or seed so the board shows the current week.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Confirm Lauris can read his KPIs in the system</span><span class="task-h plan">1 h</span></div>
+          <p class="task-desc">Acceptance: weekly tracking without a separate spreadsheet.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n p0">
+      <div class="card-head">
+        <span class="card-name"><span class="must">4 ·</span> DIPA OS — agent claim standard (Marija)</span>
+        <span class="card-meta"><span class="p0">Priority</span><span class="est">6 h</span></span>
+      </div>
+      <p class="card-path">Lead research and first-contact agents</p>
+      <p class="card-note">Apply Marija’s claim levels to first-contact output. Final labelling standard to be confirmed this week. Agents should also consider speaker tone, not only literal text.</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Label claims: Fact / Diagnosis / Hypothesis / Personal assumption</span><span class="task-h plan">5 h</span></div>
+          <p class="task-desc">Facts may be used as-is. Diagnoses become questions. ROI figures need Value Owner (Aušrinė) confirmation or an illustrative range. Personal assumptions are not used until verified.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Tone and emotion in first contact</span><span class="task-h plan">1 h</span></div>
+          <p class="task-desc">Assess whether agents can adjust wording from speaker emotion. Design decision this week.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-n8n">
+      <div class="card-head">
+        <span class="card-name">5 · DIPA OS — remaining MVP items</span>
+        <span class="card-meta"><span class="est">4 h</span></span>
+      </div>
+      <p class="card-path">After ASAICHI KPIs and claim labels</p>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Integrations and QA gold set</span><span class="task-h plan">3 h</span></div>
+          <p class="task-desc">Kajabi end-to-end, Monday connection test, automation registry, gold-set with Marija and Lauris.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Command Center and extras</span><span class="task-h plan">1 h</span></div>
+          <p class="task-desc">No expansion of RAG, background check, or telephony until KPIs and claim labels are in.</p>
+        </li>
+      </ul>
+    </article>
+
+    <article class="card c-client">
+      <div class="card-head">
+        <span class="card-name">6 · Clients and infrastructure</span>
+        <span class="card-meta"><span class="est">8 h</span></span>
+      </div>
+      <ul class="tasks">
+        <li class="task">
+          <div class="task-top"><span class="task-title">Mantinga — decision by 26 August</span><span class="task-h plan">2 h</span></div>
+          <p class="task-desc">If accepted: start Discovery and collect five to six further weekly cases (excluding logistics and production).</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Emerald Bastion — Google Support follow-up</span><span class="task-h plan">0.5 h</span></div>
+          <p class="task-desc">Restore or close the suspended project after Google replies.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">Company account migration</span><span class="task-h plan">4 h</span></div>
+          <p class="task-desc">Cloudflare, DIDWW, Cursor Teams, Vercel, Supabase. Yields to invitations and ASAICHI if time is short.</p>
+        </li>
+        <li class="task">
+          <div class="task-top"><span class="task-title">DIPA OS user authentication</span><span class="task-h plan">1.5 h</span></div>
+          <p class="task-desc">Replace the shared password gate with individual accounts after ASAICHI KPIs are live.</p>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+</main>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">OPPM Development &amp; QA — this week</p>
+  <table class="data">
+    <thead>
+      <tr><th>ID</th><th>Item</th><th>Owner</th><th>Due</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>T1.2</td><td>Deploy Firestore invitation rules</td><td>Eimantas Norvaišas</td><td>18 Aug</td><td>Planned</td></tr>
+      <tr><td>T1.3</td><td>Clear duplicates and re-invite Opatrip users</td><td>Eimantas Norvaišas</td><td>18–20 Aug</td><td>Planned</td></tr>
+      <tr><td>T1.4</td><td>Invitation acceptance path (logged out, no expiry)</td><td>Ada Miller</td><td>18–21 Aug</td><td>Planned</td></tr>
+      <tr><td>T1.5–T1.6</td><td>Regression and invitation-link documentation</td><td>Eimantas Norvaišas</td><td>19–21 Aug</td><td>Planned</td></tr>
+      <tr><td>T2.1</td><td>Timer and hours roll-up</td><td>Ada Miller, Eimantas Norvaišas</td><td>18–21 Aug</td><td>Planned</td></tr>
+      <tr><td>T2.2</td><td>Subtask status and cells persist after refresh</td><td>Ada Miller</td><td>20–26 Aug</td><td>Planned</td></tr>
+      <tr><td>T4.1</td><td>Sanitize AI report content</td><td>Ada Miller, Eimantas Norvaišas</td><td>21–25 Aug</td><td>Planned</td></tr>
+      <tr><td>T5.1–T5.2</td><td>Account isolation and owners on the home grid</td><td>Eimantas Norvaišas, Ada Miller</td><td>21–25 Aug</td><td>Planned</td></tr>
+      <tr><td>T9.1–T9.2</td><td>Branch review and smoke test of new views</td><td>Both</td><td>18–28 Aug</td><td>Planned</td></tr>
+      <tr><td>T10.1–T10.2</td><td>Lint and type-check baseline</td><td>Ada Miller</td><td>17–18 Aug</td><td>Planned</td></tr>
+      <tr><td>T12.1</td><td>Week-1 rules deploy</td><td>Eimantas Norvaišas</td><td>18–21 Aug</td><td>Planned</td></tr>
+      <tr><td>T13.1–T13.2</td><td>Full matrix view: audit and shared timeline</td><td>Ada Miller</td><td>18–25 Aug</td><td>Planned</td></tr>
+      <tr><td>—</td><td>Project colours, person filter, responsive layout, security fixes, company-email super-admin</td><td>Ada Miller</td><td>This week</td><td>Planned</td></tr>
+      <tr><td colspan="5">Invitation objective due 21 August. Production release after the matrix view is ready.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">First-contact claim levels (Marija) — to implement this week</p>
+  <table class="data">
+    <thead>
+      <tr><th>Level</th><th>Definition</th><th>Source required</th><th>Use in first contact</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Fact</td><td>Confirmed information from a trusted source</td><td>CRM, public register, confirmed conversation</td><td>May be used directly</td></tr>
+      <tr><td>Diagnosis</td><td>AI interpretation stated as a fact</td><td>Confirm with the client or rephrase as a question</td><td>Question or hypothesis only</td></tr>
+      <tr><td>Hypothesis (ROI)</td><td>Modelled figure without a client baseline</td><td>Value Owner (Aušrinė) before exact amounts</td><td>Illustrative range only</td></tr>
+      <tr><td>Personal assumption</td><td>Unverified biography or personal detail</td><td>LinkedIn, CRM, or a prior conversation</td><td>Do not use until verified</td></tr>
+      <tr><td colspan="4">Agents should also consider speaker emotion, not only literal text. Final labelling format to be confirmed this week.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Day order — 17–23 August</p>
+  <table class="data">
+    <thead><tr><th>Day</th><th>Focus</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mon 17</strong></td><td>Invitation rules · inform Mantas of the production date · start claim labels in agents</td></tr>
+      <tr><td><strong>Tue 18</strong></td><td>Deploy rules · Opatrip re-invite · Ada Miller on lint and matrix view · ASAICHI kick-off with Lauris</td></tr>
+      <tr><td><strong>Wed 19</strong></td><td>Load first ASAICHI numbers · invitation regression · timer review</td></tr>
+      <tr><td><strong>Thu 20</strong></td><td>Confirm KPIs with Lauris · finish claim labels · branch review</td></tr>
+      <tr><td><strong>Fri 21</strong></td><td>Invitation gate · tone/emotion decision · Mantinga follow-up if needed</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <p class="section-title" style="padding-left:0">Hours — 17–23 August</p>
+  <table class="data">
+    <thead>
+      <tr><th>#</th><th>Item</th><th>When</th><th class="num">Hours</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>OPPM invitations and rules</td><td>Mon–Wed</td><td class="num">6</td></tr>
+      <tr><td>2</td><td>OPPM matrix and review with Ada Miller</td><td>Tue–Thu</td><td class="num">6</td></tr>
+      <tr><td>3</td><td>DIPA OS — ASAICHI KPIs with Lauris</td><td>Tue–Thu</td><td class="num">8</td></tr>
+      <tr><td>4</td><td>DIPA OS — claim levels and tone</td><td>Mon–Thu</td><td class="num">6</td></tr>
+      <tr><td>5</td><td>DIPA OS — remaining integrations and QA</td><td>Fri</td><td class="num">4</td></tr>
+      <tr><td>6</td><td>Mantinga, Emerald Bastion, accounts, authentication</td><td>Fri</td><td class="num">8</td></tr>
+      <tr><td colspan="3">Total — week 17–23 August 2026</td><td class="num">38</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  Eimantas Norvaišas · 11–17 August delivered · 17–23 August plan
+</footer>
+
+</body>
+</html>
