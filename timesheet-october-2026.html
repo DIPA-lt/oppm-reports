@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task register — October 2026</title>
+  <style>
+    :root { --bg:#0a0f1e; --muted:#94a3b8; --text:#f1f5f9; --border:#334155; --ok:#4ade80; --accent:#38bdf8; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+    header { padding:1.5rem 2rem; border-bottom:1px solid var(--border); background:linear-gradient(140deg,#0d1f3c,#0a0f1e); }
+    header h1 { margin:0 0 .35rem; font-size:1.45rem; font-weight:800; }
+    header p { margin:0; color:var(--muted); font-size:.85rem; }
+    .total { display:inline-block; margin-top:.75rem; padding:.35rem .85rem; border-radius:999px; font-weight:700; color:var(--ok); background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.3); }
+    main { padding:1.25rem 2rem 2.5rem; max-width:1180px; margin:0 auto; }
+    .table-wrap { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    table { width:100%; border-collapse:collapse; font-size:.8rem; }
+    th, td { padding:.55rem .7rem; border-bottom:1px solid var(--border); vertical-align:top; }
+    th { background:#070c17; text-align:left; font-size:.68rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+    td.desc { color:#cbd5e1; font-size:.78rem; line-height:1.55; }
+    td.task { font-weight:600; min-width:200px; }
+    td.proj { font-weight:600; color:#7dd3fc; white-space:nowrap; width:140px; }
+    td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; font-weight:700; width:72px; }
+    tr.data:hover td { background:rgba(255,255,255,.02); }
+    tfoot td { font-weight:800; background:#070c17; }
+    .cc-section { margin-bottom:1.5rem; }
+    .cc-section h2 { margin:0 0 .35rem; font-size:1rem; font-weight:700; color:var(--accent); }
+    .cc-section p.lead { margin:0 0 .75rem; color:var(--muted); font-size:.78rem; }
+    .cc-wrap { border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:.5rem; }
+    .cc-wrap table { font-size:.82rem; }
+    .cc-wrap td.hint { color:#94a3b8; font-size:.75rem; }
+    footer { padding:1rem 2rem; color:var(--muted); font-size:.73rem; border-top:1px solid var(--border); }
+    .dl { margin-top:.85rem; }
+    .dl a { display:inline-block; margin-right:.5rem; padding:.4rem .8rem; border-radius:999px; background:#38bdf8; color:#0a0f1e; font-weight:700; font-size:.8rem; text-decoration:none; }
+    @media print { body { background:#fff; color:#111; } .dl { display:none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Task register — October 2026</h1>
+    <p>E. Norvaišas · billed to UAB Dipa · invoice S2026 Nr. 10 · period 1–31 Oct 2026</p>
+    <span class="total">148 h total · 1–31 October 2026</span>
+    <div class="dl">
+      <a href="timesheet-october-2026.html" download="Timesheet-2026-spalis-148h.html">Download task list</a>
+      <a href="invoice-october-2026.html" download="Saskaita-S2026-Nr-10-2026-spalis.html">Download invoice</a>
+    </div>
+  </header>
+  <main>
+    <section class="cc-section">
+      <h2>Hours by project / cost center</h2>
+      <p class="lead">For accounting allocation · 1–31 October 2026 (spalis). Nothing after 31 Oct.</p>
+      <div class="cc-wrap">
+        <table>
+          <thead><tr><th>Cost center</th><th>Scope</th><th class="num">Hours</th></tr></thead>
+          <tbody>
+          <tr class="data"><td class="task">DIPA OS</td><td class="hint desc">Releases 00031–00043, seller screen, CRM, Monday copy, Business Central, audit and plan</td><td class="num">72</td></tr>
+          <tr class="data"><td class="task">DIDWW</td><td class="hint desc">phone.systems line +370 647 21374, outbound test, inbound route, Drive recordings</td><td class="num">16</td></tr>
+          <tr class="data"><td class="task">Compensa</td><td class="hint desc">23 Oct meeting, questionnaire, OPPM project, requirements audit</td><td class="num">16</td></tr>
+          <tr class="data"><td class="task">dipa.lt</td><td class="hint desc">New site live 12 Oct, www close-out</td><td class="num">10</td></tr>
+          <tr class="data"><td class="task">Forms</td><td class="hint desc">Dashboard built, waiting on a yes</td><td class="num">8</td></tr>
+          <tr class="data"><td class="task">Linas RAG</td><td class="hint desc">RAG 4 on 2 Oct, revision 00012 on 21 Oct</td><td class="num">8</td></tr>
+          <tr class="data"><td class="task">Dograh</td><td class="hint desc">Work split, local practice bridge, account set up by 30 Oct</td><td class="num">6</td></tr>
+          <tr class="data"><td class="task">Administrative work</td><td class="hint desc">Gemba 7 Oct and Monday ASAICHI</td><td class="num">6</td></tr>
+          <tr class="data"><td class="task">OPPM</td><td class="hint desc">Ada’s releases reviewed; tests run, failure named</td><td class="num">3</td></tr>
+          <tr class="data"><td class="task">Ad hoc</td><td class="hint desc">KROT lost leads and workshop seat import</td><td class="num">3</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="2">Total</td><td class="num">148</td></tr></tfoot>
+        </table>
+      </div>
+    </section>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Project</th><th>Task</th><th>Description</th><th class="num">Hours</th></tr></thead>
+        <tbody>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Sales flow v2</td><td class="desc">Releases 00031 and 00032, 7–9 Oct. Pre-call screen, company talking points, post-call review.</td><td class="num">5</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Personal phone search</td><td class="desc">A number is accepted only next to the person’s name. Switchboard numbers are rejected.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Send to Monday</td><td class="desc">“Siųsti į Monday” creates the lead on Marketing Leads, after a duplicate check.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Monday auto-sync</td><td class="desc">Status, ICP, warm or cold, dates and the call summary sync back. A manual edit is kept.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Call QA rework</td><td class="desc">Release 00033, 12 Oct. The score uses facts, not emotions. A good call moved from 20 to 51.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Auto-screening</td><td class="desc">Every new lead is screened. Deep research runs for A and B, capped at 40 a day.</td><td class="num">3</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Callbacks and wrong numbers</td><td class="desc">From the 7 Oct seller session, released 12 Oct. No answer creates a next-day task. A bad number is flagged.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Confidential mode and report-a-problem</td><td class="desc">12 Oct. One click blurs names, phones and companies. A problem report takes type, severity and text.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Sales OS load time</td><td class="desc">106 database trips batched. Measured on the live database: 5.3 s down to 2.7 s. Week and month switch on the board.</td><td class="num">3</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Release 00041, seller screen</td><td class="desc">14 Oct, 100% of traffic. The lead is one brief. The day page shows do-now, open deals and today’s calls. Bell and email when deep research comes back A or B.</td><td class="num">5</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">os.dipa.lt</td><td class="desc">The short address opens the login. Mail links still used the long Cloud Run address.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Email, calendar grid, voice command</td><td class="desc">Built 14–16 Oct on this machine, after 00041. Draft and send from the lead. Day and week calendar. Copilot by voice in Lithuanian or English. Not in the 14 Oct release.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Release 00043 and Sales OS v2</td><td class="desc">Live 20 Oct, 100% of os.dipa.lt. Money, Sales and CEO on one screen, week and month, from data already in DIPA OS. Paid workshop seats only.</td><td class="num">6</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Sales process schemas</td><td class="desc">Written 21 Oct, ideal view 23 Oct. Each stage shows what came in, what left, what is sitting, and the week’s change. Money stays on the Money sheet.</td><td class="num">5</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Business Central access</td><td class="desc">Week of 23 Oct. Aušrinė’s note on how it works, and the Findigo keys, are in. This is the reading. The pull itself is the later row.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">CRM company and contact match</td><td class="desc">By 30 Oct. Companies, contacts and deals sit beside leads. Company matched by registration code, then name. Contact matched by email, then phone. Blank fields fill in. Existing values stay.</td><td class="num">5</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Monday copy, not yet released</td><td class="desc">By 30 Oct, in the working tree, not in the 29 Oct commit and not on os.dipa.lt. Reads the leads, contacts and companies boards. A thread can become a summary, an activity and a task.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Business Central invoice pull</td><td class="desc">By 30 Oct. One-way pull of posted sales invoices into the ledger and onto company cards. Number, amounts, paid and open, status. A daily route can run it. Nothing is written back. A hand-entered row with the same document number is updated, not duplicated.</td><td class="num">6</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Process page and UML</td><td class="desc">Schema page published 26 Oct. Process UML drawn 27 Oct: the funnel, the day and the week.</td><td class="num">3</td></tr>
+          <tr class="data"><td class="proj">DIPA OS</td><td class="task">Audit and development plan</td><td class="desc">With Igoris, 27 Oct. The product scored at 29% of the target. The plan is 7 phases plus a security track, 41 work packages, 14 of them P0. A phase ends when its gate is proved. No prices and no deadlines in the document.</td><td class="num">5</td></tr>
+          <tr class="data"><td class="proj">DIDWW</td><td class="task">Outbound on +370 647 21374</td><td class="desc">22 Oct. A call from the DIPA OS phone goes through with that caller ID. Wednesday morning was SIP 404, missing prefix 370. Retested the next day.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">DIDWW</td><td class="task">Inbound route</td><td class="desc">Saved 29 Oct. A customer call to +370 647 21374 reaches the voice box. DIPA OS looks up who is calling. The phone.systems app rings Lauris with the company name.</td><td class="num">6</td></tr>
+          <tr class="data"><td class="proj">DIDWW</td><td class="task">Recordings into DIPA OS</td><td class="desc">Saved 29 Oct. The recording lands in the shared Drive folder. DIPA OS copies it in, transcribes it, and prepares the call for evaluation.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">DIDWW</td><td class="task">Call tied to the company</td><td class="desc">29 Oct save. Inbound and outbound both use the same number, and the call can be tied to the right company. Lauris using the line in daily work was still the next step, not this one.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">Compensa</td><td class="task">23 Oct meeting and prep</td><td class="desc">Live meeting in the room, not a call. Prep written beforehand.</td><td class="num">5</td></tr>
+          <tr class="data"><td class="proj">Compensa</td><td class="task">Data-extract questionnaire</td><td class="desc">Written 26 Oct. Which systems hold the client, the contract and the payment, and how a file can be issued without a live login. First tests do not contact the client and do not write back.</td><td class="num">3</td></tr>
+          <tr class="data"><td class="proj">Compensa</td><td class="task">CRM or DIPA OS note</td><td class="desc">Written 26 Oct, before the full 74-row audit. Which requirements belong in a client book and which belong in the action layer.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">Compensa</td><td class="task">OPPM project opened</td><td class="desc">28 Oct. “Compensa Revenue OS MVP – cross-sell ir Next Best Action”, to 27 Apr 2027. Svetlana is project lead. Eimantas is the AI architect. 13 tasks, 78 subtasks.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">Compensa</td><td class="task">74 requirements scored</td><td class="desc">By 30 Oct. All 74 read against the pilot, the DIPA OS code and Twenty. 31 logical for the sale, 6 need a decision, 8 to redesign, 7 to merge, 17 later, 4 stay in a Compensa system, 1 dropped. No prices and no dates. Not checked on Compensa’s own data.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">Linas RAG</td><td class="task">RAG 4 deployed</td><td class="desc">2 Oct. Fixes live, 78/78 tests. The customer retest had not arrived by 31 Oct.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">Linas RAG</td><td class="task">Revision 00012</td><td class="desc">21 Oct. Vilita’s errors deployed. Client communication finished Friday 23 Oct. The 30 Oct note records no further Linas work that week.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">dipa.lt</td><td class="task">New site live</td><td class="desc">12 Oct. Replaced the old app. LT/EN copy and contacts set to UAB „Dipa“, Krivių g. 5. Staging hidden from Google.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">dipa.lt</td><td class="task">Forms, workshop page, ads</td><td class="desc">12 Oct. Every form posts into DIPA OS with the form name. Workshop page rebuilt. Diagnostic shows on mobile. Three Meta ad URLs kept; retired pages redirect.</td><td class="num">4</td></tr>
+          <tr class="data"><td class="proj">dipa.lt</td><td class="task">www close-out</td><td class="desc">www.dipa.lt was a 404 on the 12 Oct board. Closed by 23 Oct. No further site commits after the go-live morning.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">Forms</td><td class="task">Dashboard, first pass</td><td class="desc">Partly built in the new design during S41. Still needed a yes from Mantas and Igoris.</td><td class="num">3</td></tr>
+          <tr class="data"><td class="proj">Forms</td><td class="task">Dashboard built</td><td class="desc">Week of 23 Oct. The forms view is built. Acceptance was still open on 30 Oct. dipa-p1 itself stayed on the 21 Sep revision.</td><td class="num">5</td></tr>
+          <tr class="data"><td class="proj">Dograh</td><td class="task">Split of work and local bridge</td><td class="desc">Week of 23 Oct. Eimantas owns server, Docker, tunnel and SIP. Ada owns the agent. The local practice bridge logs into a local Dograh and loads one lead. It does not place a telephone call.</td><td class="num">3</td></tr>
+          <tr class="data"><td class="proj">Dograh</td><td class="task">Account set up</td><td class="desc">By 30 Oct, with Mantas. The account exists. The proof call was not done in October, and the handoff to Meda and Ada was not done in October.</td><td class="num">3</td></tr>
+          <tr class="data"><td class="proj">OPPM</td><td class="task">Ada’s 12 and 16 Oct releases</td><td class="desc">Two production releases reviewed. Name stays, no ads, dashboard only after a yes. oppm.dipa.lt answers. Revision 00016 from 16 Oct was still the live one on 23 Oct.</td><td class="num">2</td></tr>
+          <tr class="data"><td class="proj">OPPM</td><td class="task">Tests run</td><td class="desc">By 30 Oct. The suite was run and the product does not behave as the rules say. The failure is named. It was not fixed in October.</td><td class="num">1</td></tr>
+          <tr class="data"><td class="proj">Administrative</td><td class="task">7 Oct — Gemba with Lauris and Marija</td><td class="desc">1.5 h at the desk on real companies: cold contact, call, CRM. Both sellers can find, call, review and move a lead. The build that came out of it is under DIPA OS.</td><td class="num">1.5</td></tr>
+          <tr class="data"><td class="proj">Administrative</td><td class="task">Monday ASAICHI, 5–26 Oct</td><td class="desc">5, 12, 19 and 26 Oct. Plan versus fact for S41–S44.</td><td class="num">4.5</td></tr>
+          <tr class="data"><td class="proj">Ad hoc</td><td class="task">KROT lost leads</td><td class="desc">Checked the databases. Meta leads never reached the sheet. Reply sent. Meta Business Manager access was still missing, so the trace stopped there.</td><td class="num">1.5</td></tr>
+          <tr class="data"><td class="proj">Ad hoc</td><td class="task">Workshop seats imported</td><td class="desc">DD October, 28 people, and DD November, 12 people, loaded into DIPA OS.</td><td class="num">1.5</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="3">October 2026 total</td><td class="num">148</td></tr></tfoot>
+      </table>
+    </div>
+  </main>
+  <footer>October 2026 · internal register · 1–31 Oct only · sources: ASAICHI S41 (5 Oct) and S42 (19 Oct), week notes of 23, 26 and 30 Oct, Cloud Run revisions dipa-os-00031 to 00043, Compensa OPPM project dated 28 Oct. Not included, because it is after 31 Oct: DIPA OS 3.12 and 3.13, the Linas problem-reporting pass, the Compensa project page committed 4 Nov, and the customer diagnostic.</footer>
+</body>
+</html>
